@@ -8,7 +8,7 @@ plugins {
     id("com.android.application") version "7.0.4" apply false
     id("com.android.library") version "7.0.4" apply false
     /* Version 1.6.10 is not the latest. It is required by compose version 1.1.1 */
-    id("org.jetbrains.kotlin.android") version "1.6.10" apply false
+    id("org.jetbrains.kotlin.android") version "1.6.20" apply false
 }
 
 tasks.register("clean", Delete::class) {
