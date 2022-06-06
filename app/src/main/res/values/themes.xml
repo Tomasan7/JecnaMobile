@@ -2,10 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.JecnaMobile" parent="Theme.AppCompat.Light.DarkActionBar">
     </style>
+
     <style name="Theme.JecnaMobile.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.JecnaMobile.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.JecnaMobile.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
