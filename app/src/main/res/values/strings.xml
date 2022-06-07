@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">JecnaMobile</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="username">Uživatel</string>
+    <string name="username_error_blank">Nesmí být prázdné</string>
+    <string name="password">Heslo</string>
+    <string name="password_error_blank">Nesmí být prázdné</string>
+    <string name="remember_auth_checkbox">Zapamatovat uživatele</string>
+    <string name="login">Přihlásit se</string>
 </resources>

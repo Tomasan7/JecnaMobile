@@ -56,6 +56,8 @@ dependencies {
 
     /* --- Jetpack compose --- */
     val composeVersion = rootProject.extra["compose_version"]
+    val lifecycleVersion = "2.5.0-rc01"
+
     implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
@@ -70,5 +72,7 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
     implementation("androidx.compose.material3:material3-window-size-class:1.0.0-alpha13")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     testImplementation("junit:junit:4.13.2")
 }
