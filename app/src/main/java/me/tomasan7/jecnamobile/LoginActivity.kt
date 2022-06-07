@@ -3,7 +3,6 @@ package me.tomasan7.jecnamobile
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -23,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import me.tomasan7.jecnamobile.ui.components.OutlinedPasswordField
+import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.ui.theme.md_theme_dark_background
 

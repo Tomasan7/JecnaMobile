@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile.ui.components
+package me.tomasan7.jecnamobile.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.KeyboardActions
