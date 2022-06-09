@@ -72,6 +72,9 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
     implementation("androidx.compose.material3:material3-window-size-class:1.0.0-alpha13")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.24.10-beta")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.24.10-beta")
+
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     testImplementation("junit:junit:4.13.2")
