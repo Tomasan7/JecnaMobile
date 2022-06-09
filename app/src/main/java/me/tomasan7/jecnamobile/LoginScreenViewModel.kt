@@ -18,7 +18,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
     private val context
         get() = getApplication<Application>().applicationContext
 
-    private val preferences
+    private val authPreferences
         get() = context.getSharedPreferences(AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
     var uiState by mutableStateOf(LoginScreenState())
@@ -28,8 +28,8 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
     init
     {
-        if (preferences.contains(PREFERENCES_USERNAME_KEY))
-            login(preferences.getString(PREFERENCES_USERNAME_KEY, null) as String, preferences.getString(PREFERENCES_PASSWORD_KEY, null) as String)
+        if (authPreferences.contains(PREFERENCES_USERNAME_KEY))
+            login(authPreferences.getString(PREFERENCES_USERNAME_KEY, null) as String, authPreferences.getString(PREFERENCES_PASSWORD_KEY, null) as String)
     }
 
     fun onFieldValueChange(username: Boolean, newValue: String)
@@ -82,7 +82,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun saveAuth()
     {
-        with(preferences.edit()) {
+        with(authPreferences.edit()) {
             putString(PREFERENCES_USERNAME_KEY, uiState.username)
             putString(PREFERENCES_PASSWORD_KEY, uiState.password)
             apply()
