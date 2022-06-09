@@ -106,8 +106,8 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
     companion object
     {
-        private const val AUTH_PREFERENCES_FILE_NAME = "auth"
-        private const val PREFERENCES_USERNAME_KEY = "username"
-        private const val PREFERENCES_PASSWORD_KEY = "password"
+        const val AUTH_PREFERENCES_FILE_NAME = "auth"
+        const val PREFERENCES_USERNAME_KEY = "username"
+        const val PREFERENCES_PASSWORD_KEY = "password"
     }
 }
