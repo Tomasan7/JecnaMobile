@@ -1,7 +1,8 @@
-package me.tomasan7.jecnamobile
+package me.tomasan7.jecnamobile.screen.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,8 +10,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.JecnaWebClient
+import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.screen.view.LoginScreenState
+import me.tomasan7.jecnamobile.util.Event
+import me.tomasan7.jecnamobile.util.asEvent
 
 
 class LoginScreenViewModel(application: Application) : AndroidViewModel(application)
@@ -24,13 +28,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
     var uiState by mutableStateOf(LoginScreenState())
         private set
 
-    val login = MutableLiveData<Event<Auth>>()
-
-    init
-    {
-        if (authPreferences.contains(PREFERENCES_USERNAME_KEY))
-            login(authPreferences.getString(PREFERENCES_USERNAME_KEY, null) as String, authPreferences.getString(PREFERENCES_PASSWORD_KEY, null) as String)
-    }
+    val login = MutableLiveData<Event<JecnaWebClient>>()
 
     fun onFieldValueChange(username: Boolean, newValue: String)
     {
@@ -66,11 +64,19 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
         viewModelScope.launch {
             val client = JecnaWebClient(username, password)
-            val successful = client.login()
+            val successful = try
+            {
+                client.login()
+            }
+            catch (e: Exception)
+            {
+                Toast.makeText(context, context.getString(R.string.login_error), Toast.LENGTH_LONG).show()
+                false
+            }
 
             if (successful)
             {
-                login.value = Auth(username, password).asEvent()
+                login.value = client.asEvent()
 
                 if (uiState.rememberAuth)
                     saveAuth()

@@ -1,49 +1,65 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
+import android.app.Application
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.Grade
+import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.util.getGradeColor
 
+@SubScreensNavGraph(start = true)
+@Destination
 @Composable
-fun GradesSubScreen(modifier: Modifier = Modifier)
+fun GradesSubScreen(
+    jecnaWebClient: JecnaWebClient?
+)
 {
-    val viewModel = viewModel<GradesSubScreenViewModel>()
+    val applicationContext = LocalContext.current.applicationContext
+    val viewModel = remember { GradesSubScreenViewModel(applicationContext as Application, jecnaWebClient) }
     val uiState = viewModel.uiState
     var openDialog by remember { mutableStateOf(false) }
     var dialogGrade by remember { mutableStateOf<Grade?>(null) }
 
-    Column(
-        modifier.verticalScroll(rememberScrollState()).padding(16.dp),
-        Arrangement.spacedBy(20.dp)
+    SwipeRefresh(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberSwipeRefreshState(uiState.loading),
+        onRefresh = { viewModel.loadGrades() }
     ) {
-        uiState.subjects.forEach { subject ->
-            Subject(subject.name, subject.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
-        }
+        Column(
+            Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
+            Arrangement.spacedBy(20.dp)
+        ) {
+            uiState.subjects.forEach { subject ->
+                Subject(subject.name, subject.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
+            }
 
-        if (openDialog && dialogGrade != null)
-            GradeDialog(dialogGrade!!) { openDialog = false }
+            if (openDialog && dialogGrade != null)
+                GradeDialog(dialogGrade!!) { openDialog = false }
+        }
     }
 }
 

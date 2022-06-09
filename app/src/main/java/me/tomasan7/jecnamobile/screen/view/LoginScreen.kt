@@ -1,12 +1,5 @@
-package me.tomasan7.jecnamobile
+package me.tomasan7.jecnamobile.screen.view
 
-import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,53 +10,58 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
+import me.tomasan7.jecnamobile.destinations.MainScreenDestination
+import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
 import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
-import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.ui.theme.md_theme_dark_background
 
-class LoginActivity : ComponentActivity()
+@RootNavGraph
+@Destination
+@Composable
+fun LoginScreen(
+    navigator: DestinationsNavigator,
+    viewModel: LoginScreenViewModel = viewModel()
+)
 {
-    private val viewModel: LoginScreenViewModel by viewModels()
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-
-        viewModel.login.observe(this) { event ->
-            event.handleIfNotHandledYet {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("username", it.username)
-                intent.putExtra("password", it.password)
-                startActivity(intent)
-            }
-        }
-
-        setContent {
-            JecnaMobileTheme {
-                LoginScreen(viewModel)
+    viewModel.login.observe(LocalLifecycleOwner.current) { event ->
+        event.handleIfNotHandledYet {
+            navigator.navigate(MainScreenDestination(it)) {
+                popUpTo(LoginScreenDestination.route) {
+                    inclusive = true
+                }
             }
         }
     }
-}
 
-@Composable
-fun LoginScreen(viewModel: LoginScreenViewModel = viewModel())
-{
     if (viewModel.uiState.isLoading)
         LoadingState()
     else
         LoginState(viewModel)
 }
 
+@Composable
+private fun LoadingState()
+{
+    Box(
+        modifier = Modifier.fillMaxSize().background(md_theme_dark_background),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginState(viewModel: LoginScreenViewModel)
+private fun LoginState(viewModel: LoginScreenViewModel = viewModel())
 {
     val state = viewModel.uiState
 
@@ -71,6 +69,12 @@ private fun LoginState(viewModel: LoginScreenViewModel)
         modifier = Modifier.fillMaxSize().background(md_theme_dark_background),
         contentAlignment = Alignment.Center
     ) {
+        Text(
+            text = stringResource(R.string.login_title),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 100.dp))
+
         Column(
             modifier = Modifier.width(IntrinsicSize.Min),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,8 +85,7 @@ private fun LoginState(viewModel: LoginScreenViewModel)
                 leadingIcon = { Icon(Icons.Default.Person, null) },
                 label = { Text(stringResource(R.string.username)) },
                 value = state.username,
-                onValueChange = { viewModel.onFieldValueChange(true, it) },
-                modifier = Modifier.onFocusEvent { }
+                onValueChange = { viewModel.onFieldValueChange(true, it) }
             )
 
             if (state.usernameBlankError)
@@ -110,9 +113,11 @@ private fun LoginState(viewModel: LoginScreenViewModel)
                     modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 16.dp, end = 16.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { viewModel.onRememberAuthCheckedChange(!state.rememberAuth) },
+                modifier = Modifier.fillMaxWidth()
+                    .clickable { viewModel.onRememberAuthCheckedChange(!state.rememberAuth) },
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start) {
+                horizontalArrangement = Arrangement.Start
+            ) {
                 Checkbox(state.rememberAuth, onCheckedChange = { viewModel.onRememberAuthCheckedChange(it) })
                 Text(stringResource(R.string.remember_auth_checkbox),
                      color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -130,25 +135,5 @@ private fun LoginState(viewModel: LoginScreenViewModel)
                 onClick = { viewModel.onLoginClick() }
             )
         }
-    }
-}
-
-@Composable
-private fun LoadingState()
-{
-    Box(
-        modifier = Modifier.fillMaxSize().background(md_theme_dark_background),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Preview
-@Composable
-fun LoginScreenPreview()
-{
-    Surface {
-        LoginScreen()
     }
 }

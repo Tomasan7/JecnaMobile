@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.JecnaMobile" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/md_theme_dark_background</item>
     </style>
 
     <style name="Theme.JecnaMobile.NoActionBar">

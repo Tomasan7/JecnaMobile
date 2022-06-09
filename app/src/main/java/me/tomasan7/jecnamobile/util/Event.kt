@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile
+package me.tomasan7.jecnamobile.util
 
 open class Event<out T>(private val content: T) {
 

@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile
+package me.tomasan7.jecnamobile.screen.view
 
 data class LoginScreenState(val isLoading: Boolean = false,
                             val username: String = "",

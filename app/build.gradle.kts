@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("com.google.devtools.ksp") version "1.6.20-1.0.4"
 }
 
 android {
@@ -48,6 +49,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -72,10 +81,16 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
     implementation("androidx.compose.material3:material3-window-size-class:1.0.0-alpha13")
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.24.10-beta")
-    implementation("com.google.accompanist:accompanist-flowlayout:0.24.10-beta")
+    val accompanistVersion = "0.24.10-beta"
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
 
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+
+    val composeDestinationsVersion = "1.5.9-beta"
+    implementation("io.github.raamcosta.compose-destinations:core:$composeDestinationsVersion")
+    ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
+
     testImplementation("junit:junit:4.13.2")
 }
