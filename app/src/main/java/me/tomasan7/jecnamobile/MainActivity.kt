@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnamobile.subscreen.view.GradesSubScreen
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 
 class MainActivity : ComponentActivity()
@@ -97,17 +98,9 @@ class MainActivity : ComponentActivity()
                         )
                     }
                 ) { paddingValues ->
-                    Column(
-                        modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = if (drawerState.isClosed) ">>> Swipe >>>" else "<<< Swipe <<<",
-                             color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Spacer(Modifier.height(20.dp))
-                        Button(onClick = { scope.launch { drawerState.open() } }) {
-                            Text("Click to open")
-                        }
-                    }
+                    GradesSubScreen(
+                        modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    )
                 }
             }
         )
