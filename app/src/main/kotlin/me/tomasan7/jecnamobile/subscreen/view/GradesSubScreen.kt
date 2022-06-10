@@ -1,7 +1,6 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
 import android.app.Application
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -75,11 +75,12 @@ private fun Subject(
         modifier,
         tonalElevation = 2.dp,
         shadowElevation = 4.dp,
-        shape = RoundedCornerShape(10.dp)) {
+        shape = RoundedCornerShape(10.dp)
+    ) {
         Column(Modifier.fillMaxSize().padding(20.dp)) {
-            Row(Modifier.fillMaxWidth()) {
-                Text(name, style = MaterialTheme.typography.titleMedium)
-            }
+            Text(text = name,
+                 style = MaterialTheme.typography.titleMedium,
+                 modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(15.dp))
             FlowRow(
                 Modifier.fillMaxWidth(),

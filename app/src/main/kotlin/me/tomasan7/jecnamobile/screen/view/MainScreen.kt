@@ -10,23 +10,35 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
-import me.tomasan7.jecnamobile.subscreen.view.GradesSubScreen
+import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.AttendancesScreenDestination
+import me.tomasan7.jecnamobile.destinations.Destination
+import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
+
+data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
+
+private val destinationItems = listOf(
+    DrawerItem(Icons.Default.Star, "Známky", GradesSubScreenDestination),
+    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesScreenDestination)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
-@Destination
+@com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun MainScreen(
     jecnaWebClient: JecnaWebClient?
@@ -34,16 +46,16 @@ fun MainScreen(
 {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val contentNavController = rememberNavController()
 
-    data class DrawerItem(val icon: ImageVector, val label: String)
+    var selectedItem by remember { mutableStateOf(destinationItems[0]) }
 
-    // icons to mimic drawer destinations
-    val items = listOf(
-        DrawerItem(Icons.Default.Star, "Známky"),
-        DrawerItem(Icons.Default.DateRange, "Příchody")
-    )
+    contentNavController.addOnDestinationChangedListener { _, destination,_ ->
+        val newSelectedItem = destinationItems.find { it.destination.route == destination.route }
+        if (newSelectedItem != null)
+            selectedItem = newSelectedItem
+    }
 
-    val selectedItem = remember { mutableStateOf(items[0]) }
 
     ModalNavigationDrawer(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -54,20 +66,24 @@ fun MainScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Ječná Mobile",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
-            items.forEach { item ->
+            destinationItems.forEach { item ->
                 NavigationDrawerItem(
                     modifier = Modifier.padding(horizontal = 12.dp),
                     icon = { Icon(item.icon, null) },
                     label = { Text(item.label) },
-                    selected = item == selectedItem.value,
-                    onClick = {
-                        selectedItem.value = item
+                    selected = item == selectedItem,
+                    onClick = onClick@ {
                         scope.launch { drawerState.close() }
+                        if (selectedItem == item)
+                            return@onClick
+
+                        contentNavController.navigate(item.destination.route)
+                        selectedItem = item
                     }
                 )
             }
@@ -76,7 +92,7 @@ fun MainScreen(
             Scaffold(
                 topBar = {
                     SmallTopAppBar(
-                        title = { Text(selectedItem.value.label) },
+                        title = { Text(selectedItem.label) },
                         colors = TopAppBarDefaults.smallTopAppBarColors(),
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
@@ -91,6 +107,7 @@ fun MainScreen(
             ) { paddingValues ->
                 DestinationsNavHost(
                     navGraph = NavGraphs.subScreens,
+                    navController = contentNavController,
                     modifier = Modifier.fillMaxSize().padding(paddingValues)
                 )
             }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JecnaMobile</string>
+    <string name="app_name">Ječná Mobile</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_title">Přihlášení</string>
     <string name="username">Uživatel</string>
@@ -22,4 +22,12 @@
     <string name="grade_weight_big">Velká</string>
     <string name="grade_description">Popis</string>
     <string name="grade_teacher">Učitel</string>
+
+    <string name="monday">Pondělí</string>
+    <string name="tuesday">Úterý</string>
+    <string name="wednesday">Středa</string>
+    <string name="thursday">Čtvrtek</string>
+    <string name="friday">Pátek</string>
+    <string name="saturday">Sobota</string>
+    <string name="sunday">Neděle</string>
 </resources>

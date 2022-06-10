@@ -8,12 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.repository.WebGradesRepository
+import me.tomasan7.jecnaapi.repository.WebAttendancesRepository
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
-import java.util.*
 
-class GradesSubScreenViewModel(application: Application, jecnaWebClient: JecnaWebClient?) : AndroidViewModel(application)
+class AttendancesSubScreenViewModel(application: Application,
+                                    jecnaWebClient: JecnaWebClient?) : AndroidViewModel(application)
 {
     private val appContext
         get() = getApplication<Application>().applicationContext
@@ -21,10 +21,10 @@ class GradesSubScreenViewModel(application: Application, jecnaWebClient: JecnaWe
     private val authPreferences
         get() = appContext.getSharedPreferences(LoginScreenViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
-    var uiState by mutableStateOf(GradesSubScreenState())
+    var uiState by mutableStateOf(AttendancesSubScreenState())
         private set
 
-    private lateinit var gradesRepository: WebGradesRepository
+    private lateinit var attendancesRepository: WebAttendancesRepository
 
     init
     {
@@ -32,33 +32,32 @@ class GradesSubScreenViewModel(application: Application, jecnaWebClient: JecnaWe
         {
             viewModelScope.launch {
                 val client = JecnaWebClient(authPreferences.getString(LoginScreenViewModel.PREFERENCES_USERNAME_KEY, null) as String,
-                                            authPreferences.getString(
-                                                LoginScreenViewModel.PREFERENCES_PASSWORD_KEY, null) as String)
+                                            authPreferences.getString(LoginScreenViewModel.PREFERENCES_PASSWORD_KEY, null) as String)
                 client.login()
-                gradesRepository = WebGradesRepository(client)
-                loadGrades()
+                attendancesRepository = WebAttendancesRepository(client)
+                loadAttendances()
             }
         }
         else
         {
-            gradesRepository = WebGradesRepository(jecnaWebClient)
-            loadGrades()
+            attendancesRepository = WebAttendancesRepository(jecnaWebClient)
+            loadAttendances()
         }
     }
 
-    fun loadGrades()
+    fun loadAttendances()
     {
         uiState = uiState.copy(loading = true)
 
         viewModelScope.launch {
-            val grades = gradesRepository.queryGrades()
+            val attendances = attendancesRepository.queryAttendances()
 
-            val subjects: MutableList<Subject> = LinkedList()
+            val attendanceRows = mutableListOf<AttendanceRow>()
 
-            for (subject in grades.subjects)
-                subjects.add(Subject(subject, grades.getGradesForSubject(subject)))
+            for (day in attendances.days)
+                attendanceRows.add(AttendanceRow(day, attendances.getAttendancesForDay(day).map(Any::toString)))
 
-            uiState = uiState.copy(loading = false, subjects = subjects)
+            uiState = uiState.copy(loading = false, attendanceRows = attendanceRows)
         }
     }
 }
