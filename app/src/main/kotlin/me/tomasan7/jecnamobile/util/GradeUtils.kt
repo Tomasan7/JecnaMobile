@@ -1,6 +1,6 @@
 package me.tomasan7.jecnamobile.util
 
-import me.tomasan7.jecnaapi.data.Grade
+import me.tomasan7.jecnaapi.data.grade.Grade
 import me.tomasan7.jecnamobile.ui.theme.*
 
 fun getGradeColor(gradeValue: Int) = when (gradeValue)

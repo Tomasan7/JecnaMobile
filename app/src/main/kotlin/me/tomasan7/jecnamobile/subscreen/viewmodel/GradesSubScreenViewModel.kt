@@ -1,49 +1,24 @@
 package me.tomasan7.jecnamobile.subscreen.viewmodel
 
-import android.app.Application
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.repository.WebGradesRepository
-import me.tomasan7.jecnaapi.web.JecnaWebClient
-import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
+import me.tomasan7.jecnamobile.RepositoryContainer
 import java.util.*
 
-class GradesSubScreenViewModel(application: Application, jecnaWebClient: JecnaWebClient?) : AndroidViewModel(application)
+class GradesSubScreenViewModel : ViewModel()
 {
-    private val appContext
-        get() = getApplication<Application>().applicationContext
-
-    private val authPreferences
-        get() = appContext.getSharedPreferences(LoginScreenViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
-
     var uiState by mutableStateOf(GradesSubScreenState())
         private set
 
-    private lateinit var gradesRepository: WebGradesRepository
+    private val gradesRepository = RepositoryContainer.gradesRepository
 
     init
     {
-        if (jecnaWebClient == null)
-        {
-            viewModelScope.launch {
-                val client = JecnaWebClient(authPreferences.getString(LoginScreenViewModel.PREFERENCES_USERNAME_KEY, null) as String,
-                                            authPreferences.getString(
-                                                LoginScreenViewModel.PREFERENCES_PASSWORD_KEY, null) as String)
-                client.login()
-                gradesRepository = WebGradesRepository(client)
-                loadGrades()
-            }
-        }
-        else
-        {
-            gradesRepository = WebGradesRepository(jecnaWebClient)
-            loadGrades()
-        }
+        loadGrades()
     }
 
     fun loadGrades()
@@ -51,14 +26,9 @@ class GradesSubScreenViewModel(application: Application, jecnaWebClient: JecnaWe
         uiState = uiState.copy(loading = true)
 
         viewModelScope.launch {
-            val grades = gradesRepository.queryGrades()
+            val grades = gradesRepository.queryGradesPage()
 
-            val subjects: MutableList<Subject> = LinkedList()
-
-            for (subject in grades.subjects)
-                subjects.add(Subject(subject, grades.getGradesForSubject(subject)))
-
-            uiState = uiState.copy(loading = false, subjects = subjects)
+            uiState = uiState.copy(loading = false, gradesPage = grades)
         }
     }
 }

@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import android.app.Application
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,24 +7,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.Grade
-import me.tomasan7.jecnaapi.web.JecnaWebClient
+import me.tomasan7.jecnaapi.data.grade.Grade
+import me.tomasan7.jecnaapi.data.grade.Grades
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
@@ -35,11 +33,9 @@ import me.tomasan7.jecnamobile.util.getGradeColor
 @Destination
 @Composable
 fun GradesSubScreen(
-    jecnaWebClient: JecnaWebClient?
+    viewModel: GradesSubScreenViewModel = viewModel()
 )
 {
-    val applicationContext = LocalContext.current.applicationContext
-    val viewModel = remember { GradesSubScreenViewModel(applicationContext as Application, jecnaWebClient) }
     val uiState = viewModel.uiState
     var openDialog by remember { mutableStateOf(false) }
     var dialogGrade by remember { mutableStateOf<Grade?>(null) }
@@ -53,9 +49,10 @@ fun GradesSubScreen(
             Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
             Arrangement.spacedBy(20.dp)
         ) {
-            uiState.subjects.forEach { subject ->
-                Subject(subject.name, subject.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
-            }
+            if (uiState.gradesPage != null)
+                uiState.gradesPage.subjectNames.forEach { subjectName ->
+                    Subject(subjectName.full, uiState.gradesPage[subjectName]!!.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
+                }
 
             if (openDialog && dialogGrade != null)
                 GradeDialog(dialogGrade!!) { openDialog = false }
@@ -66,7 +63,7 @@ fun GradesSubScreen(
 @Composable
 private fun Subject(
     name: String,
-    grades: List<Grade>,
+    grades: Grades,
     onGradeClick: (Grade) -> Unit,
     modifier: Modifier = Modifier
 )
@@ -88,9 +85,10 @@ private fun Subject(
                 mainAxisSpacing = 5.dp,
                 crossAxisSpacing = 5.dp
             ) {
-                grades.forEach {
-                    GradeComposable(it, onClick = { onGradeClick(it) })
-                }
+                for (subjectPart in grades.subjectParts)
+                    grades[subjectPart]!!.forEach {
+                        GradeComposable(it, onClick = { onGradeClick(it) })
+                    }
             }
         }
     }

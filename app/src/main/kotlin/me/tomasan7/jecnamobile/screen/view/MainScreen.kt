@@ -22,10 +22,9 @@ import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.destinations.AttendancesScreenDestination
+import me.tomasan7.jecnamobile.destinations.AttendancesSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.Destination
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
 
@@ -33,16 +32,14 @@ data class DrawerItem(val icon: ImageVector, val label: String, val destination:
 
 private val destinationItems = listOf(
     DrawerItem(Icons.Default.Star, "Známky", GradesSubScreenDestination),
-    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesScreenDestination)
+    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesSubScreenDestination)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
-fun MainScreen(
-    jecnaWebClient: JecnaWebClient?
-)
+fun MainScreen()
 {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -55,7 +52,6 @@ fun MainScreen(
         if (newSelectedItem != null)
             selectedItem = newSelectedItem
     }
-
 
     ModalNavigationDrawer(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),

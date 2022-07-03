@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.RepositoryContainer
 import me.tomasan7.jecnamobile.screen.view.LoginScreenState
 import me.tomasan7.jecnamobile.util.Event
 import me.tomasan7.jecnamobile.util.asEvent
@@ -63,10 +64,10 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
         changeUiState(isLoading = true)
 
         viewModelScope.launch {
-            val client = JecnaWebClient(username, password)
+            val client = JecnaWebClient()
             val successful = try
             {
-                client.login()
+                client.login(username, password)
             }
             catch (e: Exception)
             {
@@ -76,6 +77,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
             if (successful)
             {
+                RepositoryContainer.init(client)
                 login.value = client.asEvent()
 
                 if (uiState.rememberAuth)

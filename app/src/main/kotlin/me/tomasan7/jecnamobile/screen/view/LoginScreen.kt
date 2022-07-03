@@ -34,7 +34,7 @@ fun LoginScreen(
 {
     viewModel.login.observe(LocalLifecycleOwner.current) { event ->
         event.handleIfNotHandledYet {
-            navigator.navigate(MainScreenDestination(it)) {
+            navigator.navigate(MainScreenDestination()) {
                 popUpTo(LoginScreenDestination.route) {
                     inclusive = true
                 }

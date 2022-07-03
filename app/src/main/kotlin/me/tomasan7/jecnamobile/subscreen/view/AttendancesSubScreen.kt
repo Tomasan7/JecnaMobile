@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -25,6 +22,7 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendanceRow
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.format.DateTimeFormatter
 
@@ -34,12 +32,10 @@ private val timePattern = DateTimeFormatter.ofPattern("H:mm")
 @SubScreensNavGraph
 @Destination
 @Composable
-fun AttendancesScreen(
-    jecnaWebClient: JecnaWebClient?
+fun AttendancesSubScreen(
+    viewModel: AttendancesSubScreenViewModel = viewModel()
 )
 {
-    val applicationContext = LocalContext.current.applicationContext
-    val viewModel = remember { AttendancesSubScreenViewModel(applicationContext as Application, jecnaWebClient) }
     val uiState = viewModel.uiState
 
     SwipeRefresh(
