@@ -3,6 +3,10 @@ plugins {
     id("kotlin-android")
     id("com.google.devtools.ksp") version "1.6.20-1.0.4"
     kotlin("plugin.serialization") version "1.6.21"
+
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
+
 }
 
 android {
@@ -60,6 +64,11 @@ android {
     }
 }
 
+/* Allow references to generated code */
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     /* Main JecnaAPI dependency. */
     implementation("me.tomasan7:jecna-api:1.0-SNAPSHOT")
@@ -94,4 +103,9 @@ dependencies {
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
     testImplementation("junit:junit:4.13.2")
+
+    /* Dagger-Hilt */
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }

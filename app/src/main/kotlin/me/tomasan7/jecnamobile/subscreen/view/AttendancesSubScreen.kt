@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,21 +7,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendanceRow
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
-import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.format.DateTimeFormatter
 
@@ -33,7 +30,7 @@ private val timePattern = DateTimeFormatter.ofPattern("H:mm")
 @Destination
 @Composable
 fun AttendancesSubScreen(
-    viewModel: AttendancesSubScreenViewModel = viewModel()
+    viewModel: AttendancesSubScreenViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState

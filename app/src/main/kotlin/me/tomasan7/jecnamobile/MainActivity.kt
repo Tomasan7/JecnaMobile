@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.JecnaWebClient
@@ -19,10 +20,14 @@ import me.tomasan7.jecnamobile.destinations.NetworkErrorScreenDestination
 import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import java.net.InetAddress
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity()
 {
+    @Inject
+    lateinit var jecnaClient: JecnaWebClient
+
     private val authPreferences
         get() = getSharedPreferences(LoginScreenViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
@@ -30,7 +35,6 @@ class MainActivity : ComponentActivity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-
 
         setContent {
 
@@ -40,12 +44,10 @@ class MainActivity : ComponentActivity()
                 else
                 {
                     val loginResult = runBlocking {
-                        val client = JecnaWebClient()
                         try
                         {
-                            if (client.login(getSavedAuth()))
+                            if (jecnaClient.login(getSavedAuth()))
                             {
-                                RepositoryContainer.init(client)
                                 LoginResult.SUCCESS
                             }
                             else

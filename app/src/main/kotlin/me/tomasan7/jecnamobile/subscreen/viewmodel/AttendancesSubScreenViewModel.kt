@@ -5,16 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnamobile.RepositoryContainer
+import me.tomasan7.jecnaapi.repository.AttendancesRepository
+import javax.inject.Inject
 
-class AttendancesSubScreenViewModel : ViewModel()
+@HiltViewModel
+class AttendancesSubScreenViewModel @Inject constructor(
+    private val attendancesRepository: AttendancesRepository
+) : ViewModel()
 {
-
     var uiState by mutableStateOf(AttendancesSubScreenState())
         private set
-
-    private val attendancesRepository = RepositoryContainer.attendancesRepository
 
     init
     {

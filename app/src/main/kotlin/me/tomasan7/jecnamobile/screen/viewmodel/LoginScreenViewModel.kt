@@ -1,27 +1,29 @@
 package me.tomasan7.jecnamobile.screen.viewmodel
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.RepositoryContainer
 import me.tomasan7.jecnamobile.screen.view.LoginScreenState
 import me.tomasan7.jecnamobile.util.Event
 import me.tomasan7.jecnamobile.util.asEvent
+import javax.inject.Inject
 
-
-class LoginScreenViewModel(application: Application) : AndroidViewModel(application)
+@HiltViewModel
+class LoginScreenViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val jecnaClient: JecnaWebClient
+) : ViewModel()
 {
-    private val context
-        get() = getApplication<Application>().applicationContext
 
     private val authPreferences
         get() = context.getSharedPreferences(AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
@@ -64,10 +66,9 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
         changeUiState(isLoading = true)
 
         viewModelScope.launch {
-            val client = JecnaWebClient()
             val successful = try
             {
-                client.login(username, password)
+                jecnaClient.login(username, password)
             }
             catch (e: Exception)
             {
@@ -77,8 +78,7 @@ class LoginScreenViewModel(application: Application) : AndroidViewModel(applicat
 
             if (successful)
             {
-                RepositoryContainer.init(client)
-                login.value = client.asEvent()
+                login.value = jecnaClient.asEvent()
 
                 if (uiState.rememberAuth)
                     saveAuth()

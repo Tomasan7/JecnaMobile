@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -33,7 +34,7 @@ import me.tomasan7.jecnamobile.util.getGradeColor
 @Destination
 @Composable
 fun GradesSubScreen(
-    viewModel: GradesSubScreenViewModel = viewModel()
+    viewModel: GradesSubScreenViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState
