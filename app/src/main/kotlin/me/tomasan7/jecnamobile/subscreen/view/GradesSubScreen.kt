@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
+import android.icu.text.Collator
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -29,6 +29,7 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.util.getGradeColor
+import java.util.*
 
 @SubScreensNavGraph(start = true)
 @Destination
@@ -51,7 +52,7 @@ fun GradesSubScreen(
             Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.gradesPage != null)
-                uiState.gradesPage.subjectNames.forEach { subjectName ->
+                uiState.gradesPage.subjectNames.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full }).forEach { subjectName ->
                     Subject(subjectName.full, uiState.gradesPage[subjectName]!!.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
                 }
 
