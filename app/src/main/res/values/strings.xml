@@ -30,4 +30,20 @@
     <string name="friday">Pátek</string>
     <string name="saturday">Sobota</string>
     <string name="sunday">Neděle</string>
+
+    <string name="january">Leden</string>
+    <string name="february">Únor</string>
+    <string name="march">Březen</string>
+    <string name="april">Duben</string>
+    <string name="may">Květen</string>
+    <string name="june">Červen</string>
+    <string name="july">Červenec</string>
+    <string name="august">Srpen</string>
+    <string name="september">Září</string>
+    <string name="october">Říjen</string>
+    <string name="november">Listopad</string>
+    <string name="december">Prosinec</string>
+
+    <string name="month">Měsíc</string>
+    <string name="school_year">Školní rok</string>
 </resources>

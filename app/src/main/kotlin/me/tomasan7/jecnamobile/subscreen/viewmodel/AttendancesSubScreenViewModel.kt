@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.repository.AttendancesRepository
+import me.tomasan7.jecnaapi.util.SchoolYear
+import java.time.LocalDate
+import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,11 +18,23 @@ class AttendancesSubScreenViewModel @Inject constructor(
     private val attendancesRepository: AttendancesRepository
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(AttendancesSubScreenState())
+    var uiState by mutableStateOf(AttendancesSubScreenState(selectedMonth = LocalDate.now().month, selectedSchoolYear = SchoolYear(LocalDate.now())))
         private set
 
     init
     {
+        loadAttendances()
+    }
+
+    fun selectMonth(month: Month)
+    {
+        uiState = uiState.copy(selectedMonth = month)
+        loadAttendances()
+    }
+
+    fun selectSchoolYear(schoolYear: SchoolYear)
+    {
+        uiState = uiState.copy(selectedSchoolYear = schoolYear)
         loadAttendances()
     }
 
@@ -28,14 +43,9 @@ class AttendancesSubScreenViewModel @Inject constructor(
         uiState = uiState.copy(loading = true)
 
         viewModelScope.launch {
-            val attendances = attendancesRepository.queryAttendancesPage()
+            val attendances = attendancesRepository.queryAttendancesPage(uiState.selectedSchoolYear, uiState.selectedMonth.value)
 
-            val attendanceRows = mutableListOf<AttendanceRow>()
-
-            for (day in attendances.days)
-                attendanceRows.add(AttendanceRow(day, attendances[day].map(Any::toString)))
-
-            uiState = uiState.copy(loading = false, attendanceRows = attendanceRows)
+            uiState = uiState.copy(loading = false, attendancesPage = attendances)
         }
     }
 }
