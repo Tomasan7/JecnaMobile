@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -52,9 +53,10 @@ fun GradesSubScreen(
             Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.gradesPage != null)
-                uiState.gradesPage.subjectNames.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full }).forEach { subjectName ->
-                    Subject(subjectName.full, uiState.gradesPage[subjectName]!!.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
-                }
+                uiState.gradesPage.subjectNames.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full })
+                    .forEach { subjectName ->
+                        Subject(subjectName.full, uiState.gradesPage[subjectName]!!.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
+                    }
 
             if (openDialog && dialogGrade != null)
                 GradeDialog(dialogGrade!!) { openDialog = false }
@@ -147,12 +149,11 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    GradeDialogRow("${stringResource(R.string.grade_weight)}: ",
-                                   if (grade.small) stringResource(R.string.grade_weight_small) else stringResource(R.string.grade_weight_big))
+                    GradeDialogRow(if (grade.small) stringResource(R.string.grade_weight_small) else stringResource(R.string.grade_weight_big))
                     if (grade.description != null)
-                        GradeDialogRow("${stringResource(R.string.grade_description)}: ", grade.description!!, true)
+                        GradeDialogRow(grade.description!!)
                     if (grade.teacher != null)
-                        GradeDialogRow("${stringResource(R.string.grade_teacher)}: ", grade.teacher!!, true)
+                        GradeDialogRow(grade.teacher!!)
                 }
             }
         }
@@ -160,27 +161,17 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
 }
 
 @Composable
-private fun GradeDialogRow(key: String, value: String, valueNewLine: Boolean = false)
+private fun GradeDialogRow(value: String)
 {
     Surface(
         tonalElevation = 10.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Box(modifier = Modifier.padding(15.dp).fillMaxWidth()) {
-            val content = @Composable {
-                Text(key)
-                Text(value)
-            }
-
-            if (valueNewLine)
-                Column(Modifier.fillMaxWidth(), content = { content() })
-            else
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    content = { content() }
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = value,
+                    modifier = Modifier.padding(15.dp).fillMaxWidth()
                 )
-        }
     }
 }
 
