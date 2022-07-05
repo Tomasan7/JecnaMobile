@@ -53,7 +53,7 @@ fun AttendancesSubScreen(
                 MonthSelector(uiState.selectedMonth) {
                     viewModel.selectMonth(it)
                 }
-                YearSelector(uiState.selectedSchoolYear) {
+                SchoolYearSelector(uiState.selectedSchoolYear) {
                     viewModel.selectSchoolYear(it)
                 }
             }
@@ -103,7 +103,7 @@ private fun MonthSelector(selectedMonth: Month, onChange: (Month) -> Unit)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun YearSelector(selectedSchoolYear: SchoolYear, onChange: (SchoolYear) -> Unit)
+private fun SchoolYearSelector(selectedSchoolYear: SchoolYear, onChange: (SchoolYear) -> Unit)
 {
     val currentSchoolYear = remember { SchoolYear(LocalDate.now()) }
 
