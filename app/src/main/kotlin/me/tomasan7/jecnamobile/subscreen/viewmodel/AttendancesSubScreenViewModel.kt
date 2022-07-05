@@ -18,7 +18,7 @@ class AttendancesSubScreenViewModel @Inject constructor(
     private val attendancesRepository: AttendancesRepository
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(AttendancesSubScreenState(selectedMonth = LocalDate.now().month, selectedSchoolYear = SchoolYear(LocalDate.now())))
+    var uiState by mutableStateOf(AttendancesSubScreenState())
         private set
 
     init
