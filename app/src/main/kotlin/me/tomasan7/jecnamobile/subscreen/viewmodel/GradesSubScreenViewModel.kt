@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.repository.GradesRepository
+import me.tomasan7.jecnaapi.util.SchoolYear
+import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,12 +25,24 @@ class GradesSubScreenViewModel @Inject constructor(
         loadGrades()
     }
 
+    fun selectSchoolYearHalf(schoolYearHalf: Boolean)
+    {
+        uiState = uiState.copy(selectedSchoolYearHalf = schoolYearHalf)
+        loadGrades()
+    }
+
+    fun selectSchoolYear(schoolYear: SchoolYear)
+    {
+        uiState = uiState.copy(selectedSchoolYear = schoolYear)
+        loadGrades()
+    }
+
     fun loadGrades()
     {
         uiState = uiState.copy(loading = true)
 
         viewModelScope.launch {
-            val grades = gradesRepository.queryGradesPage()
+            val grades = gradesRepository.queryGradesPage(uiState.selectedSchoolYear, uiState.selectedSchoolYearHalf)
 
             uiState = uiState.copy(loading = false, gradesPage = grades)
         }

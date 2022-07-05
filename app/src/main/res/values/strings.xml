@@ -46,4 +46,7 @@
 
     <string name="month">Měsíc</string>
     <string name="school_year">Školní rok</string>
+    <string name="school_year_half">Pololetí</string>
+    <string name="school_year_half_1">1.</string>
+    <string name="school_year_half_2">2.</string>
 </resources>

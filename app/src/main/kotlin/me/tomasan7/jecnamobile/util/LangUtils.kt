@@ -34,3 +34,6 @@ fun getMonthName(month: Month) = when (month)
     Month.NOVEMBER -> stringResource(R.string.november)
     Month.DECEMBER -> stringResource(R.string.december)
 }
+
+@Composable
+fun getSchoolYearHalfName(schoolYearHalf: Boolean) = stringResource(if (schoolYearHalf) R.string.school_year_half_1 else R.string.school_year_half_2)

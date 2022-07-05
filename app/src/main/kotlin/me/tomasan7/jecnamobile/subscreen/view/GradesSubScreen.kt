@@ -4,9 +4,7 @@ import android.icu.text.Collator
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,10 +24,14 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.grade.Grade
 import me.tomasan7.jecnaapi.data.grade.Grades
+import me.tomasan7.jecnaapi.util.SchoolYear
+import me.tomasan7.jecnaapi.util.mapToIntRange
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.util.getGradeColor
+import me.tomasan7.jecnamobile.util.getSchoolYearHalfName
+import java.time.LocalDate
 import java.util.*
 
 @SubScreensNavGraph(start = true)
@@ -52,6 +54,19 @@ fun GradesSubScreen(
             Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
             Arrangement.spacedBy(20.dp)
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SchoolYearSelector(uiState.selectedSchoolYear) {
+                    viewModel.selectSchoolYear(it)
+                }
+                SchoolYearHalfSelector(uiState.selectedSchoolYearHalf) {
+                    viewModel.selectSchoolYearHalf(it)
+                }
+            }
+
+
             if (uiState.gradesPage != null)
                 uiState.gradesPage.subjectNames.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full })
                     .forEach { subjectName ->
@@ -60,6 +75,93 @@ fun GradesSubScreen(
 
             if (openDialog && dialogGrade != null)
                 GradeDialog(dialogGrade!!) { openDialog = false }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SchoolYearSelector(selectedSchoolYear: SchoolYear, onChange: (SchoolYear) -> Unit)
+{
+    val currentSchoolYear = remember { SchoolYear(LocalDate.now()) }
+
+    var menuShown by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        modifier = Modifier.width(160.dp),
+        expanded = menuShown,
+        onExpandedChange = { menuShown = !menuShown },
+    ) {
+        OutlinedTextField(
+            shape = RoundedCornerShape(10.dp),
+            readOnly = true,
+            value = selectedSchoolYear.toString(),
+            onValueChange = {},
+            label = { Text(stringResource(R.string.school_year)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
+        )
+
+        val past4SchoolYears = remember {
+            ((currentSchoolYear - 3)..currentSchoolYear).mapToIntRange { it.firstCalendarYear }.toList()
+                .map { SchoolYear(it) }
+        }
+
+        ExposedDropdownMenu(
+            expanded = menuShown,
+            onDismissRequest = { menuShown = false },
+        ) {
+            past4SchoolYears.forEach { schoolYear ->
+                DropdownMenuItem(
+                    text = { Text(schoolYear.toString()) },
+                    onClick = {
+                        menuShown = false
+                        onChange(schoolYear)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SchoolYearHalfSelector(selectedSchoolYearHalf: Boolean, onChange: (Boolean) -> Unit)
+{
+    var menuShown by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        modifier = Modifier.width(160.dp),
+        expanded = menuShown,
+        onExpandedChange = { menuShown = !menuShown },
+    ) {
+        OutlinedTextField(
+            shape = RoundedCornerShape(10.dp),
+            readOnly = true,
+            value = getSchoolYearHalfName(selectedSchoolYearHalf),
+            onValueChange = {},
+            label = { Text(stringResource(R.string.school_year_half)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
+        )
+
+        ExposedDropdownMenu(
+            expanded = menuShown,
+            onDismissRequest = { menuShown = false },
+        ) {
+            DropdownMenuItem(
+                text = { Text(getSchoolYearHalfName(true)) },
+                onClick = {
+                    menuShown = false
+                    onChange(true)
+                }
+            )
+
+            DropdownMenuItem(
+                text = { Text(getSchoolYearHalfName(false)) },
+                onClick = {
+                    menuShown = false
+                    onChange(false)
+                }
+            )
         }
     }
 }
@@ -167,22 +269,22 @@ private fun GradeDialogRow(value: String)
         tonalElevation = 10.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = value,
-                    modifier = Modifier.padding(15.dp).fillMaxWidth()
-                )
+        Text(
+            textAlign = TextAlign.Center,
+            text = value,
+            modifier = Modifier.padding(15.dp).fillMaxWidth()
+        )
     }
 }
 
 @Composable
 private fun getGradeWord(grade: Grade) = when (grade.value)
 {
-    0    -> stringResource(R.string.grade_word_0)
-    1    -> stringResource(R.string.grade_word_1)
-    2    -> stringResource(R.string.grade_word_2)
-    3    -> stringResource(R.string.grade_word_3)
-    4    -> stringResource(R.string.grade_word_4)
-    5    -> stringResource(R.string.grade_word_5)
+    0 -> stringResource(R.string.grade_word_0)
+    1 -> stringResource(R.string.grade_word_1)
+    2 -> stringResource(R.string.grade_word_2)
+    3 -> stringResource(R.string.grade_word_3)
+    4 -> stringResource(R.string.grade_word_4)
+    5 -> stringResource(R.string.grade_word_5)
     else -> throw IllegalArgumentException("Grade value must be between 0 and 5. (got ${grade.value})")
 }
