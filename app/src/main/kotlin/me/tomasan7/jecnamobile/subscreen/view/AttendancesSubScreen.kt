@@ -50,11 +50,11 @@ fun AttendancesSubScreen(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly) {
-                MonthSelector(uiState.selectedMonth) {
-                    viewModel.selectMonth(it)
-                }
                 SchoolYearSelector(uiState.selectedSchoolYear) {
                     viewModel.selectSchoolYear(it)
+                }
+                MonthSelector(uiState.selectedMonth) {
+                    viewModel.selectMonth(it)
                 }
             }
             if (uiState.attendancesPage != null)
