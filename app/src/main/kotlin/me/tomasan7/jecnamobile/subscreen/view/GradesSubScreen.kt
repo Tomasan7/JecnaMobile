@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -212,13 +211,8 @@ private fun GradeComposable(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.clickable(onClick = onClick)
+        modifier = modifier.size(gradeWidth, gradeHeight).background(getGradeColor(grade), RoundedCornerShape(7.dp)).clickable(onClick = onClick)
     ) {
-        Canvas(Modifier.width(gradeWidth).height(gradeHeight)) {
-            drawRoundRect(color = getGradeColor(grade),
-                          size = size,
-                          cornerRadius = CornerRadius(20f, 20f))
-        }
         Text(
             grade.valueChar().toString(),
             color = Color.Black,
