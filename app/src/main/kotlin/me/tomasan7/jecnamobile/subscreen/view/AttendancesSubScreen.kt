@@ -44,8 +44,10 @@ fun AttendancesSubScreen(
         onRefresh = { viewModel.loadAttendances() }
     ) {
         Column(
-            Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
-            Arrangement.spacedBy(20.dp)
+            modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -53,19 +55,23 @@ fun AttendancesSubScreen(
             ) {
                 SchoolYearSelector(
                     modifier = Modifier.width(160.dp),
-                    selectedSchoolYear = uiState.selectedSchoolYear
-                ) {
-                    viewModel.selectSchoolYear(it)
-                }
-                MonthSelector(modifier = Modifier.width(160.dp),
-                              selectedMonth = uiState.selectedMonth
-                ) {
-                    viewModel.selectMonth(it)
-                }
+                    selectedSchoolYear = uiState.selectedSchoolYear,
+                    onChange = { viewModel.selectSchoolYear(it) }
+                )
+
+                MonthSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedMonth = uiState.selectedMonth,
+                    onChange = { viewModel.selectMonth(it) }
+                )
             }
+
             if (uiState.attendancesPage != null)
                 uiState.attendancesPage.days.forEach { day ->
-                    AttendanceComposable(day to uiState.attendancesPage[day])
+                    AttendanceComposable(
+                        modifier = Modifier.fillMaxWidth(),
+                        attendanceRow = day to uiState.attendancesPage[day]
+                    )
                 }
         }
     }
@@ -78,36 +84,41 @@ private fun AttendanceComposable(
 )
 {
     Surface(
-        modifier,
+        modifier = modifier,
         tonalElevation = 2.dp,
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Column(Modifier.fillMaxSize().padding(20.dp)) {
-
+        Column(Modifier.fillMaxSize()
+                       .padding(20.dp)
+        ) {
             val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
             val dayDate = attendanceRow.first.format(datePattern)
 
-            Text(text = "$dayName $dayDate",
-                 style = MaterialTheme.typography.titleMedium,
-                 modifier = Modifier.fillMaxWidth())
+            Text(
+                text = "$dayName $dayDate",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+
             Spacer(Modifier.height(15.dp))
+
             FlowRow(
                 Modifier.fillMaxWidth(),
                 crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                mainAxisSpacing = 5.dp,
-                crossAxisSpacing = 5.dp
+                mainAxisSpacing = 7.dp,
+                crossAxisSpacing = 7.dp
             ) {
                 attendanceRow.second.forEach { attendance ->
                     Surface(
                         tonalElevation = 10.dp,
-                        shadowElevation = 4.dp,
+                        shadowElevation = 2.dp,
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Row(Modifier.padding(10.dp))
-                        {
-                            Text(attendance.toString())
-                        }
+                        Text(
+                            text = attendance.toString(),
+                            modifier = Modifier.padding(10.dp)
+                        )
                     }
                 }
             }
