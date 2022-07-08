@@ -16,11 +16,10 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.Attendance
-import me.tomasan7.jecnaapi.util.SchoolYear
-import me.tomasan7.jecnaapi.util.mapToIntRange
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
+import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getMonthName
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
@@ -49,8 +48,12 @@ fun AttendancesSubScreen(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly) {
-                SchoolYearSelector(uiState.selectedSchoolYear) {
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SchoolYearSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYear = uiState.selectedSchoolYear
+                ) {
                     viewModel.selectSchoolYear(it)
                 }
                 MonthSelector(uiState.selectedMonth) {
@@ -97,47 +100,6 @@ private fun MonthSelector(selectedMonth: Month, onChange: (Month) -> Unit)
                     }
                 )
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SchoolYearSelector(selectedSchoolYear: SchoolYear, onChange: (SchoolYear) -> Unit)
-{
-    val currentSchoolYear = remember { SchoolYear(LocalDate.now()) }
-
-    var menuShown by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        modifier = Modifier.width(160.dp),
-        expanded = menuShown,
-        onExpandedChange = { menuShown = !menuShown },
-    ) {
-        OutlinedTextField(
-            shape = RoundedCornerShape(10.dp),
-            readOnly = true,
-            value = selectedSchoolYear.toString(),
-            onValueChange = {},
-            label = { Text(stringResource(R.string.school_year)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
-        )
-
-        val past4SchoolYears = remember { ((currentSchoolYear - 3)..currentSchoolYear).mapToIntRange { it.firstCalendarYear }.toList().map { SchoolYear(it) } }
-
-        ExposedDropdownMenu(
-            expanded = menuShown,
-            onDismissRequest = { menuShown = false },
-        ) {
-            past4SchoolYears.forEach { schoolYear ->
-                    DropdownMenuItem(
-                        text = { Text(schoolYear.toString()) },
-                        onClick = {
-                            menuShown = false
-                            onChange(schoolYear)
-                        }
-                    )
-                }
         }
     }
 }

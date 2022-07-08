@@ -28,6 +28,7 @@ import me.tomasan7.jecnaapi.util.mapToIntRange
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
+import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.getSchoolYearHalfName
 import java.time.LocalDate
@@ -57,7 +58,10 @@ fun GradesSubScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                SchoolYearSelector(uiState.selectedSchoolYear) {
+                SchoolYearSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYear = uiState.selectedSchoolYear
+                ) {
                     viewModel.selectSchoolYear(it)
                 }
                 SchoolYearHalfSelector(uiState.selectedSchoolYearHalf) {
@@ -74,50 +78,6 @@ fun GradesSubScreen(
 
             if (openDialog && dialogGrade != null)
                 GradeDialog(dialogGrade!!) { openDialog = false }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SchoolYearSelector(selectedSchoolYear: SchoolYear, onChange: (SchoolYear) -> Unit)
-{
-    val currentSchoolYear = remember { SchoolYear(LocalDate.now()) }
-
-    var menuShown by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        modifier = Modifier.width(160.dp),
-        expanded = menuShown,
-        onExpandedChange = { menuShown = !menuShown },
-    ) {
-        OutlinedTextField(
-            shape = RoundedCornerShape(10.dp),
-            readOnly = true,
-            value = selectedSchoolYear.toString(),
-            onValueChange = {},
-            label = { Text(stringResource(R.string.school_year)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
-        )
-
-        val past4SchoolYears = remember {
-            ((currentSchoolYear - 3)..currentSchoolYear).mapToIntRange { it.firstCalendarYear }.toList()
-                .map { SchoolYear(it) }
-        }
-
-        ExposedDropdownMenu(
-            expanded = menuShown,
-            onDismissRequest = { menuShown = false },
-        ) {
-            past4SchoolYears.forEach { schoolYear ->
-                DropdownMenuItem(
-                    text = { Text(schoolYear.toString()) },
-                    onClick = {
-                        menuShown = false
-                        onChange(schoolYear)
-                    }
-                )
-            }
         }
     }
 }
