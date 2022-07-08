@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -29,7 +30,7 @@ import me.tomasan7.jecnamobile.ui.theme.md_theme_dark_background
 @Composable
 fun LoginScreen(
     navigator: DestinationsNavigator,
-    viewModel: LoginScreenViewModel = viewModel()
+    viewModel: LoginScreenViewModel = hiltViewModel()
 )
 {
     viewModel.login.observe(LocalLifecycleOwner.current) { event ->
