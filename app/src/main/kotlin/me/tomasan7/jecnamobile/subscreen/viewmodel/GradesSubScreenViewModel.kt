@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.repository.GradesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
+import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import java.time.Month
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class GradesSubScreenViewModel @Inject constructor(
         loadGrades()
     }
 
-    fun selectSchoolYearHalf(schoolYearHalf: Boolean)
+    fun selectSchoolYearHalf(schoolYearHalf: SchoolYearHalf)
     {
         uiState = uiState.copy(selectedSchoolYearHalf = schoolYearHalf)
         loadGrades()

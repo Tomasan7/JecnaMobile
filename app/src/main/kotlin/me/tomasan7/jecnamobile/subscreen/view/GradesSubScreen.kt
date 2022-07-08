@@ -4,7 +4,9 @@ import android.icu.text.Collator
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,15 +25,12 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.grade.Grade
 import me.tomasan7.jecnaapi.data.grade.Grades
-import me.tomasan7.jecnaapi.util.SchoolYear
-import me.tomasan7.jecnaapi.util.mapToIntRange
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
+import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getGradeColor
-import me.tomasan7.jecnamobile.util.getSchoolYearHalfName
-import java.time.LocalDate
 import java.util.*
 
 @SubScreensNavGraph(start = true)
@@ -64,7 +63,10 @@ fun GradesSubScreen(
                 ) {
                     viewModel.selectSchoolYear(it)
                 }
-                SchoolYearHalfSelector(uiState.selectedSchoolYearHalf) {
+                SchoolYearHalfSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYearHalf = uiState.selectedSchoolYearHalf
+                ) {
                     viewModel.selectSchoolYearHalf(it)
                 }
             }
@@ -78,49 +80,6 @@ fun GradesSubScreen(
 
             if (openDialog && dialogGrade != null)
                 GradeDialog(dialogGrade!!) { openDialog = false }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SchoolYearHalfSelector(selectedSchoolYearHalf: Boolean, onChange: (Boolean) -> Unit)
-{
-    var menuShown by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        modifier = Modifier.width(160.dp),
-        expanded = menuShown,
-        onExpandedChange = { menuShown = !menuShown },
-    ) {
-        OutlinedTextField(
-            shape = RoundedCornerShape(10.dp),
-            readOnly = true,
-            value = getSchoolYearHalfName(selectedSchoolYearHalf),
-            onValueChange = {},
-            label = { Text(stringResource(R.string.school_year_half)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
-        )
-
-        ExposedDropdownMenu(
-            expanded = menuShown,
-            onDismissRequest = { menuShown = false },
-        ) {
-            DropdownMenuItem(
-                text = { Text(getSchoolYearHalfName(true)) },
-                onClick = {
-                    menuShown = false
-                    onChange(true)
-                }
-            )
-
-            DropdownMenuItem(
-                text = { Text(getSchoolYearHalfName(false)) },
-                onClick = {
-                    menuShown = false
-                    onChange(false)
-                }
-            )
         }
     }
 }

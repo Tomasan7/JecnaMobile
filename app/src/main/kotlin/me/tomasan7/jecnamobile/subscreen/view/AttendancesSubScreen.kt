@@ -19,6 +19,7 @@ import me.tomasan7.jecnaapi.data.Attendance
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
+import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getMonthName
 import me.tomasan7.jecnamobile.util.getWeekDayName
@@ -56,7 +57,9 @@ fun AttendancesSubScreen(
                 ) {
                     viewModel.selectSchoolYear(it)
                 }
-                MonthSelector(uiState.selectedMonth) {
+                MonthSelector(modifier = Modifier.width(160.dp),
+                              selectedMonth = uiState.selectedMonth
+                ) {
                     viewModel.selectMonth(it)
                 }
             }
@@ -64,42 +67,6 @@ fun AttendancesSubScreen(
                 uiState.attendancesPage.days.forEach { day ->
                     AttendanceComposable(day to uiState.attendancesPage[day])
                 }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MonthSelector(selectedMonth: Month, onChange: (Month) -> Unit)
-{
-    var menuShown by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        modifier = Modifier.width(160.dp),
-        expanded = menuShown,
-        onExpandedChange = { menuShown = !menuShown },
-    ) {
-        OutlinedTextField(
-            shape = RoundedCornerShape(10.dp),
-            readOnly = true,
-            value = getMonthName(selectedMonth),
-            onValueChange = {},
-            label = { Text(stringResource(R.string.month)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuShown) }
-        )
-        ExposedDropdownMenu(
-            expanded = menuShown,
-            onDismissRequest = { menuShown = false },
-        ) {
-            Month.values().forEach { month ->
-                DropdownMenuItem(
-                    text = { Text(getMonthName(month)) },
-                    onClick = {
-                        menuShown = false
-                        onChange(month)
-                    }
-                )
-            }
         }
     }
 }
