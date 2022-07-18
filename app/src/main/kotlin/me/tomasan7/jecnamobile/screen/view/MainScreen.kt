@@ -8,8 +8,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,6 +25,7 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.AttendancesSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.Destination
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
 
@@ -45,7 +44,7 @@ fun MainScreen()
     val scope = rememberCoroutineScope()
     val contentNavController = rememberNavController()
 
-    var selectedItem by remember { mutableStateOf(destinationItems[0]) }
+    var selectedItem by rememberMutableStateOf(destinationItems[0])
 
     contentNavController.addOnDestinationChangedListener { _, destination,_ ->
         val newSelectedItem = destinationItems.find { it.destination.route == destination.route }

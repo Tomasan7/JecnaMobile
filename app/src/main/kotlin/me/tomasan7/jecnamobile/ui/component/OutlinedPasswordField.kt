@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @Composable
 fun OutlinedPasswordField(
@@ -35,7 +36,7 @@ fun OutlinedPasswordField(
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors()
 )
 {
-    var isVisible by remember { mutableStateOf(false) }
+    var isVisible by rememberMutableStateOf(false)
 
     val trailingIcon = @Composable {
         IconButton({ isVisible = !isVisible }) {

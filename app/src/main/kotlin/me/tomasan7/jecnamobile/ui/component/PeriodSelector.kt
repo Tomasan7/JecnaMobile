@@ -4,9 +4,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,7 +18,7 @@ fun <T> PeriodSelector(
     onChange: (T) -> Unit
 )
 {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberMutableStateOf(false)
 
     ExposedDropdownMenuBox(
         modifier = modifier,
