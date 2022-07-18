@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -16,15 +15,12 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.Attendance
-import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
-import me.tomasan7.jecnamobile.util.getMonthName
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
-import java.time.Month
 import java.time.format.DateTimeFormatter
 
 private val datePattern = DateTimeFormatter.ofPattern("d.M.")
