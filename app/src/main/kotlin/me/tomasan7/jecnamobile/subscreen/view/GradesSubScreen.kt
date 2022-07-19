@@ -10,8 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onSizeChanged
@@ -39,7 +37,6 @@ import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import java.util.*
 import kotlin.math.roundToInt
 
 @SubScreensNavGraph(start = true)
@@ -117,9 +114,12 @@ fun GradesSubScreen(
 }
 
 @Composable
-private fun Subject(
-    subject: Subject,
-    onGradeClick: (Grade) -> Unit = {}
+private fun Container(
+    title: String,
+    rightColumnVisible: Boolean = true,
+    rightColumnContent: @Composable ColumnScope.() -> Unit = {},
+    modifier: Modifier,
+    content: @Composable () -> Unit = {}
 )
 {
     var rowHeightValue by remember { mutableStateOf(0) }
@@ -140,55 +140,72 @@ private fun Subject(
         ) {
             Column(Modifier.weight(1f, true)) {
                 Text(
-                    text = subject.name.full,
+                    text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Spacer(Modifier.height(15.dp))
 
-                if (subject.grades.isEmpty())
-                    Text(stringResource(R.string.no_grades))
-                else
-                {
-                    Column {
-                        subject.grades.subjectParts.forEach { subjectPart ->
-                            SubjectPart(subjectPart, subject.grades[subjectPart]!!, onGradeClick)
-                        }
-                    }
-                }
+                content()
             }
 
-            if (!subject.grades.isEmpty())
+            if (!rightColumnVisible)
+                return@Row
+
+            VerticalDivider(
+                modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+            )
+
+            Column(
+                modifier = Modifier.rowHeight(),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                content = rightColumnContent
+            )
+        }
+    }
+}
+
+@Composable
+private fun Subject(
+    subject: Subject,
+    onGradeClick: (Grade) -> Unit = {}
+)
+{
+    Container(
+        modifier = Modifier.fillMaxWidth(),
+        title = subject.name.full,
+        rightColumnVisible = !subject.grades.isEmpty(),
+        rightColumnContent = {
+            val average = remember { subject.grades.average() }
+
+            if (subject.finalGrade == null)
+                GradeAverageComposable(average)
+            else
             {
-                VerticalDivider(
-                    modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
-                    thickness = 2.dp,
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-                )
+                var showAverage by rememberMutableStateOf(false)
 
-                Column(
-                    modifier = Modifier.rowHeight(),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    val average = remember { subject.grades.average() }
-
-                    if (subject.finalGrade == null)
-                        GradeAverageComposable(average)
-                    else
-                    {
-                        var showAverage by rememberMutableStateOf(false)
-
-                        if (!showAverage)
-                            GradeComposable(
-                                grade = Grade(subject.finalGrade!!.value, false),
-                                onClick = { showAverage = true }
-                            )
-                        else
-                            GradeAverageComposable(
-                                value = average,
-                                onClick = { showAverage = false }
-                            )
-                    }
+                if (!showAverage)
+                    GradeComposable(
+                        grade = Grade(subject.finalGrade!!.value, false),
+                        onClick = { showAverage = true }
+                    )
+                else
+                    GradeAverageComposable(
+                        value = average,
+                        onClick = { showAverage = false }
+                    )
+            }
+        }
+    ) {
+        if (subject.grades.isEmpty())
+            Text(stringResource(R.string.no_grades))
+        else
+        {
+            Column {
+                subject.grades.subjectParts.forEach { subjectPart ->
+                    SubjectPart(subjectPart, subject.grades[subjectPart]!!, onGradeClick)
                 }
             }
         }
@@ -413,60 +430,27 @@ private fun GradeDialogRow(value: String)
 @Composable
 private fun Behaviour(behaviour: Behaviour)
 {
-    var rowHeightValue by remember { mutableStateOf(0) }
-
-    /* This is used as a workaround for not working Intrinsic Measurements in Flow layouts. */
-    /* https://github.com/google/accompanist/issues/1236 */
-    @Composable
-    fun Modifier.rowHeight() = height(with(LocalDensity.current) { rowHeightValue.toDp() })
-
-    Surface(
+    Container(
         modifier = Modifier.fillMaxWidth(),
-        tonalElevation = 2.dp,
-        shadowElevation = 4.dp,
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Row(Modifier.padding(20.dp)
-                    .onSizeChanged { rowHeightValue = it.height }
-        ) {
-            Column(Modifier.weight(1f, true)) {
-                Text(
-                    text = Behaviour.SUBJECT_NAME,
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(Modifier.height(15.dp))
-
-                if (behaviour.notifications.isEmpty())
-                    Text(stringResource(R.string.no_grades))
-                else
-                {
-                    FlowRow(
-                        crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                        mainAxisSpacing = 5.dp,
-                        crossAxisSpacing = 5.dp
-                    ) {
-                        behaviour.notifications.forEach {
-                            BehaviourNotification(it)
-                        }
-                    }
-                }
-            }
-
-            VerticalDivider(
-                modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
-                thickness = 2.dp,
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+        title = Behaviour.SUBJECT_NAME,
+        rightColumnContent = {
+            GradeComposable(
+                grade = Grade(behaviour.finalGrade.value, false)
             )
-
-            Column(
-                modifier = Modifier.rowHeight(),
-                verticalArrangement = Arrangement.SpaceEvenly
+        }
+    ) {
+        if (behaviour.notifications.isEmpty())
+            Text(stringResource(R.string.no_grades))
+        else
+        {
+            FlowRow(
+                crossAxisAlignment = FlowCrossAxisAlignment.Center,
+                mainAxisSpacing = 5.dp,
+                crossAxisSpacing = 5.dp
             ) {
-
-                GradeComposable(
-                    grade = Grade(behaviour.finalGrade.value, false)
-                )
+                behaviour.notifications.forEach {
+                    BehaviourNotification(it)
+                }
             }
         }
     }
