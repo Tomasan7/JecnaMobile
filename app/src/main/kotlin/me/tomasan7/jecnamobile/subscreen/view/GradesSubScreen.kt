@@ -1,16 +1,21 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import android.icu.text.Collator
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,15 +28,19 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.grade.Grade
-import me.tomasan7.jecnaapi.data.grade.Grades
+import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.ui.component.VerticalDivider
 import me.tomasan7.jecnamobile.util.getGradeColor
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 @SubScreensNavGraph(start = true)
 @Destination
@@ -41,8 +50,20 @@ fun GradesSubScreen(
 )
 {
     val uiState = viewModel.uiState
-    var openDialog by remember { mutableStateOf(false) }
-    var dialogGrade by remember { mutableStateOf<Grade?>(null) }
+    var dialogOpened by rememberMutableStateOf(false)
+    var dialogGrade by rememberMutableStateOf<Grade?>(null)
+
+    fun showDialog(grade: Grade)
+    {
+        dialogOpened = true
+        dialogGrade = grade
+    }
+
+    fun hideDialog()
+    {
+        dialogOpened = false
+        dialogGrade = null
+    }
 
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
@@ -50,8 +71,10 @@ fun GradesSubScreen(
         onRefresh = { viewModel.loadGrades() }
     ) {
         Column(
-            Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
-            Arrangement.spacedBy(20.dp)
+            modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -59,78 +82,215 @@ fun GradesSubScreen(
             ) {
                 SchoolYearSelector(
                     modifier = Modifier.width(160.dp),
-                    selectedSchoolYear = uiState.selectedSchoolYear
-                ) {
-                    viewModel.selectSchoolYear(it)
-                }
+                    selectedSchoolYear = uiState.selectedSchoolYear,
+                    onChange = { viewModel.selectSchoolYear(it) }
+                )
                 SchoolYearHalfSelector(
                     modifier = Modifier.width(160.dp),
-                    selectedSchoolYearHalf = uiState.selectedSchoolYearHalf
-                ) {
-                    viewModel.selectSchoolYearHalf(it)
-                }
+                    selectedSchoolYearHalf = uiState.selectedSchoolYearHalf,
+                    onChange = { viewModel.selectSchoolYearHalf(it) }
+                )
             }
 
-
             if (uiState.gradesPage != null)
-                uiState.gradesPage.subjectNames.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full })
-                    .forEach { subjectName ->
-                        Subject(subjectName.full, uiState.gradesPage[subjectName]!!.grades, { openDialog = true; dialogGrade = it }, Modifier.fillMaxWidth())
+            {
+                /* subjectNamesSorted is not null, because it is only null when gradesPage is null. */
+                uiState.subjectNamesSorted!!.forEach { subjectName ->
+                    val subject = uiState.gradesPage[subjectName]!!
+                    /* Using subject as a key, so once there's a different subject (ex. user changes period) the composables are recreated. (not just recomposed) */
+                    key(subject) {
+                        Subject(
+                            subject = subject,
+                            onGradeClick = { showDialog(it) }
+                        )
                     }
+                }
 
-            if (openDialog && dialogGrade != null)
-                GradeDialog(dialogGrade!!) { openDialog = false }
+                Behaviour(uiState.gradesPage.behaviour)
+            }
+
+            /* Show the grade dialog. */
+            if (dialogOpened && dialogGrade != null)
+                GradeDialog(dialogGrade!!, ::hideDialog)
         }
     }
 }
 
 @Composable
 private fun Subject(
-    name: String,
-    grades: Grades,
-    onGradeClick: (Grade) -> Unit,
-    modifier: Modifier = Modifier
+    subject: Subject,
+    onGradeClick: (Grade) -> Unit = {}
 )
 {
+    var rowHeightValue by remember { mutableStateOf(0) }
+
+    /* This is used as a workaround for not working Intrinsic Measurements in Flow layouts. */
+    /* https://github.com/google/accompanist/issues/1236 */
+    @Composable
+    fun Modifier.rowHeight() = height(with(LocalDensity.current) { rowHeightValue.toDp() })
+
     Surface(
-        modifier,
+        modifier = Modifier.fillMaxWidth(),
         tonalElevation = 2.dp,
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Column(Modifier.fillMaxSize().padding(20.dp)) {
-            Text(text = name,
-                 style = MaterialTheme.typography.titleMedium,
-                 modifier = Modifier.fillMaxWidth())
-            Spacer(Modifier.height(15.dp))
-            FlowRow(
-                Modifier.fillMaxWidth(),
-                crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                mainAxisSpacing = 5.dp,
-                crossAxisSpacing = 5.dp
-            ) {
-                for (subjectPart in grades.subjectParts)
-                    grades[subjectPart]!!.forEach {
-                        GradeComposable(it, onClick = { onGradeClick(it) })
+        Row(Modifier.padding(20.dp)
+                    .onSizeChanged { rowHeightValue = it.height }
+        ) {
+            Column(Modifier.weight(1f, true)) {
+                Text(
+                    text = subject.name.full,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(15.dp))
+
+                if (subject.grades.isEmpty())
+                    Text(stringResource(R.string.no_grades))
+                else
+                {
+                    Column {
+                        subject.grades.subjectParts.forEach { subjectPart ->
+                            SubjectPart(subjectPart, subject.grades[subjectPart]!!, onGradeClick)
+                        }
                     }
+                }
+            }
+
+            if (!subject.grades.isEmpty())
+            {
+                VerticalDivider(
+                    modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                )
+
+                Column(
+                    modifier = Modifier.rowHeight(),
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    val average = remember { subject.grades.average() }
+
+                    if (subject.finalGrade == null)
+                        GradeAverageComposable(average)
+                    else
+                    {
+                        var showAverage by rememberMutableStateOf(false)
+
+                        if (!showAverage)
+                            GradeComposable(
+                                grade = Grade(subject.finalGrade!!.value, false),
+                                onClick = { showAverage = true }
+                            )
+                        else
+                            GradeAverageComposable(
+                                value = average,
+                                onClick = { showAverage = false }
+                            )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun GradeComposable(
-    grade: Grade,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+private fun SubjectPart(
+    subjectPart: String? = null,
+    grades: List<Grade>,
+    onGradeClick: (Grade) -> Unit = {}
 )
 {
-    val gradeWidth = 40.dp
-    val gradeHeight = if (grade.small) 25.dp else gradeWidth
+    if (subjectPart != null)
+        Text("$subjectPart:", Modifier.padding(vertical = 10.dp))
+
+    FlowRow(
+        crossAxisAlignment = FlowCrossAxisAlignment.Center,
+        mainAxisSpacing = 5.dp,
+        crossAxisSpacing = 5.dp
+    ) {
+        grades.forEach {
+            GradeComposable(it, onClick = { onGradeClick(it) })
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GradeComposable(
+    grade: Grade,
+    onClick: () -> Unit
+)
+{
+    val gradeHeight = if (grade.small) Constants.gradeSmallHeight else Constants.gradeWidth
+    val gradeColor = remember { getGradeColor(grade) }
+
+    /* Using Surface here for dropping th shadow. */
+    Surface(
+        modifier = Modifier.size(Constants.gradeWidth, gradeHeight),
+        onClick = onClick,
+        color = gradeColor,
+        shape = Constants.gradeShape,
+        shadowElevation = Constants.gradeShadowElevation
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = grade.valueChar().toString(),
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun GradeComposable(grade: Grade)
+{
+    val gradeHeight = if (grade.small) Constants.gradeSmallHeight else Constants.gradeWidth
+    val gradeColor = remember { getGradeColor(grade) }
+
+    /* Using Surface here for dropping th shadow. */
+    Surface(
+        modifier = Modifier.size(Constants.gradeWidth, gradeHeight),
+        color = gradeColor,
+        shape = Constants.gradeShape,
+        shadowElevation = Constants.gradeShadowElevation
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = grade.valueChar().toString(),
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        }
+    }
+}
+
+/*@Composable
+private fun GradeComposable(
+    grade: Grade,
+    onClick: () -> Unit
+)
+{
+    val gradeHeight = if (grade.small) Constants.gradeSmallHeight else Constants.gradeWidth
+    val gradeColor = remember { getGradeColor(grade) }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.size(gradeWidth, gradeHeight).background(getGradeColor(grade), RoundedCornerShape(7.dp)).clickable(onClick = onClick)
+        modifier = Modifier
+                .size(Constants.gradeWidth, gradeHeight)
+                .clip(RoundedCornerShape(7.dp))
+                .background(gradeColor)
+                .clickable(onClick = onClick)
     ) {
         Text(
             grade.valueChar().toString(),
@@ -138,6 +298,57 @@ private fun GradeComposable(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
+    }
+}*/
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GradeAverageComposable(
+    value: Float,
+    onClick: () -> Unit
+)
+{
+    val valueString = remember {
+        Constants.gradeAverageDecimalFormat.format(value)
+    }
+
+    Surface(
+        modifier = Modifier.size(Constants.gradeWidth),
+        border = BorderStroke(1.dp, getGradeColor(value.roundToInt())),
+        tonalElevation = 10.dp,
+        shape = Constants.gradeShape,
+        shadowElevation = Constants.gradeShadowElevation,
+        onClick = onClick
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = valueString,
+                fontSize = 16.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun GradeAverageComposable(value: Float)
+{
+    val valueString = remember {
+        Constants.gradeAverageDecimalFormat.format(value)
+    }
+
+    Surface(
+        modifier = Modifier.size(Constants.gradeWidth),
+        border = BorderStroke(1.dp, getGradeColor(value.roundToInt())),
+        tonalElevation = 10.dp,
+        shape = Constants.gradeShape,
+        shadowElevation = Constants.gradeShadowElevation
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = valueString,
+                fontSize = 16.sp
+            )
+        }
     }
 }
 
@@ -155,9 +366,17 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                 Surface(
                     modifier = Modifier.fillMaxWidth().height(50.dp),
                     color = getGradeColor(grade),
-                    shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)) {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(getGradeWord(grade), color = Color.Black, fontSize = 20.sp)
+                    shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = getGradeWord(grade),
+                            color = Color.Black,
+                            fontSize = 20.sp
+                        )
                     }
                 }
                 Column(
@@ -165,6 +384,7 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     GradeDialogRow(if (grade.small) stringResource(R.string.grade_weight_small) else stringResource(R.string.grade_weight_big))
+
                     if (grade.description != null)
                         GradeDialogRow(grade.description!!)
                     if (grade.teacher != null)
@@ -191,13 +411,118 @@ private fun GradeDialogRow(value: String)
 }
 
 @Composable
+private fun Behaviour(behaviour: Behaviour)
+{
+    var rowHeightValue by remember { mutableStateOf(0) }
+
+    /* This is used as a workaround for not working Intrinsic Measurements in Flow layouts. */
+    /* https://github.com/google/accompanist/issues/1236 */
+    @Composable
+    fun Modifier.rowHeight() = height(with(LocalDensity.current) { rowHeightValue.toDp() })
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        tonalElevation = 2.dp,
+        shadowElevation = 4.dp,
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Row(Modifier.padding(20.dp)
+                    .onSizeChanged { rowHeightValue = it.height }
+        ) {
+            Column(Modifier.weight(1f, true)) {
+                Text(
+                    text = Behaviour.SUBJECT_NAME,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(15.dp))
+
+                if (behaviour.notifications.isEmpty())
+                    Text(stringResource(R.string.no_grades))
+                else
+                {
+                    FlowRow(
+                        crossAxisAlignment = FlowCrossAxisAlignment.Center,
+                        mainAxisSpacing = 5.dp,
+                        crossAxisSpacing = 5.dp
+                    ) {
+                        behaviour.notifications.forEach {
+                            BehaviourNotification(it)
+                        }
+                    }
+                }
+            }
+
+            VerticalDivider(
+                modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+            )
+
+            Column(
+                modifier = Modifier.rowHeight(),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+                GradeComposable(
+                    grade = Grade(behaviour.finalGrade.value, false)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
+{
+    Surface(
+        tonalElevation = 10.dp,
+        shadowElevation = 2.dp,
+        shape = RoundedCornerShape(7.dp)
+    ) {
+        Row(Modifier.padding(5.dp)) {
+            Text(
+                modifier = Modifier.padding(end = 5.dp),
+                text = behaviourNotification.message
+            )
+            when (behaviourNotification.type)
+            {
+                Behaviour.NotificationType.GOOD ->
+                    Image(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(getGradeColor(1))
+                    )
+                Behaviour.NotificationType.BAD  ->
+                    Image(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(getGradeColor(5))
+                    )
+            }
+        }
+    }
+}
+
+@Composable
 private fun getGradeWord(grade: Grade) = when (grade.value)
 {
-    0 -> stringResource(R.string.grade_word_0)
-    1 -> stringResource(R.string.grade_word_1)
-    2 -> stringResource(R.string.grade_word_2)
-    3 -> stringResource(R.string.grade_word_3)
-    4 -> stringResource(R.string.grade_word_4)
-    5 -> stringResource(R.string.grade_word_5)
+    0    -> stringResource(R.string.grade_word_0)
+    1    -> stringResource(R.string.grade_word_1)
+    2    -> stringResource(R.string.grade_word_2)
+    3    -> stringResource(R.string.grade_word_3)
+    4    -> stringResource(R.string.grade_word_4)
+    5    -> stringResource(R.string.grade_word_5)
     else -> throw IllegalArgumentException("Grade value must be between 0 and 5. (got ${grade.value})")
+}
+
+private object Constants
+{
+    val gradeWidth = 40.dp
+    val gradeSmallHeight = 25.dp
+    val gradeAverageDecimalFormat = DecimalFormat("#.##").apply {
+        roundingMode = RoundingMode.HALF_UP
+    }
+    val gradeShadowElevation = 2.dp
+    val gradeShape = RoundedCornerShape(7.dp)
 }
