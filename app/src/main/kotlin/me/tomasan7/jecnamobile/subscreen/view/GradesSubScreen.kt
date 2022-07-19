@@ -37,6 +37,7 @@ import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 @SubScreensNavGraph(start = true)
@@ -400,8 +401,8 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    GradeDialogRow(if (grade.small) stringResource(R.string.grade_weight_small) else stringResource(R.string.grade_weight_big))
-
+                    if (grade.receiveDate != null)
+                        GradeDialogRow(grade.receiveDate!!.format(Constants.gradeDateFormatter)!!)
                     if (grade.description != null)
                         GradeDialogRow(grade.description!!)
                     if (grade.teacher != null)
@@ -507,6 +508,7 @@ private object Constants
     val gradeAverageDecimalFormat = DecimalFormat("#.##").apply {
         roundingMode = RoundingMode.HALF_UP
     }
+    val gradeDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
     val gradeShadowElevation = 2.dp
     val gradeShape = RoundedCornerShape(7.dp)
 }
