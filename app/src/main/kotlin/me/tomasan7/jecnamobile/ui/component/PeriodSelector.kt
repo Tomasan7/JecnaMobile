@@ -9,11 +9,11 @@ import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> PeriodSelector(
+fun <T> PeriodSelectorNullable(
     label: String,
     options: List<T>,
-    optionStringMap: @Composable (T) -> String = { it.toString() },
-    selectedValue: T = options[0],
+    selectedValue: T? = options[0],
+    optionStringMap: @Composable (T?) -> String = { it.toString() },
     modifier: Modifier = Modifier,
     onChange: (T) -> Unit
 )
@@ -47,3 +47,20 @@ fun <T> PeriodSelector(
         }
     }
 }
+
+@Composable
+fun <T> PeriodSelector(
+    label: String,
+    options: List<T>,
+    selectedValue: T = options[0],
+    optionStringMap: @Composable (T) -> String = { it.toString() },
+    modifier: Modifier = Modifier,
+    onChange: (T) -> Unit
+) = PeriodSelectorNullable(
+    label = label,
+    options = options,
+    selectedValue = selectedValue,
+    optionStringMap = { optionStringMap(it!!) },
+    modifier = modifier,
+    onChange = onChange
+)
