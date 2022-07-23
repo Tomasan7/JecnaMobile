@@ -23,6 +23,8 @@
     <string name="grade_description">Popis</string>
     <string name="grade_teacher">Učitel</string>
 
+    <string name="no_grades">Zatím nemáš žádné známky</string>
+
     <string name="average">Průměr</string>
 
     <string name="monday">Pondělí</string>
@@ -52,5 +54,5 @@
     <string name="school_year_half_1">1.</string>
     <string name="school_year_half_2">2.</string>
 
-    <string name="no_grades">Zatím nemáš žádné známky</string>
+    <string name="timetable_period">Období</string>
 </resources>

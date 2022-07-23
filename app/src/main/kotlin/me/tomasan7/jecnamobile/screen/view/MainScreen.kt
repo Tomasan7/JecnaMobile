@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
@@ -25,13 +26,15 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.AttendancesSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.Destination
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
+import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
 
 private val destinationItems = listOf(
     DrawerItem(Icons.Default.Star, "Známky", GradesSubScreenDestination),
-    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesSubScreenDestination)
+    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesSubScreenDestination),
+    DrawerItem(Icons.Default.TableChart, "Rozvrh", TimetableSubScreenDestination)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
