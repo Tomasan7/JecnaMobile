@@ -11,11 +11,8 @@ import java.util.*
 data class GradesSubScreenState(
     val loading: Boolean = true,
     val gradesPage: GradesPage? = null,
-    val selectedSchoolYear: SchoolYear = SchoolYear(LocalDate.now()),
-    val selectedSchoolYearHalf: SchoolYearHalf = if (LocalDate.now().month !in Month.FEBRUARY..Month.AUGUST)
-        SchoolYearHalf.FIRST
-    else
-        SchoolYearHalf.SECOND
+    val selectedSchoolYear: SchoolYear = SchoolYear.current(),
+    val selectedSchoolYearHalf: SchoolYearHalf = SchoolYearHalf.current()
 )
 {
     /**

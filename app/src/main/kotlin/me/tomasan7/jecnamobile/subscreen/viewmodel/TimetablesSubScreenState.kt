@@ -7,7 +7,7 @@ import java.time.LocalDate
 data class TimetableSubScreenState(
     val loading: Boolean = true,
     val timetablePage: TimetablePage? = null,
-    val selectedSchoolYear: SchoolYear = SchoolYear(LocalDate.now()),
+    val selectedSchoolYear: SchoolYear = SchoolYear.current(),
     val selectedPeriod: TimetablePage.PeriodOption? = run {
         timetablePage ?: return@run null
         timetablePage.periodOptions.find { it.selected }

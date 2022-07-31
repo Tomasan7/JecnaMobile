@@ -9,5 +9,5 @@ data class AttendancesSubScreenState(
     val loading: Boolean = true,
     val attendancesPage: AttendancesPage? = null,
     val selectedMonth: Month = LocalDate.now().month,
-    val selectedSchoolYear: SchoolYear = SchoolYear(LocalDate.now())
+    val selectedSchoolYear: SchoolYear = SchoolYear.current()
 )

@@ -136,7 +136,7 @@ private fun TimetablePeriodSelector(
         modifier = modifier,
         label = stringResource(R.string.timetable_period),
         options = periodOptions ?: emptyList(),
-        optionStringMap = { it?.value ?: "" },
+        optionStringMap = { it?.toString() ?: "" },
         selectedValue = selectedOption,
         onChange = onChange
     )
