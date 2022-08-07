@@ -48,7 +48,12 @@ class TimetableSubScreenViewModel @Inject constructor(
             else
                 timetableRepository.queryTimetablePage(uiState.selectedSchoolYear, uiState.selectedPeriod!!)
 
-            uiState = uiState.copy(loading = false, timetablePage = timetablePage, selectedPeriod = timetablePage.periodOptions.find { it.selected })
+            uiState = uiState.copy(
+                loading = false,
+                timetablePage = timetablePage,
+                selectedPeriod = timetablePage.periodOptions.find { it.selected },
+                mostLessonsInLessonSpotInEachDay = TimetableSubScreenState(timetablePage = timetablePage).mostLessonsInLessonSpotInEachDay
+            )
         }
     }
 }

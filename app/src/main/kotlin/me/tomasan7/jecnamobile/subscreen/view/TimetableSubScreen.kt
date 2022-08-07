@@ -27,7 +27,6 @@ import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableSubScreenViewModel
-import me.tomasan7.jecnamobile.ui.component.PeriodSelector
 import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.manipulate
@@ -63,6 +62,7 @@ fun TimetableSubScreen(
                 SchoolYearSelector(
                     modifier = Modifier.width(160.dp),
                     selectedSchoolYear = uiState.selectedSchoolYear,
+                    showYearAhead = true,
                     onChange = { viewModel.selectSchoolYear(it) }
                 )
 
@@ -102,9 +102,13 @@ fun TimetableSubScreen(
                     }
 
                     uiState.timetablePage.daysSorted.forEach { day ->
-                        Row {
+                        val modifier = if (uiState.mostLessonsInLessonSpotInEachDay!![day]!! <= 2)
+                            Modifier.height(100.dp)
+                        else
+                            Modifier.height(IntrinsicSize.Min)
+                        Row(modifier) {
                             Spacer(Modifier.width(16.dp))
-                            DayLabel(day)
+                            DayLabel(day, Modifier.width(30.dp).fillMaxHeight())
                             Spacer(Modifier.width(5.dp))
                             uiState.timetablePage.getLessonsForDay(day).forEachIndexed { i, lessonSpot ->
                                 val lessonPeriod = uiState.timetablePage.lessonPeriods[i]
@@ -176,10 +180,22 @@ fun TimetableLessonSpot(
     current: Boolean = false
 )
 {
-    Column(Modifier.size(100.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    var lessonSpotModifier = Modifier.width(100.dp)
+
+    if (lessonSpot == null || lessonSpot.size <= 2)
+        lessonSpotModifier = lessonSpotModifier.fillMaxHeight()
+
+    Column(lessonSpotModifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         lessonSpot?.forEach { lesson ->
+            /* If there is < 2 lessons, they are stretched to  */
+            var lessonModifier = Modifier.fillMaxWidth()
+            lessonModifier = if (lessonSpot.size <= 2)
+                lessonModifier.weight(1f)
+            else
+                lessonModifier.height(50.dp)
+
             TimetableLesson(
-                modifier = Modifier.fillMaxWidth().weight(1F),
+                modifier = lessonModifier,
                 lesson = lesson,
                 current = current
             )
@@ -214,10 +230,13 @@ private fun TimetableLesson(
 }
 
 @Composable
-private fun DayLabel(day: String)
+private fun DayLabel(
+    day: String,
+    modifier: Modifier = Modifier
+)
 {
     Surface(
-        modifier = Modifier.size(width = 30.dp, height = 100.dp),
+        modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp).manipulate(1.5f),
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(5.dp)

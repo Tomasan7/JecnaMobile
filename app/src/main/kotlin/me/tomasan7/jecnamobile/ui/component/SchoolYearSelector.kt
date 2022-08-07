@@ -11,13 +11,15 @@ import java.time.LocalDate
 fun SchoolYearSelector(
     selectedSchoolYear: SchoolYear,
     modifier: Modifier = Modifier,
+    showYearAhead: Boolean = false,
     onChange: (SchoolYear) -> Unit
 )
 {
-    /* List of four past SchoolYears including the current one. */
+    /* List of four past SchoolYears including the current one. (optionally the following one) */
     val past4SchoolYears = remember {
         val currentSchoolYear = SchoolYear(LocalDate.now())
-        ((currentSchoolYear - 3)..currentSchoolYear).toList()
+        val rangeEnd = if (showYearAhead) currentSchoolYear + 1 else currentSchoolYear
+        ((currentSchoolYear - 3)..rangeEnd).toList()
     }
 
     PeriodSelector(
