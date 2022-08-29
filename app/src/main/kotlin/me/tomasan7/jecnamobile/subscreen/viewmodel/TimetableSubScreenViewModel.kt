@@ -1,13 +1,18 @@
 package me.tomasan7.jecnamobile.subscreen.viewmodel
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
@@ -15,7 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimetableSubScreenViewModel @Inject constructor(
-    private val timetableRepository: TimetableRepository
+    private val timetableRepository: TimetableRepository,
+    @SuppressLint("StaticFieldLeak") @ApplicationContext
+    private val appContext: Context
 ) : ViewModel()
 {
     var uiState by mutableStateOf(TimetableSubScreenState())
@@ -43,10 +50,21 @@ class TimetableSubScreenViewModel @Inject constructor(
         uiState = uiState.copy(loading = true)
 
         viewModelScope.launch {
-            val timetablePage = if (uiState.selectedPeriod == null)
-                timetableRepository.queryTimetablePage()
-            else
-                timetableRepository.queryTimetablePage(uiState.selectedSchoolYear, uiState.selectedPeriod!!)
+            val timetablePage = try
+            {
+                if (uiState.selectedPeriod == null)
+                    timetableRepository.queryTimetablePage()
+                else
+                    timetableRepository.queryTimetablePage(uiState.selectedSchoolYear, uiState.selectedPeriod!!)
+            }
+            catch (e: ParseException)
+            {
+                Toast.makeText(appContext, "Requested timetable is not supported.", Toast.LENGTH_LONG).show()
+                /* Go back to default. */
+                uiState = TimetableSubScreenState()
+                loadTimetable()
+                return@launch
+            }
 
             uiState = uiState.copy(
                 loading = false,
