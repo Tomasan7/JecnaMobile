@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile.screen.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -23,7 +22,6 @@ import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
 import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
-import me.tomasan7.jecnamobile.ui.theme.md_theme_dark_background
 
 @RootNavGraph
 @Destination
@@ -53,7 +51,7 @@ fun LoginScreen(
 private fun LoadingState()
 {
     Box(
-        modifier = Modifier.fillMaxSize().background(md_theme_dark_background),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
@@ -67,7 +65,7 @@ private fun LoginState(viewModel: LoginScreenViewModel = viewModel())
     val state = viewModel.uiState
 
     Box(
-        modifier = Modifier.fillMaxSize().background(md_theme_dark_background),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
