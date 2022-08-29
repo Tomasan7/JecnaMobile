@@ -1,6 +1,7 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.grade.*
+import me.tomasan7.jecnaapi.data.grade.Behaviour
+import me.tomasan7.jecnaapi.data.grade.Grade
+import me.tomasan7.jecnaapi.data.grade.Subject
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
@@ -119,6 +122,7 @@ private fun Container(
     title: String,
     rightColumnVisible: Boolean = true,
     rightColumnContent: @Composable ColumnScope.() -> Unit = {},
+    onRightColumnClick: (() -> Unit)? = null,
     modifier: Modifier,
     content: @Composable () -> Unit = {}
 )
@@ -136,7 +140,8 @@ private fun Container(
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
-        Row(Modifier.padding(20.dp)
+        Row(Modifier
+                    .padding(20.dp)
                     .onSizeChanged { rowHeightValue = it.height }
         ) {
             Column(Modifier.weight(1f, true)) {
@@ -160,7 +165,12 @@ private fun Container(
             )
 
             Column(
-                modifier = Modifier.rowHeight(),
+                modifier = Modifier.rowHeight().clickable(
+                    enabled = onRightColumnClick != null,
+                    onClick = { onRightColumnClick?.invoke() },
+                    indication = null,
+                    interactionSource = MutableInteractionSource()
+                ),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 content = rightColumnContent
             )
@@ -174,31 +184,23 @@ private fun Subject(
     onGradeClick: (Grade) -> Unit = {}
 )
 {
+    val average = remember { subject.grades.average() }
+    var showAverage by rememberMutableStateOf(false)
+
     Container(
         modifier = Modifier.fillMaxWidth(),
         title = subject.name.full,
         rightColumnVisible = !subject.grades.isEmpty(),
         rightColumnContent = {
-            val average = remember { subject.grades.average() }
-
             if (subject.finalGrade == null)
                 GradeAverageComposable(average)
             else
-            {
-                var showAverage by rememberMutableStateOf(false)
-
                 if (!showAverage)
-                    GradeComposable(
-                        grade = Grade(subject.finalGrade!!.value, false),
-                        onClick = { showAverage = true }
-                    )
+                    GradeComposable(Grade(subject.finalGrade!!.value, false))
                 else
-                    GradeAverageComposable(
-                        value = average,
-                        onClick = { showAverage = false }
-                    )
-            }
-        }
+                    GradeAverageComposable(average)
+        },
+        onRightColumnClick = { showAverage = !showAverage }
     ) {
         if (subject.grades.isEmpty())
             Text(stringResource(R.string.no_grades))
