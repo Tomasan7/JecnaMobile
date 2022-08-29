@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
@@ -27,7 +28,6 @@ fun OutlinedPasswordField(
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
@@ -45,6 +45,7 @@ fun OutlinedPasswordField(
     }
 
     val visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
+    val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
 
     if (shape != null)
         OutlinedTextField(
