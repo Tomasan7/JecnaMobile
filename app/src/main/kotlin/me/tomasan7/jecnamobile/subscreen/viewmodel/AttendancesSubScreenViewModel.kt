@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.repository.AttendancesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
@@ -20,6 +21,8 @@ class AttendancesSubScreenViewModel @Inject constructor(
 {
     var uiState by mutableStateOf(AttendancesSubScreenState())
         private set
+
+    var loadAttendancesJob: Job? = null
 
     init
     {
@@ -42,7 +45,9 @@ class AttendancesSubScreenViewModel @Inject constructor(
     {
         uiState = uiState.copy(loading = true)
 
-        viewModelScope.launch {
+        loadAttendancesJob?.cancel()
+
+        loadAttendancesJob = viewModelScope.launch {
             val attendances = attendancesRepository.queryAttendancesPage(uiState.selectedSchoolYear, uiState.selectedMonth.value)
 
             uiState = uiState.copy(loading = false, attendancesPage = attendances)

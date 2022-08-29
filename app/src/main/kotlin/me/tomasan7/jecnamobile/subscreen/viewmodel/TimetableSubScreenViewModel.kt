@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnaapi.parser.ParseException
@@ -28,6 +29,8 @@ class TimetableSubScreenViewModel @Inject constructor(
 {
     var uiState by mutableStateOf(TimetableSubScreenState())
         private set
+
+    var timetableLoadJob: Job? = null
 
     init
     {
@@ -50,7 +53,9 @@ class TimetableSubScreenViewModel @Inject constructor(
     {
         uiState = uiState.copy(loading = true)
 
-        viewModelScope.launch {
+        timetableLoadJob?.cancel()
+
+        timetableLoadJob = viewModelScope.launch {
             val timetablePage = try
             {
                 if (uiState.selectedPeriod == null)
