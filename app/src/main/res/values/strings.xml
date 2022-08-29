@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Ječná Mobile</string>
+
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_title">Přihlášení</string>
     <string name="username">Uživatel</string>
@@ -9,6 +10,10 @@
     <string name="remember_auth_checkbox">Zapamatovat uživatele</string>
     <string name="login">Přihlásit se</string>
     <string name="login_error">Při přihlašování došlo k chybě. (internet?)</string>
+
+    <string name="sidebar_grades">Známky</string>
+    <string name="sidebar_attendances">Příchody</string>
+    <string name="sidebar_timetable">Rozvrh</string>
 
     <string name="grade_word_0">Nehodnocen</string>
     <string name="grade_word_1">Výborný</string>

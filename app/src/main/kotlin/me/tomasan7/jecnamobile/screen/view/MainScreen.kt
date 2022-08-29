@@ -8,10 +8,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,18 +28,18 @@ import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
 
-private val destinationItems = listOf(
-    DrawerItem(Icons.Default.Star, "Známky", GradesSubScreenDestination),
-    DrawerItem(Icons.Default.DateRange, "Příchody", AttendancesSubScreenDestination),
-    DrawerItem(Icons.Default.TableChart, "Rozvrh", TimetableSubScreenDestination)
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun MainScreen()
 {
+    val destinationItems = listOf(
+            DrawerItem(Icons.Default.Star, stringResource(R.string.sidebar_grades), GradesSubScreenDestination),
+            DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination),
+            DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination)
+        )
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val contentNavController = rememberNavController()
