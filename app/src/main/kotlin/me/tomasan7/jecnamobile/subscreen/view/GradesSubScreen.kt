@@ -131,7 +131,7 @@ private fun Container(
     fun Modifier.rowHeight() = height(with(LocalDensity.current) { rowHeightValue.toDp() })
 
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         tonalElevation = 2.dp,
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(10.dp)
