@@ -60,4 +60,5 @@
     <string name="school_year_half_2">2.</string>
 
     <string name="timetable_period">Období</string>
+    <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
 </resources>

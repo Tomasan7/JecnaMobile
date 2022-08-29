@@ -16,6 +16,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
+import me.tomasan7.jecnamobile.R
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,7 +60,7 @@ class TimetableSubScreenViewModel @Inject constructor(
             }
             catch (e: ParseException)
             {
-                Toast.makeText(appContext, "Requested timetable is not supported.", Toast.LENGTH_LONG).show()
+                Toast.makeText(appContext, appContext.getString(R.string.unsupported_timetable), Toast.LENGTH_LONG).show()
                 /* Go back to default. */
                 uiState = TimetableSubScreenState()
                 loadTimetable()
