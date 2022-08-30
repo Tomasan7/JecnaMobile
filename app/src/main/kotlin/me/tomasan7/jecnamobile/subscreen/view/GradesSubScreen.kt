@@ -405,10 +405,10 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                 ) {
                     if (grade.receiveDate != null)
                         GradeDialogRow(grade.receiveDate!!.format(Constants.gradeDateFormatter)!!)
-                    if (grade.description != null)
-                        GradeDialogRow(grade.description!!)
-                    if (grade.teacher != null)
-                        GradeDialogRow(grade.teacher!!)
+                    else
+                        GradeDialogRow("")
+                    GradeDialogRow(grade.description ?: "")
+                    GradeDialogRow(grade.teacher ?: "")
                 }
             }
         }
