@@ -442,18 +442,13 @@ private fun Behaviour(behaviour: Behaviour)
             )
         }
     ) {
-        if (behaviour.notifications.isEmpty())
-            Text(stringResource(R.string.no_grades))
-        else
-        {
-            FlowRow(
-                crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                mainAxisSpacing = 5.dp,
-                crossAxisSpacing = 5.dp
-            ) {
-                behaviour.notifications.forEach {
-                    BehaviourNotification(it)
-                }
+        FlowRow(
+            crossAxisAlignment = FlowCrossAxisAlignment.Center,
+            mainAxisSpacing = 5.dp,
+            crossAxisSpacing = 5.dp
+        ) {
+            behaviour.notifications.forEach {
+                BehaviourNotification(it)
             }
         }
     }
