@@ -53,6 +53,8 @@
     <string name="november">Listopad</string>
     <string name="december">Prosinec</string>
 
+    <string name="attendance_load_error">Při načítání příchodů a odchodů došlo k chybě. Zkuste to znovu později.</string>
+
     <string name="month">Měsíc</string>
     <string name="school_year">Školní rok</string>
     <string name="school_year_half">Pololetí</string>
