@@ -1,16 +1,15 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.devtools.ksp") version "1.6.20-1.0.4"
-    kotlin("plugin.serialization") version "1.6.21"
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
+    kotlin("plugin.serialization") version "1.7.10"
 
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
-
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "me.tomasan7.jecnamobile"
@@ -46,7 +45,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0-alpha08" //rootProject.extra["compose_version"] as? String
+        kotlinCompilerExtensionVersion = "1.3.0"
     }
 
     packagingOptions {
@@ -75,7 +74,7 @@ dependencies {
 
     /* --- Jetpack compose --- */
     val composeVersion = rootProject.extra["compose_version"]
-    val lifecycleVersion = "2.5.0-rc01"
+    val lifecycleVersion = "2.5.1"
 
     implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
@@ -84,28 +83,30 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
 
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.appcompat:appcompat:1.4.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation("androidx.appcompat:appcompat:1.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
-    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
-    implementation("androidx.compose.material3:material3-window-size-class:1.0.0-alpha14")
-    val accompanistVersion = "0.24.10-beta"
+    val composeMaterial3Version = "1.0.0-alpha14"
+    implementation("androidx.compose.material3:material3:$composeMaterial3Version")
+    implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
+
+    val accompanistVersion = "0.25.1"
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
 
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
-    val composeDestinationsVersion = "1.5.9-beta"
+    val composeDestinationsVersion = "1.6.17-beta"
     implementation("io.github.raamcosta.compose-destinations:core:$composeDestinationsVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
     testImplementation("junit:junit:4.13.2")
 
     /* Dagger-Hilt */
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+    implementation("com.google.dagger:hilt-android:2.43.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.43.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
