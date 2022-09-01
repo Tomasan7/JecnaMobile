@@ -79,33 +79,26 @@ private fun AttendanceComposable(
     modifier: Modifier = Modifier
 )
 {
-    Surface(
-        modifier = modifier,
-        tonalElevation = 2.dp,
-        shadowElevation = 4.dp,
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Column(Modifier.fillMaxSize()
-                       .padding(20.dp)
-        ) {
-            val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
-            val dayDate = attendanceRow.first.format(datePattern)
+    val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
+    val dayDate = attendanceRow.first.format(datePattern)
 
+    me.tomasan7.jecnamobile.ui.component.Card(
+        title = {
             Text(
                 text = "$dayName $dayDate",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Spacer(Modifier.height(15.dp))
-
-            FlowRow(
-                Modifier.fillMaxWidth(),
-                crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                mainAxisSpacing = 7.dp,
-                crossAxisSpacing = 7.dp
-            ) {
-                attendanceRow.second.forEach { attendance ->
+        },
+        modifier = modifier
+    ) {
+        FlowRow(
+            Modifier.fillMaxWidth(),
+            crossAxisAlignment = FlowCrossAxisAlignment.Center,
+            mainAxisSpacing = 7.dp,
+            crossAxisSpacing = 7.dp
+        ) {
+            attendanceRow.second.forEach { attendance ->
                     Surface(
                         tonalElevation = 10.dp,
                         shadowElevation = 2.dp,
@@ -118,6 +111,5 @@ private fun AttendanceComposable(
                     }
                 }
             }
-        }
     }
 }
