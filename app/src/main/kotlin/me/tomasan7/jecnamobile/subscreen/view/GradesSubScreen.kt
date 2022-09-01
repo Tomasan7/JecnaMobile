@@ -203,7 +203,10 @@ private fun Subject(
         onRightColumnClick = { showAverage = !showAverage }
     ) {
         if (subject.grades.isEmpty())
-            Text(stringResource(R.string.no_grades))
+            Text(
+                text = stringResource(R.string.no_grades),
+                fontSize = 14.sp
+            )
         else
         {
             Column {
