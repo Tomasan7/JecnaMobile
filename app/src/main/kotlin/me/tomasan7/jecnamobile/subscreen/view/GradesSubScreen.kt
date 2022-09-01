@@ -155,25 +155,25 @@ private fun Container(
                 content()
             }
 
-            if (!rightColumnVisible)
-                return@Row
+            if (rightColumnVisible)
+            {
+                VerticalDivider(
+                    modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
+                    thickness = 2.dp,
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                )
 
-            VerticalDivider(
-                modifier = Modifier.rowHeight().padding(horizontal = 10.dp),
-                thickness = 2.dp,
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-            )
-
-            Column(
-                modifier = Modifier.rowHeight().clickable(
-                    enabled = onRightColumnClick != null,
-                    onClick = { onRightColumnClick?.invoke() },
-                    indication = null,
-                    interactionSource = MutableInteractionSource()
-                ),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                content = rightColumnContent
-            )
+                Column(
+                    modifier = Modifier.rowHeight().clickable(
+                        enabled = onRightColumnClick != null,
+                        onClick = { onRightColumnClick?.invoke() },
+                        indication = null,
+                        interactionSource = MutableInteractionSource()
+                    ),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    content = rightColumnContent
+                )
+            }
         }
     }
 }
