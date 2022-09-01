@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedPasswordField(
     value: String,

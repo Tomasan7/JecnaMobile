@@ -56,31 +56,33 @@ fun MainScreen()
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         drawerState = drawerState,
         drawerContent = {
-            Row(
-                modifier = Modifier.height(56.dp).padding(start = 28.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+            ModalDrawerSheet {
+                Row(
+                    modifier = Modifier.height(56.dp).padding(start = 28.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
 
-            destinationItems.forEach { item ->
-                NavigationDrawerItem(
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    icon = { Icon(item.icon, null) },
-                    label = { Text(item.label) },
-                    selected = item == selectedItem,
-                    onClick = onClick@ {
-                        scope.launch { drawerState.close() }
-                        if (selectedItem == item)
-                            return@onClick
+                destinationItems.forEach { item ->
+                    NavigationDrawerItem(
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        icon = { Icon(item.icon, null) },
+                        label = { Text(item.label) },
+                        selected = item == selectedItem,
+                        onClick = onClick@ {
+                            scope.launch { drawerState.close() }
+                            if (selectedItem == item)
+                                return@onClick
 
-                        contentNavController.navigate(item.destination.route)
-                        selectedItem = item
-                    }
-                )
+                            contentNavController.navigate(item.destination.route)
+                            selectedItem = item
+                        }
+                    )
+                }
             }
         },
         content = {
