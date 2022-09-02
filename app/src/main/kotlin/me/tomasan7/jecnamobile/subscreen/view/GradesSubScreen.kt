@@ -473,16 +473,16 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
             when (behaviourNotification.type)
             {
                 Behaviour.NotificationType.GOOD ->
-                    Image(
+                    Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(getGradeColor(1))
+                        tint = getGradeColor(1)
                     )
                 Behaviour.NotificationType.BAD  ->
-                    Image(
+                    Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(getGradeColor(5))
+                        tint = getGradeColor(5)
                     )
             }
         }
