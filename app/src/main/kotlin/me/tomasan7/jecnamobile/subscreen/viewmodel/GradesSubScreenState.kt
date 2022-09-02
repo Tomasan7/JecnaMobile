@@ -9,7 +9,7 @@ import java.time.Month
 import java.util.*
 
 data class GradesSubScreenState(
-    val loading: Boolean = true,
+    val loading: Boolean = false,
     val gradesPage: GradesPage? = null,
     val selectedSchoolYear: SchoolYear = SchoolYear.current(),
     val selectedSchoolYearHalf: SchoolYearHalf = SchoolYearHalf.current()

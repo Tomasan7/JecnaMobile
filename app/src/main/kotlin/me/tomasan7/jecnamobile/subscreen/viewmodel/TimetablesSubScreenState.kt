@@ -4,7 +4,7 @@ import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 
 data class TimetableSubScreenState(
-    val loading: Boolean = true,
+    val loading: Boolean = false,
     val timetablePage: TimetablePage? = null,
     val selectedSchoolYear: SchoolYear = SchoolYear.current(),
     val mostLessonsInLessonSpotInEachDay: Map<String, Int>? = timetablePage?.run {

@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.Month
 
 data class AttendancesSubScreenState(
-    val loading: Boolean = true,
+    val loading: Boolean = false,
     val attendancesPage: AttendancesPage? = null,
     val selectedMonth: Month = LocalDate.now().month,
     val selectedSchoolYear: SchoolYear = SchoolYear.current()
