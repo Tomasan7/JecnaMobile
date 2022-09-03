@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
@@ -12,10 +13,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -98,12 +103,13 @@ private fun Article(
         if (article.files.isNotEmpty())
         {
             Divider(
-                modifier = Modifier.padding(vertical = 10.dp),
+                modifier = Modifier.padding(top = 10.dp),
                 thickness = 2.dp,
                 color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
             )
 
             article.files.forEach { articleFile ->
+                Spacer(Modifier.height(10.dp))
                 ArticleFile(
                     articleFile = articleFile,
                     onClick = { onArticleFileClick(articleFile) },
@@ -129,16 +135,29 @@ private fun ArticleFile(
     modifier: Modifier = Modifier
 )
 {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.clickable(onClick = onClick)
+    val surfaceShape = RoundedCornerShape(4.dp)
+
+    Surface(
+        tonalElevation = 4.dp,
+        shape = surfaceShape,
+        modifier = modifier.clip(shape = RoundedCornerShape(4.dp)).clickable(onClick = onClick)
     ) {
-        Icon(Icons.Default.Description, contentDescription = null)
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            "${articleFile.label} (${articleFile.fileExtension})",
-            textDecoration = TextDecoration.Underline
-        )
+        Row(
+            modifier = Modifier.padding(5.dp).height(IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Icons.Default.Description, contentDescription = null)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = buildAnnotatedString {
+                    append(articleFile.label)
+
+                    withStyle(SpanStyle(fontSize = 10.sp, color = Color.LightGray)) {
+                        append("." + articleFile.fileExtension)
+                    }
+                }
+            )
+        }
     }
 }
 
