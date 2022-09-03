@@ -4,11 +4,9 @@ import android.icu.text.Collator
 import me.tomasan7.jecnaapi.data.grade.GradesPage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
-import java.time.LocalDate
-import java.time.Month
 import java.util.*
 
-data class GradesSubScreenState(
+data class GradesState(
     val loading: Boolean = false,
     val gradesPage: GradesPage? = null,
     val selectedSchoolYear: SchoolYear = SchoolYear.current(),

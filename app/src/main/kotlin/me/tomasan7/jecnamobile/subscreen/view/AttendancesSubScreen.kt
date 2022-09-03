@@ -16,7 +16,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.Attendance
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesSubScreenViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getWeekDayName
@@ -29,7 +29,7 @@ private val datePattern = DateTimeFormatter.ofPattern("d.M.")
 @Destination
 @Composable
 fun AttendancesSubScreen(
-    viewModel: AttendancesSubScreenViewModel = hiltViewModel()
+    viewModel: AttendancesViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState

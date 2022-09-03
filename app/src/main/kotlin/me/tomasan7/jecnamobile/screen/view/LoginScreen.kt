@@ -20,7 +20,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
-import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
+import me.tomasan7.jecnamobile.screen.viewmodel.LoginViewModel
 import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
 
 @RootNavGraph
@@ -28,7 +28,7 @@ import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
 @Composable
 fun LoginScreen(
     navigator: DestinationsNavigator,
-    viewModel: LoginScreenViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 )
 {
     viewModel.login.observe(LocalLifecycleOwner.current) { event ->
@@ -60,7 +60,7 @@ private fun LoadingState()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginState(viewModel: LoginScreenViewModel = viewModel())
+private fun LoginState(viewModel: LoginViewModel = viewModel())
 {
     val state = viewModel.uiState
 

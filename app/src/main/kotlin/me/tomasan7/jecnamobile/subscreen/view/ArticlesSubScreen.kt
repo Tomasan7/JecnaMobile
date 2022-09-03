@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +31,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.Article
 import me.tomasan7.jecnaapi.data.ArticleFile
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesSubScreenViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -41,7 +40,7 @@ import java.util.*
 @Destination
 @Composable
 fun ArticlesSubScreen(
-    viewModel: ArticlesSubScreenViewModel = hiltViewModel()
+    viewModel: ArticlesViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState

@@ -16,18 +16,17 @@ import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
-import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
 import javax.inject.Inject
 
 @HiltViewModel
-class TimetableSubScreenViewModel @Inject constructor(
+class TimetableViewModel @Inject constructor(
     private val timetableRepository: TimetableRepository,
     @SuppressLint("StaticFieldLeak") @ApplicationContext
     private val appContext: Context
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(TimetableSubScreenState())
+    var uiState by mutableStateOf(TimetableState())
         private set
 
     private var timetableLoadJob: Job? = null
@@ -67,7 +66,7 @@ class TimetableSubScreenViewModel @Inject constructor(
             {
                 Toast.makeText(appContext, appContext.getString(R.string.unsupported_timetable), Toast.LENGTH_LONG).show()
                 /* Go back to default. */
-                uiState = TimetableSubScreenState()
+                uiState = TimetableState()
                 loadTimetable()
                 return@launch
             }
@@ -76,7 +75,7 @@ class TimetableSubScreenViewModel @Inject constructor(
                 loading = false,
                 timetablePage = timetablePage,
                 selectedPeriod = timetablePage.periodOptions.find { it.selected },
-                mostLessonsInLessonSpotInEachDay = TimetableSubScreenState(timetablePage = timetablePage).mostLessonsInLessonSpotInEachDay
+                mostLessonsInLessonSpotInEachDay = TimetableState(timetablePage = timetablePage).mostLessonsInLessonSpotInEachDay
             )
         }
     }

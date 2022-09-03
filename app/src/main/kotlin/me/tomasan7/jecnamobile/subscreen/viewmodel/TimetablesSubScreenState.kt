@@ -3,7 +3,7 @@ package me.tomasan7.jecnamobile.subscreen.viewmodel
 import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 
-data class TimetableSubScreenState(
+data class TimetableState(
     val loading: Boolean = false,
     val timetablePage: TimetablePage? = null,
     val selectedSchoolYear: SchoolYear = SchoolYear.current(),

@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -32,7 +31,7 @@ import me.tomasan7.jecnaapi.data.grade.Grade
 import me.tomasan7.jecnaapi.data.grade.Subject
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesSubScreenViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesViewModel
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
@@ -47,7 +46,7 @@ import kotlin.math.roundToInt
 @Destination
 @Composable
 fun GradesSubScreen(
-    viewModel: GradesSubScreenViewModel = hiltViewModel()
+    viewModel: GradesViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState

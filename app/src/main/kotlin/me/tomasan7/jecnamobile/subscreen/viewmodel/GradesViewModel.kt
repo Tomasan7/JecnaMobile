@@ -11,15 +11,14 @@ import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.repository.GradesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
-import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
-class GradesSubScreenViewModel @Inject constructor(
+class GradesViewModel @Inject constructor(
     private val gradesRepository: GradesRepository
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(GradesSubScreenState())
+    var uiState by mutableStateOf(GradesState())
         private set
 
     private var loadGradesJob: Job? = null

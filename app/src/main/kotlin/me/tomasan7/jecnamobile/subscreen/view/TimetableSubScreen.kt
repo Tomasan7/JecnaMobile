@@ -26,7 +26,7 @@ import me.tomasan7.jecnaapi.data.LessonSpot
 import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableSubScreenViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableViewModel
 import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.manipulate
@@ -38,7 +38,7 @@ import java.time.LocalDateTime
 @Destination
 @Composable
 fun TimetableSubScreen(
-    viewModel: TimetableSubScreenViewModel = hiltViewModel()
+    viewModel: TimetableViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState

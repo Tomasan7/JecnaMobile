@@ -5,7 +5,7 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import java.time.LocalDate
 import java.time.Month
 
-data class AttendancesSubScreenState(
+data class AttendancesState(
     val loading: Boolean = false,
     val attendancesPage: AttendancesPage? = null,
     val selectedMonth: Month = LocalDate.now().month,

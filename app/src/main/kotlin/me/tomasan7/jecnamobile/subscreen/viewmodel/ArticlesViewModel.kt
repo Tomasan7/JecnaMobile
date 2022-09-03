@@ -28,14 +28,14 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class ArticlesSubScreenViewModel @Inject constructor(
+class ArticlesViewModel @Inject constructor(
     private val articlesRepository: ArticlesRepository,
     private val webClient: JecnaWebClient,
     @ApplicationContext
     private val context: Context
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(ArticlesSubScreenState())
+    var uiState by mutableStateOf(ArticlesState())
         private set
 
     private var loadArticlesJob: Job? = null

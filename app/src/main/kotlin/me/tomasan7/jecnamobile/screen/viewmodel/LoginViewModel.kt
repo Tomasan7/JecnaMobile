@@ -13,13 +13,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.screen.view.LoginScreenState
+import me.tomasan7.jecnamobile.screen.view.LoginState
 import me.tomasan7.jecnamobile.util.Event
 import me.tomasan7.jecnamobile.util.asEvent
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginScreenViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val jecnaClient: JecnaWebClient
 ) : ViewModel()
@@ -28,7 +28,7 @@ class LoginScreenViewModel @Inject constructor(
     private val authPreferences
         get() = context.getSharedPreferences(AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
-    var uiState by mutableStateOf(LoginScreenState())
+    var uiState by mutableStateOf(LoginState())
         private set
 
     val login = MutableLiveData<Event<JecnaWebClient>>()

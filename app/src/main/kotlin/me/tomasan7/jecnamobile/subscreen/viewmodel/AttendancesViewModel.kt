@@ -18,13 +18,13 @@ import java.time.Month
 import javax.inject.Inject
 
 @HiltViewModel
-class AttendancesSubScreenViewModel @Inject constructor(
+class AttendancesViewModel @Inject constructor(
     private val attendancesRepository: AttendancesRepository,
     @ApplicationContext
     private val appContext: Context
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(AttendancesSubScreenState())
+    var uiState by mutableStateOf(AttendancesState())
         private set
 
     private var loadAttendancesJob: Job? = null

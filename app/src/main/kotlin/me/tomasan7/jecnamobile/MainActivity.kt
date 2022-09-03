@@ -19,7 +19,7 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.destinations.NetworkErrorScreenDestination
-import me.tomasan7.jecnamobile.screen.viewmodel.LoginScreenViewModel
+import me.tomasan7.jecnamobile.screen.viewmodel.LoginViewModel
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import java.net.InetAddress
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity()
     lateinit var jecnaClient: JecnaWebClient
 
     private val authPreferences
-        get() = getSharedPreferences(LoginScreenViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+        get() = getSharedPreferences(LoginViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?)
@@ -85,11 +85,11 @@ class MainActivity : ComponentActivity()
         AUTH_ERROR
     }
 
-    private fun isAuthSaved() = authPreferences.contains(LoginScreenViewModel.PREFERENCES_USERNAME_KEY)
+    private fun isAuthSaved() = authPreferences.contains(LoginViewModel.PREFERENCES_USERNAME_KEY)
 
     private fun getSavedAuth() =
-        Auth(authPreferences.getString(LoginScreenViewModel.PREFERENCES_USERNAME_KEY, null) as String,
-             authPreferences.getString(LoginScreenViewModel.PREFERENCES_PASSWORD_KEY, null) as String)
+        Auth(authPreferences.getString(LoginViewModel.PREFERENCES_USERNAME_KEY, null) as String,
+             authPreferences.getString(LoginViewModel.PREFERENCES_PASSWORD_KEY, null) as String)
 
     private fun isInternetAvailable(): Boolean
     {
