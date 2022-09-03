@@ -101,13 +101,6 @@ private fun Article(
         )
 
         if (article.files.isNotEmpty())
-        {
-            Divider(
-                modifier = Modifier.padding(top = 10.dp),
-                thickness = 2.dp,
-                color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-            )
-
             article.files.forEach { articleFile ->
                 Spacer(Modifier.height(10.dp))
                 ArticleFile(
@@ -116,7 +109,6 @@ private fun Article(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
 
         Spacer(Modifier.height(10.dp))
 
