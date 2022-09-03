@@ -3,10 +3,7 @@ package me.tomasan7.jecnamobile.screen.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TableChart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,10 +17,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.destinations.AttendancesSubScreenDestination
-import me.tomasan7.jecnamobile.destinations.Destination
-import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
-import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
+import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
@@ -35,16 +29,17 @@ data class DrawerItem(val icon: ImageVector, val label: String, val destination:
 fun MainScreen()
 {
     val destinationItems = listOf(
-            DrawerItem(Icons.Default.Star, stringResource(R.string.sidebar_grades), GradesSubScreenDestination),
-            DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination),
-            DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination)
-        )
+        DrawerItem(Icons.Default.Newspaper, stringResource(R.string.sidebar_news), ArticlesSubScreenDestination),
+        DrawerItem(Icons.Default.Star, stringResource(R.string.sidebar_grades), GradesSubScreenDestination),
+        DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination),
+        DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination)
+    )
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val contentNavController = rememberNavController()
 
-    var selectedItem by rememberMutableStateOf(destinationItems[0])
+    var selectedItem by rememberMutableStateOf(destinationItems[1])
 
     contentNavController.addOnDestinationChangedListener { _, destination,_ ->
         val newSelectedItem = destinationItems.find { it.destination.route == destination.route }

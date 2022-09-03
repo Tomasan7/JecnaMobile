@@ -14,6 +14,7 @@
     <string name="sidebar_grades">Známky</string>
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
+    <string name="sidebar_news">Novinky</string>
 
     <string name="grade_word_0">Nehodnocen</string>
     <string name="grade_word_1">Výborný</string>
@@ -63,4 +64,14 @@
 
     <string name="timetable_period">Období</string>
     <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
+
+    <string name="notification_news_download_file_title">Stahování přílohy z novinek</string>
+    <string name="notification_news_download_file_description">Soubor: %1$s</string>
+    <string name="notification_news_download_file_complete_title">Příloha z novinek stažena</string>
+    <string name="notification_news_download_file_complete_description">Soubor: %1$s</string>
+
+    <string name="notification_channel_file_downloads">Stahování souborů</string>
+    <string name="notification_channel_file_downloads_description">Notifikace stahující se ke stahování souborů.</string>
+
+    <string name="unable_to_open_file">Soubor nelze otevřít.</string>
 </resources>

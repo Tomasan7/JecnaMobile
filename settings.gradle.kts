@@ -12,6 +12,8 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         mavenLocal()
+        /* Compose HTML */
+        maven("https://jitpack.io")
     }
 }
 

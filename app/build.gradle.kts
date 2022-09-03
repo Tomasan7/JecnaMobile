@@ -70,7 +70,7 @@ kapt {
 
 dependencies {
     /* Main JecnaAPI dependency. */
-    implementation("me.tomasan7:jecna-api:1.0-SNAPSHOT")
+    implementation("me.tomasan7:jecna-api:1.0.4")
 
     /* --- Jetpack compose --- */
     val composeVersion = rootProject.extra["compose_version"]
@@ -109,4 +109,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.43.2")
     kapt("com.google.dagger:hilt-android-compiler:2.43.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    /* Compose HTML */
+    implementation("com.github.ireward:compose-html:1.0.2")
 }

@@ -27,4 +27,8 @@ internal object AppModule
     @Provides
     @Singleton
     fun provideTimetableRepository(jecnaWebClient: JecnaWebClient): TimetableRepository = WebTimetableRepository(jecnaWebClient)
+
+    @Provides
+    @Singleton
+    fun provideArticlesRepository(jecnaWebClient: JecnaWebClient): ArticlesRepository = WebArticlesRepository(jecnaWebClient)
 }
