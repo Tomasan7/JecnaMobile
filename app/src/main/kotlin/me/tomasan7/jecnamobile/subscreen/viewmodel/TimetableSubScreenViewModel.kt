@@ -30,7 +30,7 @@ class TimetableSubScreenViewModel @Inject constructor(
     var uiState by mutableStateOf(TimetableSubScreenState())
         private set
 
-    var timetableLoadJob: Job? = null
+    private var timetableLoadJob: Job? = null
 
     init
     {

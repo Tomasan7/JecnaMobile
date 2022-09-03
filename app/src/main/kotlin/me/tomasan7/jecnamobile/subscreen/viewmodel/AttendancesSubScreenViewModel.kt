@@ -27,7 +27,7 @@ class AttendancesSubScreenViewModel @Inject constructor(
     var uiState by mutableStateOf(AttendancesSubScreenState())
         private set
 
-    var loadAttendancesJob: Job? = null
+    private var loadAttendancesJob: Job? = null
 
     init
     {

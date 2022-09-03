@@ -22,7 +22,7 @@ class GradesSubScreenViewModel @Inject constructor(
     var uiState by mutableStateOf(GradesSubScreenState())
         private set
 
-    var loadGradesJob: Job? = null
+    private var loadGradesJob: Job? = null
 
     init
     {
