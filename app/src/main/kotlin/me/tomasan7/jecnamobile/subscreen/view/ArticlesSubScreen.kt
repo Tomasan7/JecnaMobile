@@ -143,27 +143,3 @@ private fun ArticleFile(
 }
 
 val DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM", Locale.forLanguageTag("cs-CZ"))
-
-/*
-@Composable
-@Preview
-fun ArticlePreview()
-{
-    val content = "Dovolujeme si oznámit, že byl aktualizován rozvrh na měsíc září 2022, kde bylo nově upravano zejména rozvržení jazykových učeben, laboratoří fyziky, PC laboratoří dle kapacitních možností. Poslední aktualizace k 5.9.2022"
-    val article = Article(
-        "Aktualizace učeben rozvrhů",
-        content,
-        content,
-        LocalDate.now(),
-        "RNDr. Luboš Rašek",
-        listOf(ArticleFile(
-            "Kmenové učebny tříd portál 2022-23",
-            "/download/skola/pro-verejnost/Kmenov%C3%A9+u%C4%8Debny+t%C5%99%C3%ADd+port%C3%A1l+2022-23.xlsx"
-        ))
-    )
-
-    Article(
-        article = article,
-        Modifier.width(300.dp)
-    )
-}*/
