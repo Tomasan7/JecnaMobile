@@ -181,7 +181,7 @@ private fun TimetableLessonPeriod(
 }
 
 @Composable
-fun TimetableLessonSpot(
+private fun TimetableLessonSpot(
     lessonSpot: LessonSpot?,
     current: Boolean = false
 )
@@ -251,6 +251,12 @@ private fun DayLabel(
             Text(text = day, fontWeight = FontWeight.Bold)
         }
     }
+}
+
+@Composable
+fun ()
+{
+
 }
 
 fun timetableDayLabelToDayOfWeek(timetableDayLabel: String) = when (timetableDayLabel)
