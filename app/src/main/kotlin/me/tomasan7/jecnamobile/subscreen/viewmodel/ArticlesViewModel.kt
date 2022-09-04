@@ -72,7 +72,7 @@ class ArticlesViewModel @Inject constructor(
         }
         catch (e: ActivityNotFoundException)
         {
-            Toast.makeText(context, context.getString(R.string.unable_to_open_file), Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.error_unable_to_open_file), Toast.LENGTH_LONG).show()
         }
     }
 
