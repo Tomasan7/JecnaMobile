@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Ječná Mobile</string>
 
+    <!-- ##### Network Error Screen ##### -->
+
+    <string name="error_no_internet_connection">Aplikace k fungování potřebuje připojení k internetu.</string>
+
+    <!-- ##### Login Screen ##### -->
+
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_title">Přihlášení</string>
     <string name="username">Uživatel</string>
@@ -11,10 +17,14 @@
     <string name="login">Přihlásit se</string>
     <string name="login_error">Při přihlašování došlo k chybě. (internet?)</string>
 
+    <!-- ##### Main Screen ##### -->
+
     <string name="sidebar_grades">Známky</string>
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+
+    <!-- ##### Grades SubScreen ##### -->
 
     <string name="grade_word_0">Nehodnocen</string>
     <string name="grade_word_1">Výborný</string>
@@ -32,7 +42,17 @@
 
     <string name="no_grades">Zatím nemáš žádné známky</string>
 
-    <string name="average">Průměr</string>
+    <!-- ##### Timetable SubScreen ##### -->
+
+    <string name="timetable_period">Období</string>
+    <string name="timetable_dialog_subject">Předmět</string>
+    <string name="timetable_dialog_teacher">Učitel</string>
+    <string name="timetable_dialog_classroom">Učebna</string>
+    <string name="timetable_dialog_group">Skupina</string>
+
+    <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
+
+    <!-- ##### General ##### -->
 
     <string name="monday">Pondělí</string>
     <string name="tuesday">Úterý</string>
@@ -61,23 +81,12 @@
     <string name="school_year_half_1">1.</string>
     <string name="school_year_half_2">2.</string>
 
-    <string name="timetable_period">Období</string>
+    <!-- ##### Errors ##### -->
+
     <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
     <string name="unsupported_articles">Novinky jsou v nepodporovaném formátu.</string>
     <string name="unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
     <string name="unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
-
-    <string name="timetable_subject">Předmět</string>
-    <string name="timetable_teacher">Učitel</string>
-    <string name="timetable_classroom">Učebna</string>
-    <string name="timetable_group">Skupina</string>
-
-    <string name="notification_channel_file_downloads">Stahování souborů</string>
-    <string name="notification_channel_file_downloads_description">Notifikace stahující se ke stahování souborů.</string>
-
-    <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
-
     <string name="error_load">Při načítání došlo k chybě.</string>
 
-    <string name="error_no_internet_connection">Aplikace k fungování potřebuje připojení k internetu.</string>
 </resources>

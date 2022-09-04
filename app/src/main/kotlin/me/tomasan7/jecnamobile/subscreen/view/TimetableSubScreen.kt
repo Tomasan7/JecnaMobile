@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -292,11 +291,11 @@ private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                DialogRow(stringResource(R.string.timetable_subject), lesson.subjectName.full)
-                DialogRow(stringResource(R.string.timetable_teacher), lesson.teacherName.full)
-                DialogRow(stringResource(R.string.timetable_classroom), lesson.classroom)
+                DialogRow(stringResource(R.string.timetable_dialog_subject), lesson.subjectName.full)
+                DialogRow(stringResource(R.string.timetable_dialog_teacher), lesson.teacherName.full)
+                DialogRow(stringResource(R.string.timetable_dialog_classroom), lesson.classroom)
                 if (lesson.group != 0)
-                    DialogRow(stringResource(R.string.timetable_group), lesson.group.toRoman())
+                    DialogRow(stringResource(R.string.timetable_dialog_group), lesson.group.toRoman())
             }
         }
     }
