@@ -114,8 +114,14 @@ fun TimetableSubScreen(
                                 val lessonPeriod = uiState.timetablePage.lessonPeriods[i]
                                 val now = LocalDateTime.now()
 
-                                val current = now.toLocalTime() in lessonPeriod.from..lessonPeriod.to
-                                              && timetableDayLabelToDayOfWeek(day) == now.dayOfWeek
+                                val startTime = if (i == 0)
+                                    uiState.timetablePage.lessonPeriods[0].from
+                                else
+                                    uiState.timetablePage.lessonPeriods[i - 1].to
+
+                                val endTime = lessonPeriod.to
+
+                                val current = now.toLocalTime() in startTime..endTime && timetableDayLabelToDayOfWeek(day) == now.dayOfWeek
 
                                 TimetableLessonSpot(lessonSpot, current)
                                 Spacer(Modifier.width(5.dp))
