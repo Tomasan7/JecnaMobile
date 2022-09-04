@@ -293,7 +293,7 @@ private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 DialogRow(stringResource(R.string.timetable_subject), lesson.subjectName.full)
-                DialogRow(stringResource(R.string.timetable_teacher), lesson.subjectName.full)
+                DialogRow(stringResource(R.string.timetable_teacher), lesson.teacherName.full)
                 DialogRow(stringResource(R.string.timetable_classroom), lesson.classroom)
                 if (lesson.group != 0)
                     DialogRow(stringResource(R.string.timetable_group), lesson.group.toRoman())
