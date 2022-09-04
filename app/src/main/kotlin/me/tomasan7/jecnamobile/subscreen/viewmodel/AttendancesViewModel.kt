@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.parser.ParseException
@@ -64,6 +65,11 @@ class AttendancesViewModel @Inject constructor(
                 e.printStackTrace()
                 Toast.makeText(appContext, appContext.getString(R.string.unsupported_attendances), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
             }
             catch (e: Exception)
             {

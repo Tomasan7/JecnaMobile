@@ -17,6 +17,7 @@ import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
@@ -73,6 +74,11 @@ class TimetableViewModel @Inject constructor(
                 e.printStackTrace()
                 Toast.makeText(appContext, appContext.getString(R.string.unsupported_timetable), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
             }
             catch (e: Exception)
             {

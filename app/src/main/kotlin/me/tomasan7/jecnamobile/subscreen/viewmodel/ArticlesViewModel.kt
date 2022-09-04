@@ -27,6 +27,7 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
 import java.io.File
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class ArticlesViewModel @Inject constructor(
@@ -94,6 +95,11 @@ class ArticlesViewModel @Inject constructor(
                 e.printStackTrace()
                 Toast.makeText(appContext, appContext.getString(R.string.unsupported_articles), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
             }
             catch (e: Exception)
             {
