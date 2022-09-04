@@ -21,6 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tomasan7.jecnaapi.data.ArticleFile
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.ArticlesRepository
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
@@ -32,7 +33,7 @@ class ArticlesViewModel @Inject constructor(
     private val articlesRepository: ArticlesRepository,
     private val webClient: JecnaWebClient,
     @ApplicationContext
-    private val context: Context
+    private val appContext: Context
 ) : ViewModel()
 {
     var uiState by mutableStateOf(ArticlesState())
@@ -59,8 +60,8 @@ class ArticlesViewModel @Inject constructor(
 
     private fun openFile(file: File)
     {
-        val fileUri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-        val mime = context.contentResolver.getType(fileUri)
+        val fileUri = FileProvider.getUriForFile(appContext, "${appContext.packageName}.provider", file)
+        val mime = appContext.contentResolver.getType(fileUri)
         val openIntent = Intent(Intent.ACTION_VIEW)
         openIntent.setDataAndType(fileUri, mime)
         openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -68,11 +69,11 @@ class ArticlesViewModel @Inject constructor(
 
         try
         {
-            context.startActivity(openIntent)
+            appContext.startActivity(openIntent)
         }
         catch (e: ActivityNotFoundException)
         {
-            Toast.makeText(context, context.getString(R.string.error_unable_to_open_file), Toast.LENGTH_LONG).show()
+            Toast.makeText(appContext, appContext.getString(R.string.error_unable_to_open_file), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -83,9 +84,23 @@ class ArticlesViewModel @Inject constructor(
         loadArticlesJob?.cancel()
 
         loadArticlesJob = viewModelScope.launch {
-            val articles = articlesRepository.queryArticlesPage()
-
-            uiState = uiState.copy(loading = false, articlesPage = articles)
+            try
+            {
+                val articles = articlesRepository.queryArticlesPage()
+                uiState = uiState.copy(loading = false, articlesPage = articles)
+            }
+            catch (e: ParseException)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.unsupported_articles), Toast.LENGTH_LONG).show()
+                uiState = uiState.copy(loading = false)
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.error_load), Toast.LENGTH_LONG).show()
+                uiState = uiState.copy(loading = false)
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile.subscreen.viewmodel
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -22,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
     private val timetableRepository: TimetableRepository,
-    @SuppressLint("StaticFieldLeak") @ApplicationContext
+    @ApplicationContext
     private val appContext: Context
 ) : ViewModel()
 {
@@ -55,28 +54,32 @@ class TimetableViewModel @Inject constructor(
         timetableLoadJob?.cancel()
 
         timetableLoadJob = viewModelScope.launch {
-            val timetablePage = try
+            try
             {
-                if (uiState.selectedPeriod == null)
+                val timetablePage = if (uiState.selectedPeriod == null)
                     timetableRepository.queryTimetablePage()
                 else
                     timetableRepository.queryTimetablePage(uiState.selectedSchoolYear, uiState.selectedPeriod!!)
+
+                uiState = uiState.copy(
+                    loading = false,
+                    timetablePage = timetablePage,
+                    selectedPeriod = timetablePage.periodOptions.find { it.selected },
+                    mostLessonsInLessonSpotInEachDay = TimetableState(timetablePage = timetablePage).mostLessonsInLessonSpotInEachDay
+                )
             }
             catch (e: ParseException)
             {
+                e.printStackTrace()
                 Toast.makeText(appContext, appContext.getString(R.string.unsupported_timetable), Toast.LENGTH_LONG).show()
-                /* Go back to default. */
-                uiState = TimetableState()
-                loadTimetable()
-                return@launch
+                uiState = uiState.copy(loading = false)
             }
-
-            uiState = uiState.copy(
-                loading = false,
-                timetablePage = timetablePage,
-                selectedPeriod = timetablePage.periodOptions.find { it.selected },
-                mostLessonsInLessonSpotInEachDay = TimetableState(timetablePage = timetablePage).mostLessonsInLessonSpotInEachDay
-            )
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.error_load), Toast.LENGTH_LONG).show()
+                uiState = uiState.copy(loading = false)
+            }
         }
     }
 }

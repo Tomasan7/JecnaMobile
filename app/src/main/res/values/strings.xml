@@ -55,8 +55,6 @@
     <string name="november">Listopad</string>
     <string name="december">Prosinec</string>
 
-    <string name="attendance_load_error">Při načítání příchodů a odchodů došlo k chybě. Zkuste to znovu později.</string>
-
     <string name="month">Měsíc</string>
     <string name="school_year">Školní rok</string>
     <string name="school_year_half">Pololetí</string>
@@ -65,6 +63,9 @@
 
     <string name="timetable_period">Období</string>
     <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
+    <string name="unsupported_articles">Novinky jsou v nepodporovaném formátu.</string>
+    <string name="unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
+    <string name="unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
 
     <string name="timetable_subject">Předmět</string>
     <string name="timetable_teacher">Učitel</string>
@@ -75,4 +76,6 @@
     <string name="notification_channel_file_downloads_description">Notifikace stahující se ke stahování souborů.</string>
 
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
+
+    <string name="error_load">Při načítání došlo k chybě.</string>
 </resources>

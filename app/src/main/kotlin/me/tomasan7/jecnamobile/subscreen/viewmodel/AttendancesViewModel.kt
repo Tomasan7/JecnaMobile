@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.AttendancesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
@@ -58,10 +59,16 @@ class AttendancesViewModel @Inject constructor(
                 val attendances = attendancesRepository.queryAttendancesPage(uiState.selectedSchoolYear, uiState.selectedMonth.value)
                 uiState = uiState.copy(loading = false, attendancesPage = attendances)
             }
+            catch (e: ParseException)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.unsupported_attendances), Toast.LENGTH_LONG).show()
+                uiState = uiState.copy(loading = false)
+            }
             catch (e: Exception)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.attendance_load_error), Toast.LENGTH_LONG).show()
+                Toast.makeText(appContext, appContext.getString(R.string.error_load), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
             }
         }
