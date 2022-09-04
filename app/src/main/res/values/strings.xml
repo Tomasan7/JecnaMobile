@@ -3,7 +3,7 @@
 
     <!-- ##### Network Error Screen ##### -->
 
-    <string name="error_no_internet_connection">Aplikace k fungování potřebuje připojení k internetu.</string>
+    <string name="error_no_internet_connection">Aplikace potřebuje připojení k internetu</string>
 
     <!-- ##### Login Screen ##### -->
 
