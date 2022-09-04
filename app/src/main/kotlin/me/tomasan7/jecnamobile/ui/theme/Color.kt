@@ -61,6 +61,9 @@ val md_theme_dark_shadow = Color(0xFF000000)
 
 val seed = Color(0xFF00A0B3)
 
+val label_light = Color.DarkGray
+val label_dark = Color.LightGray
+
 val grade_0 = Color(0xFFA3A7AD)
 val grade_1 = Color(0xFF00E03C)
 val grade_2 = Color(0xFF008A25)

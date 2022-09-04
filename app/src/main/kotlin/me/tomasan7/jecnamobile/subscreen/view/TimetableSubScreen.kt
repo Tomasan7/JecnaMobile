@@ -28,6 +28,7 @@ import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableViewModel
+import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.manipulate
@@ -291,28 +292,13 @@ private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                LessonDialogRow(lesson.subjectName.full)
-                LessonDialogRow(lesson.teacherName.full)
-                LessonDialogRow(lesson.classroom)
+                DialogRow(stringResource(R.string.timetable_subject), lesson.subjectName.full)
+                DialogRow(stringResource(R.string.timetable_teacher), lesson.subjectName.full)
+                DialogRow(stringResource(R.string.timetable_classroom), lesson.classroom)
                 if (lesson.group != 0)
-                    LessonDialogRow(lesson.group.toRoman())
+                    DialogRow(stringResource(R.string.timetable_group), lesson.group.toRoman())
             }
         }
-    }
-}
-
-@Composable
-private fun LessonDialogRow(value: String)
-{
-    Surface(
-        tonalElevation = 10.dp,
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(
-            textAlign = TextAlign.Center,
-            text = value,
-            modifier = Modifier.padding(15.dp).fillMaxWidth()
-        )
     }
 }
 

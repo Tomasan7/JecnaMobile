@@ -32,9 +32,12 @@ import me.tomasan7.jecnaapi.data.grade.Subject
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.GradesViewModel
+import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
+import me.tomasan7.jecnamobile.ui.theme.label_dark
+import me.tomasan7.jecnamobile.ui.theme.label_light
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -405,30 +408,12 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    if (grade.receiveDate != null)
-                        GradeDialogRow(grade.receiveDate!!.format(Constants.gradeDateFormatter)!!)
-                    else
-                        GradeDialogRow("")
-                    GradeDialogRow(grade.description ?: "")
-                    GradeDialogRow(grade.teacher ?: "")
+                    DialogRow(stringResource(R.string.grade_receive_date), grade.receiveDate?.format(Constants.gradeDateFormatter) ?: "")
+                    DialogRow(stringResource(R.string.grade_description), grade.description ?: "")
+                    DialogRow(stringResource(R.string.grade_teacher), grade.teacher ?: "")
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun GradeDialogRow(value: String)
-{
-    Surface(
-        tonalElevation = 10.dp,
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(
-            textAlign = TextAlign.Center,
-            text = value,
-            modifier = Modifier.padding(15.dp).fillMaxWidth()
-        )
     }
 }
 

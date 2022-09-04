@@ -26,6 +26,7 @@
     <string name="grade_weight">Váha</string>
     <string name="grade_weight_small">Malá</string>
     <string name="grade_weight_big">Velká</string>
+    <string name="grade_receive_date">Datum</string>
     <string name="grade_description">Popis</string>
     <string name="grade_teacher">Učitel</string>
 
@@ -64,6 +65,11 @@
 
     <string name="timetable_period">Období</string>
     <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
+
+    <string name="timetable_subject">Předmět</string>
+    <string name="timetable_teacher">Učitel</string>
+    <string name="timetable_classroom">Učebna</string>
+    <string name="timetable_group">Skupina</string>
 
     <string name="notification_channel_file_downloads">Stahování souborů</string>
     <string name="notification_channel_file_downloads_description">Notifikace stahující se ke stahování souborů.</string>
