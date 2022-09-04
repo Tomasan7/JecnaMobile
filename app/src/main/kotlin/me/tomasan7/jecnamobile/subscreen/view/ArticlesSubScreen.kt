@@ -155,4 +155,4 @@ private fun ArticleFile(
     }
 }
 
-val DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM", Locale.forLanguageTag("cs-CZ"))
+val DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM")
