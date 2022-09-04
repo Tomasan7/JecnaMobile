@@ -90,7 +90,7 @@ fun MainScreen()
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
                                     imageVector = Icons.Filled.Menu,
-                                    contentDescription = "Localized description"
+                                    contentDescription = null
                                 )
                             }
                         },
