@@ -78,4 +78,6 @@
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
 
     <string name="error_load">Při načítání došlo k chybě.</string>
+
+    <string name="error_no_internet_connection">Aplikace k fungování potřebuje připojení k internetu.</string>
 </resources>
