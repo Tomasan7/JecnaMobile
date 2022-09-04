@@ -137,7 +137,7 @@ fun TimetableSubScreen(
 @Composable
 private fun TimetablePeriodSelector(
     periodOptions: List<TimetablePage.PeriodOption>?,
-    selectedOption: TimetablePage.PeriodOption? = if (periodOptions != null && periodOptions.isNotEmpty()) periodOptions[0] else null,
+    selectedOption: TimetablePage.PeriodOption? = if (!periodOptions.isNullOrEmpty()) periodOptions[0] else null,
     modifier: Modifier = Modifier,
     onChange: (TimetablePage.PeriodOption) -> Unit
 )
