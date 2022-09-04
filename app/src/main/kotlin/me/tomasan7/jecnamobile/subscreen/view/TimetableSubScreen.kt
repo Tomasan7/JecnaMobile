@@ -5,17 +5,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -30,6 +31,7 @@ import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableViewModel
 import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.manipulate
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.toRoman
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -42,6 +44,20 @@ fun TimetableSubScreen(
 )
 {
     val uiState = viewModel.uiState
+    var dialogOpened by rememberMutableStateOf(false)
+    var dialogLesson by rememberMutableStateOf<Lesson?>(null)
+
+    fun showDialog(lesson: Lesson)
+    {
+        dialogOpened = true
+        dialogLesson = lesson
+    }
+
+    fun hideDialog()
+    {
+        dialogOpened = false
+        dialogLesson = null
+    }
 
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
@@ -123,7 +139,7 @@ fun TimetableSubScreen(
 
                                 val current = now.toLocalTime() in startTime..endTime && timetableDayLabelToDayOfWeek(day) == now.dayOfWeek
 
-                                TimetableLessonSpot(lessonSpot, current)
+                                TimetableLessonSpot(lessonSpot, { showDialog(it) }, current)
                                 Spacer(Modifier.width(5.dp))
                             }
                         }
@@ -132,6 +148,10 @@ fun TimetableSubScreen(
             }
         }
     }
+
+    /* Show the grade dialog. */
+    if (dialogOpened && dialogLesson != null)
+        LessonDialog(dialogLesson!!, ::hideDialog)
 }
 
 @Composable
@@ -183,6 +203,7 @@ private fun TimetableLessonPeriod(
 @Composable
 private fun TimetableLessonSpot(
     lessonSpot: LessonSpot?,
+    onLessonClick: (Lesson) -> Unit = {},
     current: Boolean = false
 )
 {
@@ -202,6 +223,7 @@ private fun TimetableLessonSpot(
 
             TimetableLesson(
                 modifier = lessonModifier,
+                onClick = { onLessonClick(lesson) },
                 lesson = lesson,
                 current = current
             )
@@ -209,10 +231,12 @@ private fun TimetableLessonSpot(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimetableLesson(
-    modifier: Modifier = Modifier,
     lesson: Lesson,
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
     current: Boolean = false
 )
 {
@@ -221,7 +245,8 @@ private fun TimetableLesson(
         tonalElevation = 4.dp,
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(5.dp),
-        color = if (current) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.surface
+        color = if (current) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.surface,
+        onClick = onClick
     ) {
         Box(Modifier.padding(4.dp)) {
             if (lesson.subjectName.short != null)
@@ -254,9 +279,41 @@ private fun DayLabel(
 }
 
 @Composable
-fun ()
+private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
 {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            tonalElevation = 5.dp,
+            modifier = Modifier.width(300.dp),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                LessonDialogRow(lesson.subjectName.full)
+                LessonDialogRow(lesson.teacherName.full)
+                LessonDialogRow(lesson.classroom)
+                if (lesson.group != 0)
+                    LessonDialogRow(lesson.group.toRoman())
+            }
+        }
+    }
+}
 
+@Composable
+private fun LessonDialogRow(value: String)
+{
+    Surface(
+        tonalElevation = 10.dp,
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Text(
+            textAlign = TextAlign.Center,
+            text = value,
+            modifier = Modifier.padding(15.dp).fillMaxWidth()
+        )
+    }
 }
 
 fun timetableDayLabelToDayOfWeek(timetableDayLabel: String) = when (timetableDayLabel)
