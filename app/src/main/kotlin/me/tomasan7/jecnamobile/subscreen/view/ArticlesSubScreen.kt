@@ -3,6 +3,7 @@ package me.tomasan7.jecnamobile.subscreen.view
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,8 @@ import me.tomasan7.jecnaapi.data.ArticleFile
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
+import me.tomasan7.jecnamobile.ui.theme.label_dark
+import me.tomasan7.jecnamobile.ui.theme.label_light
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -114,7 +117,7 @@ private fun Article(
         Text(
             text = "${article.date.format(DATE_FORMATTER)} | ${article.author}",
             fontSize = 12.sp,
-            color = Color.LightGray
+            color = if (isSystemInDarkTheme()) label_dark else label_light
         )
     }
 }
@@ -143,7 +146,7 @@ private fun ArticleFile(
                 text = buildAnnotatedString {
                     append(articleFile.label)
 
-                    withStyle(SpanStyle(fontSize = 10.sp, color = Color.LightGray)) {
+                    withStyle(SpanStyle(fontSize = 10.sp, color = if (isSystemInDarkTheme()) label_dark else label_light)) {
                         append("." + articleFile.fileExtension)
                     }
                 }
