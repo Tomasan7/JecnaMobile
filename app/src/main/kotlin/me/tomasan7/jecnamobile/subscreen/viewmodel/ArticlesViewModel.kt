@@ -52,9 +52,22 @@ class ArticlesViewModel @Inject constructor(
     {
         viewModelScope.launch {
             val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), articleFile.filename)
-            webClient.query(articleFile.downloadPath).content.copyAndClose(file.writeChannel())
-            withContext(Dispatchers.Main) {
-                openFile(file)
+            try
+            {
+                webClient.query(articleFile.downloadPath).content.copyAndClose(file.writeChannel())
+                withContext(Dispatchers.Main) {
+                    openFile(file)
+                }
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.error_download), Toast.LENGTH_LONG).show()
             }
         }
     }
