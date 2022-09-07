@@ -155,4 +155,4 @@ private fun ArticleFile(
     }
 }
 
-val DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM")
+private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM")
