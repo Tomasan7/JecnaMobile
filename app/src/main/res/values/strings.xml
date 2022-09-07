@@ -23,6 +23,7 @@
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+    <string name="sidebar_logout">Odhlásit se</string>
 
     <!-- ##### Articles SubScreen ##### -->
 

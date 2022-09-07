@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.screen.view
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -9,15 +10,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.*
+import me.tomasan7.jecnamobile.screen.viewmodel.LoginViewModel
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
@@ -26,7 +33,9 @@ data class DrawerItem(val icon: ImageVector, val label: String, val destination:
 @RootNavGraph(start = true)
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
-fun MainScreen()
+fun MainScreen(
+    navController: NavController
+)
 {
     val destinationItems = listOf(
         DrawerItem(Icons.Default.Newspaper, stringResource(R.string.sidebar_news), ArticlesSubScreenDestination),
@@ -52,29 +61,56 @@ fun MainScreen()
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Row(
-                    modifier = Modifier.height(56.dp).padding(start = 28.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Column {
+                    Row(
+                        modifier = Modifier.height(56.dp).padding(start = 28.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+
+                    destinationItems.forEach { item ->
+                        NavigationDrawerItem(
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                            icon = { Icon(item.icon, null) },
+                            label = { Text(item.label) },
+                            selected = item == selectedItem,
+                            onClick = onClick@{
+                                scope.launch { drawerState.close() }
+                                if (selectedItem == item)
+                                    return@onClick
+
+                                contentNavController.navigate(item.destination.route)
+                                selectedItem = item
+                            }
+                        )
+                    }
                 }
 
-                destinationItems.forEach { item ->
+                Column(
+                    modifier = Modifier.fillMaxHeight().padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    val context = LocalContext.current
                     NavigationDrawerItem(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                        icon = { Icon(item.icon, null) },
-                        label = { Text(item.label) },
-                        selected = item == selectedItem,
-                        onClick = onClick@ {
-                            scope.launch { drawerState.close() }
-                            if (selectedItem == item)
-                                return@onClick
-
-                            contentNavController.navigate(item.destination.route)
-                            selectedItem = item
+                        icon = { Icon(Icons.Default.Logout, null) },
+                        label = { Text(stringResource(R.string.sidebar_logout)) },
+                        selected = false,
+                        onClick = onClick@{
+                            navController.navigate(LoginScreenDestination) {
+                                navController.currentDestination?.id?.let {
+                                    popUpTo(it) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                            context
+                                    .getSharedPreferences(LoginViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+                                    .edit().clear().apply()
                         }
                     )
                 }
