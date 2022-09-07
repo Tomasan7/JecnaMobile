@@ -24,6 +24,10 @@
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
 
+    <!-- ##### Articles SubScreen ##### -->
+
+    <string name="article_school_only">Pouze pro školu</string>
+
     <!-- ##### Grades SubScreen ##### -->
 
     <string name="grade_word_0">Nehodnocen</string>

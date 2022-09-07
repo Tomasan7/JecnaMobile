@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,6 +34,7 @@ import com.ireward.htmlcompose.HtmlText
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
+import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
@@ -114,7 +116,10 @@ private fun Article(
         Spacer(Modifier.height(10.dp))
 
         Text(
-            text = "${article.date.format(DATE_FORMATTER)} | ${article.author}",
+            text = if (article.schoolOnly)
+                "${article.date.format(DATE_FORMATTER)} | ${article.author}"
+            else
+                "${article.date.format(DATE_FORMATTER)} | ${article.author} | ${stringResource(R.string.article_school_only)}",
             fontSize = 12.sp,
             color = if (isSystemInDarkTheme()) label_dark else label_light
         )
