@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.subscreen.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -67,13 +68,11 @@ fun AttendancesSubScreen(
             }
 
             if (uiState.attendancesPage != null)
-                uiState.attendancesPage.days.forEach { day ->
-                    item(day.toEpochDay()) {
-                        AttendanceComposable(
-                            modifier = Modifier.fillMaxWidth(),
-                            attendanceRow = day to uiState.attendancesPage[day]
-                        )
-                    }
+                items(uiState.daysSorted!!, { it.hashCode() }) { day ->
+                    AttendanceComposable(
+                        modifier = Modifier.fillMaxWidth(),
+                        attendanceRow = day to uiState.attendancesPage[day]
+                    )
                 }
         }
     }

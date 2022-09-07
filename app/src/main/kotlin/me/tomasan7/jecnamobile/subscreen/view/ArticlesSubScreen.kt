@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
@@ -58,13 +59,11 @@ fun ArticlesSubScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.articlesPage != null)
-                uiState.articlesPage.articles.forEach { article ->
-                    item(article.hashCode()) {
-                        Article(
-                            article = article,
-                            onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
-                        )
-                    }
+                items(uiState.articlesPage.articles, { it.hashCode() }) { article ->
+                    Article(
+                        article = article,
+                        onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
+                    )
                 }
         }
     }

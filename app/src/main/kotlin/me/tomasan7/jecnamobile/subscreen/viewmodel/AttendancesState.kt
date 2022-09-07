@@ -11,3 +11,6 @@ data class AttendancesState(
     val selectedMonth: Month = LocalDate.now().month,
     val selectedSchoolYear: SchoolYear = SchoolYear.current()
 )
+{
+    val daysSorted = attendancesPage?.days?.sorted()
+}

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -96,19 +97,14 @@ fun GradesSubScreen(
 
             if (uiState.gradesPage != null)
             {
-                /* subjectNamesSorted is not null, because it is only null when gradesPage is null. */
-                uiState.subjectNamesSorted!!.forEach { subjectName ->
-                    val subject = uiState.gradesPage[subjectName]!!
-                    /* Using subject as a key, so once there's a different subject (ex. user changes period) the composables are recreated. (not just recomposed) */
-                    item(subject.hashCode()) {
-                        Subject(
-                            subject = subject,
-                            onGradeClick = { showDialog(it) }
-                        )
-                    }
+                items(uiState.subjectNamesSorted!!, { it.hashCode() }) { subjectName ->
+                    Subject(
+                        subject = uiState.gradesPage[subjectName]!!,
+                        onGradeClick = { showDialog(it) }
+                    )
                 }
 
-                item {
+                item(uiState.gradesPage.behaviour.hashCode()) {
                     Behaviour(uiState.gradesPage.behaviour)
                 }
             }
