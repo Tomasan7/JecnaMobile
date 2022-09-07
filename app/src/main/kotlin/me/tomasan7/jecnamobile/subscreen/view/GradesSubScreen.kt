@@ -1,8 +1,10 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -16,7 +18,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -36,8 +37,6 @@ import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
-import me.tomasan7.jecnamobile.ui.theme.label_dark
-import me.tomasan7.jecnamobile.ui.theme.label_light
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -73,26 +72,26 @@ fun GradesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadGrades() }
     ) {
-        Column(
-            modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                SchoolYearSelector(
-                    modifier = Modifier.width(160.dp),
-                    selectedSchoolYear = uiState.selectedSchoolYear,
-                    onChange = { viewModel.selectSchoolYear(it) }
-                )
-                SchoolYearHalfSelector(
-                    modifier = Modifier.width(160.dp),
-                    selectedSchoolYearHalf = uiState.selectedSchoolYearHalf,
-                    onChange = { viewModel.selectSchoolYearHalf(it) }
-                )
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    SchoolYearSelector(
+                        modifier = Modifier.width(160.dp),
+                        selectedSchoolYear = uiState.selectedSchoolYear,
+                        onChange = { viewModel.selectSchoolYear(it) }
+                    )
+                    SchoolYearHalfSelector(
+                        modifier = Modifier.width(160.dp),
+                        selectedSchoolYearHalf = uiState.selectedSchoolYearHalf,
+                        onChange = { viewModel.selectSchoolYearHalf(it) }
+                    )
+                }
             }
 
             if (uiState.gradesPage != null)
@@ -101,7 +100,7 @@ fun GradesSubScreen(
                 uiState.subjectNamesSorted!!.forEach { subjectName ->
                     val subject = uiState.gradesPage[subjectName]!!
                     /* Using subject as a key, so once there's a different subject (ex. user changes period) the composables are recreated. (not just recomposed) */
-                    key(subject) {
+                    item(subject.hashCode()) {
                         Subject(
                             subject = subject,
                             onGradeClick = { showDialog(it) }
@@ -109,13 +108,15 @@ fun GradesSubScreen(
                     }
                 }
 
-                Behaviour(uiState.gradesPage.behaviour)
+                item {
+                    Behaviour(uiState.gradesPage.behaviour)
+                }
             }
-
-            /* Show the grade dialog. */
-            if (dialogOpened && dialogGrade != null)
-                GradeDialog(dialogGrade!!, ::hideDialog)
         }
+
+        /* Show the grade dialog. */
+        if (dialogOpened && dialogGrade != null)
+            GradeDialog(dialogGrade!!, ::hideDialog)
     }
 }
 

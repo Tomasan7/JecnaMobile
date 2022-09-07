@@ -1,11 +1,12 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,35 +40,37 @@ fun AttendancesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadAttendances() }
     ) {
-        Column(
-            modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                SchoolYearSelector(
-                    modifier = Modifier.width(160.dp),
-                    selectedSchoolYear = uiState.selectedSchoolYear,
-                    onChange = { viewModel.selectSchoolYear(it) }
-                )
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    SchoolYearSelector(
+                        modifier = Modifier.width(160.dp),
+                        selectedSchoolYear = uiState.selectedSchoolYear,
+                        onChange = { viewModel.selectSchoolYear(it) }
+                    )
 
-                MonthSelector(
-                    modifier = Modifier.width(160.dp),
-                    selectedMonth = uiState.selectedMonth,
-                    onChange = { viewModel.selectMonth(it) }
-                )
+                    MonthSelector(
+                        modifier = Modifier.width(160.dp),
+                        selectedMonth = uiState.selectedMonth,
+                        onChange = { viewModel.selectMonth(it) }
+                    )
+                }
             }
 
             if (uiState.attendancesPage != null)
                 uiState.attendancesPage.days.forEach { day ->
-                    AttendanceComposable(
-                        modifier = Modifier.fillMaxWidth(),
-                        attendanceRow = day to uiState.attendancesPage[day]
-                    )
+                    item(day.toEpochDay()) {
+                        AttendanceComposable(
+                            modifier = Modifier.fillMaxWidth(),
+                            attendanceRow = day to uiState.attendancesPage[day]
+                        )
+                    }
                 }
         }
     }

@@ -5,17 +5,18 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -37,7 +38,6 @@ import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.theme.label_dark
 import me.tomasan7.jecnamobile.ui.theme.label_light
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @SubScreensNavGraph
 @Destination
@@ -53,18 +53,18 @@ fun ArticlesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadArticles() }
     ) {
-        Column(
-            modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.articlesPage != null)
                 uiState.articlesPage.articles.forEach { article ->
-                    Article(
-                        article = article,
-                        onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
-                    )
+                    item(article.hashCode()) {
+                        Article(
+                            article = article,
+                            onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
+                        )
+                    }
                 }
         }
     }
