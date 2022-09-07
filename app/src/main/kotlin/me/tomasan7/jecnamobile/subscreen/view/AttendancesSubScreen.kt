@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -16,6 +17,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.attendance.Attendance
+import me.tomasan7.jecnaapi.data.attendance.AttendanceType
+import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
@@ -108,7 +111,7 @@ private fun AttendanceComposable(
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         Text(
-                            text = attendance.toString(),
+                            text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
                             modifier = Modifier.padding(10.dp)
                         )
                     }
@@ -116,3 +119,12 @@ private fun AttendanceComposable(
             }
     }
 }
+
+@Composable
+private fun getAttendanceTypeName(type: AttendanceType) = when(type)
+{
+    AttendanceType.ENTER -> stringResource(R.string.attendance_type_enter)
+    AttendanceType.EXIT -> stringResource(R.string.attendance_type_exit)
+}
+
+private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")

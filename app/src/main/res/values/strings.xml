@@ -52,6 +52,11 @@
 
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
 
+    <!-- ##### Attendances SubScreen ##### -->
+
+    <string name="attendance_type_enter">Příchod</string>
+    <string name="attendance_type_exit">Odchod</string>
+
     <!-- ##### General ##### -->
 
     <string name="monday">Pondělí</string>
