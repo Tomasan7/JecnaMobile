@@ -301,32 +301,6 @@ private fun GradeComposable(grade: Grade)
     }
 }
 
-/*@Composable
-private fun GradeComposable(
-    grade: Grade,
-    onClick: () -> Unit
-)
-{
-    val gradeHeight = if (grade.small) Constants.gradeSmallHeight else Constants.gradeWidth
-    val gradeColor = remember { getGradeColor(grade) }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-                .size(Constants.gradeWidth, gradeHeight)
-                .clip(RoundedCornerShape(7.dp))
-                .background(gradeColor)
-                .clickable(onClick = onClick)
-    ) {
-        Text(
-            grade.valueChar().toString(),
-            color = Color.Black,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
-    }
-}*/
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GradeAverageComposable(
