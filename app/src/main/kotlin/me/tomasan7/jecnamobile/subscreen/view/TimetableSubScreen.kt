@@ -97,7 +97,8 @@ fun TimetableSubScreen(
             Column(
                 modifier = Modifier
                         .fillMaxSize()
-                        .horizontalScroll(rememberScrollState()),
+                        .horizontalScroll(rememberScrollState())
+                        .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
 
@@ -109,7 +110,7 @@ fun TimetableSubScreen(
                     Row {
                         timetable.lessonPeriods.forEachIndexed { i, lessonPeriod ->
                             if (i == 0)
-                                Spacer(Modifier.width(46.dp))
+                                Spacer(Modifier.width(30.dp))
 
                             Spacer(Modifier.width(5.dp))
 
@@ -127,7 +128,6 @@ fun TimetableSubScreen(
                         else
                             Modifier.height(IntrinsicSize.Min)
                         Row(modifier) {
-                            Spacer(Modifier.width(16.dp))
                             DayLabel(getWeekDayName(day).substring(0, 2), Modifier.width(30.dp).fillMaxHeight())
                             Spacer(Modifier.width(5.dp))
                             timetable.getTimetableSpotsForDay(day)!!.forEach { timetableSpot ->
