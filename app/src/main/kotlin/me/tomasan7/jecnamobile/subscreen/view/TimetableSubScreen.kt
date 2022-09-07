@@ -294,13 +294,3 @@ private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
         }
     }
 }
-
-fun timetableDayLabelToDayOfWeek(timetableDayLabel: String) = when (timetableDayLabel)
-{
-    "Po" -> DayOfWeek.MONDAY
-    "Út" -> DayOfWeek.TUESDAY
-    "St" -> DayOfWeek.WEDNESDAY
-    "Čt" -> DayOfWeek.THURSDAY
-    "Pa" -> DayOfWeek.FRIDAY
-    else -> throw RuntimeException("'$timetableDayLabel' doesn't match any day of week.")
-}
