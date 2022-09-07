@@ -28,7 +28,6 @@ import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-private val datePattern = DateTimeFormatter.ofPattern("d.M.")
 
 @SubScreensNavGraph
 @Destination
@@ -85,7 +84,7 @@ private fun AttendanceComposable(
 )
 {
     val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
-    val dayDate = attendanceRow.first.format(datePattern)
+    val dayDate = attendanceRow.first.format(DATE_FORMATTER)
 
     me.tomasan7.jecnamobile.ui.component.Card(
         title = {
@@ -125,5 +124,7 @@ private fun getAttendanceTypeName(type: AttendanceType) = when(type)
     AttendanceType.ENTER -> stringResource(R.string.attendance_type_enter)
     AttendanceType.EXIT -> stringResource(R.string.attendance_type_exit)
 }
+
+private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
 
 private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
