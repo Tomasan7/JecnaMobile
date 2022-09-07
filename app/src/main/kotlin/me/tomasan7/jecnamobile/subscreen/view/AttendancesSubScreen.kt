@@ -14,7 +14,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.Attendance
+import me.tomasan7.jecnaapi.data.attendance.Attendance
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
 import me.tomasan7.jecnamobile.ui.component.MonthSelector

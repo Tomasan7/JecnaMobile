@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.tomasan7.jecnaapi.data.ArticleFile
+import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.ArticlesRepository
 import me.tomasan7.jecnaapi.web.JecnaWebClient

@@ -20,16 +20,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.Lesson
-import me.tomasan7.jecnaapi.data.LessonPeriod
-import me.tomasan7.jecnaapi.data.LessonSpot
-import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.Lesson
+import me.tomasan7.jecnaapi.data.timetable.LessonPeriod
+import me.tomasan7.jecnaapi.data.timetable.LessonSpot
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.TimetableSpot
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableViewModel
 import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.manipulate
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.toRoman
@@ -102,8 +104,10 @@ fun TimetableSubScreen(
 
                 if (uiState.timetablePage != null)
                 {
+                    val timetable = uiState.timetablePage.timetable
+
                     Row {
-                        uiState.timetablePage.lessonPeriods.forEachIndexed { i, lessonPeriod ->
+                        timetable.lessonPeriods.forEachIndexed { i, lessonPeriod ->
                             if (i == 0)
                                 Spacer(Modifier.width(46.dp))
 
@@ -117,29 +121,17 @@ fun TimetableSubScreen(
                         }
                     }
 
-                    uiState.timetablePage.daysSorted.forEach { day ->
+                    timetable.daysSorted.forEach { day ->
                         val modifier = if (uiState.mostLessonsInLessonSpotInEachDay!![day]!! <= 2)
                             Modifier.height(100.dp)
                         else
                             Modifier.height(IntrinsicSize.Min)
                         Row(modifier) {
                             Spacer(Modifier.width(16.dp))
-                            DayLabel(day, Modifier.width(30.dp).fillMaxHeight())
+                            DayLabel(getWeekDayName(day).substring(0, 2), Modifier.width(30.dp).fillMaxHeight())
                             Spacer(Modifier.width(5.dp))
-                            uiState.timetablePage.getLessonsForDay(day).forEachIndexed { i, lessonSpot ->
-                                val lessonPeriod = uiState.timetablePage.lessonPeriods[i]
-                                val now = LocalDateTime.now()
-
-                                val startTime = if (i == 0)
-                                    uiState.timetablePage.lessonPeriods[0].from
-                                else
-                                    uiState.timetablePage.lessonPeriods[i - 1].to
-
-                                val endTime = lessonPeriod.to
-
-                                val current = now.toLocalTime() in startTime..endTime && timetableDayLabelToDayOfWeek(day) == now.dayOfWeek
-
-                                TimetableLessonSpot(lessonSpot, { showDialog(it) }, current)
+                            timetable.getTimetableSpotsForDay(day)!!.forEach { timetableSpot ->
+                                TimetableSpot(timetableSpot, { showDialog(it) }, timetable.getCurrentTimetableSpot() == timetableSpot)
                                 Spacer(Modifier.width(5.dp))
                             }
                         }
@@ -201,19 +193,21 @@ private fun TimetableLessonPeriod(
 }
 
 @Composable
-private fun TimetableLessonSpot(
-    lessonSpot: LessonSpot?,
+private fun TimetableSpot(
+    timetableSpot: TimetableSpot,
     onLessonClick: (Lesson) -> Unit = {},
     current: Boolean = false
 )
 {
+    val lessonSpot = timetableSpot.lessonSpot
+
     var lessonSpotModifier = Modifier.width(100.dp)
 
-    if (lessonSpot == null || lessonSpot.size <= 2)
+    if (lessonSpot.size <= 2)
         lessonSpotModifier = lessonSpotModifier.fillMaxHeight()
 
     Column(lessonSpotModifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        lessonSpot?.forEach { lesson ->
+        lessonSpot.forEach { lesson ->
             /* If there is < 2 lessons, they are stretched to  */
             var lessonModifier = Modifier.fillMaxWidth()
             lessonModifier = if (lessonSpot.size <= 2)

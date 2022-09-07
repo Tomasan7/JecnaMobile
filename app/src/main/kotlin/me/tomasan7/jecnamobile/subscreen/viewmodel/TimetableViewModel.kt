@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear

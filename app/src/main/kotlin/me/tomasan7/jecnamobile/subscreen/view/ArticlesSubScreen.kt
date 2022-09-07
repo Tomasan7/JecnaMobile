@@ -29,8 +29,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ireward.htmlcompose.HtmlText
 import com.ramcosta.composedestinations.annotation.Destination
-import me.tomasan7.jecnaapi.data.Article
-import me.tomasan7.jecnaapi.data.ArticleFile
+import me.tomasan7.jecnaapi.data.article.Article
+import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
