@@ -4,9 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -73,40 +73,39 @@ fun GradesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadGrades() }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp),
+        Column(
+            modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    SchoolYearSelector(
-                        modifier = Modifier.width(160.dp),
-                        selectedSchoolYear = uiState.selectedSchoolYear,
-                        onChange = { viewModel.selectSchoolYear(it) }
-                    )
-                    SchoolYearHalfSelector(
-                        modifier = Modifier.width(160.dp),
-                        selectedSchoolYearHalf = uiState.selectedSchoolYearHalf,
-                        onChange = { viewModel.selectSchoolYearHalf(it) }
-                    )
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SchoolYearSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYear = uiState.selectedSchoolYear,
+                    onChange = { viewModel.selectSchoolYear(it) }
+                )
+                SchoolYearHalfSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYearHalf = uiState.selectedSchoolYearHalf,
+                    onChange = { viewModel.selectSchoolYearHalf(it) }
+                )
             }
 
             if (uiState.gradesPage != null)
             {
-                items(uiState.subjectNamesSorted!!, { uiState.gradesPage[it].hashCode() }) { subjectName ->
-                    Subject(
-                        subject = uiState.gradesPage[subjectName]!!,
-                        onGradeClick = { showDialog(it) }
-                    )
+                uiState.subjectNamesSorted!!.forEach { subjectName ->
+                    val subject = uiState.gradesPage[subjectName]!!
+                    key(subject) {
+                        Subject(
+                            subject = subject,
+                            onGradeClick = { showDialog(it) }
+                        )
+                    }
                 }
 
-                item(uiState.gradesPage.behaviour.hashCode()) {
-                    Behaviour(uiState.gradesPage.behaviour)
-                }
+                Behaviour(uiState.gradesPage.behaviour)
             }
         }
 

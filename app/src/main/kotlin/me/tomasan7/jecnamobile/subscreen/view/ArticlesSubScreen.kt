@@ -5,9 +5,9 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Icon
@@ -56,12 +56,12 @@ fun ArticlesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadArticles() }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp),
+        Column(
+            modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.articlesPage != null)
-                items(uiState.articlesPage.articles, { it.hashCode() }) { article ->
+                uiState.articlesPage.articles.forEach { article ->
                     Article(
                         article = article,
                         onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }

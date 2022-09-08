@@ -1,9 +1,9 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,35 +43,31 @@ fun AttendancesSubScreen(
         state = rememberSwipeRefreshState(uiState.loading),
         onRefresh = { viewModel.loadAttendances() }
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(16.dp),
+        Column(
+            modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    SchoolYearSelector(
-                        modifier = Modifier.width(160.dp),
-                        selectedSchoolYear = uiState.selectedSchoolYear,
-                        onChange = { viewModel.selectSchoolYear(it) }
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SchoolYearSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedSchoolYear = uiState.selectedSchoolYear,
+                    onChange = { viewModel.selectSchoolYear(it) }
+                )
 
-                    MonthSelector(
-                        modifier = Modifier.width(160.dp),
-                        selectedMonth = uiState.selectedMonth,
-                        onChange = { viewModel.selectMonth(it) }
-                    )
-                }
+                MonthSelector(
+                    modifier = Modifier.width(160.dp),
+                    selectedMonth = uiState.selectedMonth,
+                    onChange = { viewModel.selectMonth(it) }
+                )
             }
 
             if (uiState.attendancesPage != null)
-                items(uiState.daysSorted!!, { uiState.attendancesPage[it].hashCode() }) { day ->
-                    AttendanceComposable(
-                        modifier = Modifier.fillMaxWidth(),
-                        attendanceRow = day to uiState.attendancesPage[day]
-                    )
+                uiState.daysSorted!!.forEach { day ->
+                    val attendance = uiState.attendancesPage[day]
+                    AttendanceComposable(day to attendance)
                 }
         }
     }
