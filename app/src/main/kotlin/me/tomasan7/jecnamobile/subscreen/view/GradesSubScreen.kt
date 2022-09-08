@@ -95,8 +95,7 @@ fun GradesSubScreen(
 
             if (uiState.gradesPage != null)
             {
-                uiState.subjectNamesSorted!!.forEach { subjectName ->
-                    val subject = uiState.gradesPage[subjectName]!!
+                uiState.subjectsSorted!!.forEach { subject ->
                     key(subject) {
                         Subject(
                             subject = subject,

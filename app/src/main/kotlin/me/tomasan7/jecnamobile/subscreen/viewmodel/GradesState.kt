@@ -16,5 +16,5 @@ data class GradesState(
     /**
      * [gradesPage]'s `subjectNames` sorted according to Czech alphabet. Is `null` when [gradesPage] is `null`.
      */
-    val subjectNamesSorted = gradesPage?.subjectNames?.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.full })
+    val subjectsSorted = gradesPage?.subjects?.sortedWith(compareBy(Collator.getInstance(Locale("cs"))) { it.name.full })
 }
