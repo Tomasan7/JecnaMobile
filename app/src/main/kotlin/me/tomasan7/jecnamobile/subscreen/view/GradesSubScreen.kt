@@ -97,7 +97,7 @@ fun GradesSubScreen(
 
             if (uiState.gradesPage != null)
             {
-                items(uiState.subjectNamesSorted!!, { it.hashCode() }) { subjectName ->
+                items(uiState.subjectNamesSorted!!, { uiState.gradesPage[it].hashCode() }) { subjectName ->
                     Subject(
                         subject = uiState.gradesPage[subjectName]!!,
                         onGradeClick = { showDialog(it) }

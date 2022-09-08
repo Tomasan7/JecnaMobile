@@ -67,7 +67,7 @@ fun AttendancesSubScreen(
             }
 
             if (uiState.attendancesPage != null)
-                items(uiState.daysSorted!!, { it.hashCode() }) { day ->
+                items(uiState.daysSorted!!, { uiState.attendancesPage[it].hashCode() }) { day ->
                     AttendanceComposable(
                         modifier = Modifier.fillMaxWidth(),
                         attendanceRow = day to uiState.attendancesPage[day]
