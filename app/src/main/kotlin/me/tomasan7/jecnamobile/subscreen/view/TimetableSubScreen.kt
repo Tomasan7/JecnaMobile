@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -131,7 +132,12 @@ fun TimetableSubScreen(
                             DayLabel(getWeekDayName(day).substring(0, 2), Modifier.width(30.dp).fillMaxHeight())
                             Spacer(Modifier.width(5.dp))
                             timetable.getTimetableSpotsForDay(day)!!.forEach { timetableSpot ->
-                                TimetableSpot(timetableSpot, { showDialog(it) }, timetable.getCurrentTimetableSpot() == timetableSpot)
+                                TimetableSpot(
+                                    timetableSpot = timetableSpot,
+                                    onLessonClick = { showDialog(it) },
+                                    current = timetable.getCurrentTimetableSpot() == timetableSpot,
+                                    next = timetable.getCurrentNextTimetableSpot() == timetableSpot
+                                )
                                 Spacer(Modifier.width(5.dp))
                             }
                         }
@@ -196,7 +202,8 @@ private fun TimetableLessonPeriod(
 private fun TimetableSpot(
     timetableSpot: TimetableSpot,
     onLessonClick: (Lesson) -> Unit = {},
-    current: Boolean = false
+    current: Boolean = false,
+    next: Boolean = false
 )
 {
     val lessonSpot = timetableSpot.lessonSpot
@@ -219,7 +226,8 @@ private fun TimetableSpot(
                 modifier = lessonModifier,
                 onClick = { onLessonClick(lesson) },
                 lesson = lesson,
-                current = current
+                current = current,
+                next = next
             )
         }
     }
@@ -231,14 +239,16 @@ private fun TimetableLesson(
     lesson: Lesson,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
-    current: Boolean = false
+    current: Boolean = false,
+    next: Boolean = false
 )
 {
+    val shape = RoundedCornerShape(5.dp)
     Surface(
-        modifier = modifier,
+        modifier = if (next) modifier.border(1.dp, MaterialTheme.colorScheme.inverseSurface, shape) else modifier,
         tonalElevation = 4.dp,
         shadowElevation = 4.dp,
-        shape = RoundedCornerShape(5.dp),
+        shape = shape,
         color = if (current) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.surface,
         onClick = onClick
     ) {
