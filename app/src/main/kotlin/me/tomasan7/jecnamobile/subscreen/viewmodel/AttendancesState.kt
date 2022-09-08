@@ -12,5 +12,5 @@ data class AttendancesState(
     val selectedSchoolYear: SchoolYear = SchoolYear.current()
 )
 {
-    val daysSorted = attendancesPage?.days?.sorted()
+    val daysSorted = attendancesPage?.days?.sorted()?.reversed()
 }
