@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import me.tomasan7.jecnaapi.repository.*
+import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import javax.inject.Singleton
 
@@ -31,4 +32,8 @@ internal object AppModule
     @Provides
     @Singleton
     fun provideArticlesRepository(jecnaWebClient: JecnaWebClient): ArticlesRepository = WebArticlesRepository(jecnaWebClient)
+
+    @Provides
+    @Singleton
+    fun provideCanteenClient(canteenWebClient: ICanteenWebClient): CanteenClient = WebCanteenClient(canteenWebClient)
 }
