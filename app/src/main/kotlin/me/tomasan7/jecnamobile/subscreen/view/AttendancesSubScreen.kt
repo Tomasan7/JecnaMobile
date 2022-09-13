@@ -22,6 +22,7 @@ import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
+import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getWeekDayName
@@ -82,7 +83,7 @@ private fun AttendanceComposable(
     val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
     val dayDate = attendanceRow.first.format(DATE_FORMATTER)
 
-    me.tomasan7.jecnamobile.ui.component.Card(
+    Card(
         title = {
             Text(
                 text = "$dayName $dayDate",
