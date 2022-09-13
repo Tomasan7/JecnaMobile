@@ -24,7 +24,7 @@ import javax.inject.Inject
 class GradesViewModel @Inject constructor(
     private val gradesRepository: GradesRepository,
     @ApplicationContext
-    val appContext: Context
+    private val appContext: Context
 ) : ViewModel()
 {
     var uiState by mutableStateOf(GradesState())
