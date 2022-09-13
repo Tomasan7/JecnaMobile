@@ -17,6 +17,7 @@ import me.tomasan7.jecnaapi.repository.GradesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.state.GradesState
 import javax.inject.Inject
 
 @HiltViewModel

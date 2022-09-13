@@ -25,6 +25,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.ArticlesRepository
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.state.ArticlesState
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException

@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile.subscreen.viewmodel
+package me.tomasan7.jecnamobile.subscreen.state
 
 import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 import me.tomasan7.jecnaapi.util.SchoolYear

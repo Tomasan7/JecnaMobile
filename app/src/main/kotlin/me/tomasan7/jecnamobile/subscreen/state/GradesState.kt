@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile.subscreen.viewmodel
+package me.tomasan7.jecnamobile.subscreen.state
 
 import android.icu.text.Collator
 import me.tomasan7.jecnaapi.data.grade.GradesPage
