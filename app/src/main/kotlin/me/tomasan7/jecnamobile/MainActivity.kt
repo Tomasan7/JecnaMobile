@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,15 +13,12 @@ import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.destinations.NetworkErrorScreenDestination
 import me.tomasan7.jecnamobile.repository.AuthRepository
-import me.tomasan7.jecnamobile.screen.viewmodel.LoginViewModel
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
-import java.net.InetAddress
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,19 +80,5 @@ class MainActivity : ComponentActivity()
         SUCCESS,
         NETWORK_ERROR,
         AUTH_ERROR
-    }
-
-    private fun isInternetAvailable(): Boolean
-    {
-        return try
-        {
-            val ipAddr = InetAddress.getByName(JecnaWebClient.ENDPOINT)
-            //You can replace it with your name
-            !ipAddr.equals("")
-        }
-        catch (e: Exception)
-        {
-            false
-        }
     }
 }
