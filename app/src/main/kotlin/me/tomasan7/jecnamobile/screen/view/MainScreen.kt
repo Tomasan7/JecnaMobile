@@ -94,7 +94,6 @@ fun MainScreen(
                     modifier = Modifier.fillMaxHeight().padding(bottom = 16.dp),
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    val context = LocalContext.current
                     NavigationDrawerItem(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         icon = { Icon(Icons.Default.Logout, null) },

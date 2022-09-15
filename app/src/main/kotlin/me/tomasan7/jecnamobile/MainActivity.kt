@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity()
                     val loginResult = runBlocking {
                         try
                         {
-                            if (jecnaClient.login(authRepository.getAuth()!!))
+                            if (jecnaClient.login(authRepository.get()!!))
                             {
                                 LoginResult.SUCCESS
                             }

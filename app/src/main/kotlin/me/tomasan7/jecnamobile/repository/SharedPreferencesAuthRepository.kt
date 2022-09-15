@@ -12,7 +12,7 @@ class SharedPreferencesAuthRepository @Inject constructor(
 {
     private val preferences = appContext.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
 
-    override fun getAuth(): Auth?
+    override fun get(): Auth?
     {
         val username = preferences.getString(USERNAME_KEY, null) ?: return null
         val password = preferences.getString(PASSWORD_KEY, null) ?: return null
@@ -20,7 +20,7 @@ class SharedPreferencesAuthRepository @Inject constructor(
         return Auth(username, password)
     }
 
-    override fun setAuth(auth: Auth)
+    override fun set(auth: Auth)
     {
         with(preferences.edit()) {
             putString(USERNAME_KEY, auth.username)
@@ -29,7 +29,7 @@ class SharedPreferencesAuthRepository @Inject constructor(
         }
     }
 
-    override fun clearAuth()
+    override fun clear()
     {
         with(preferences.edit()) {
             clear()

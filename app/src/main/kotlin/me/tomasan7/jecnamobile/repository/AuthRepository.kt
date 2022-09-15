@@ -4,9 +4,9 @@ import me.tomasan7.jecnaapi.web.Auth
 
 interface AuthRepository
 {
-    fun getAuth(): Auth?
-    fun setAuth(auth: Auth)
-    fun setAuth(username: String, password: String) = setAuth(Auth(username, password))
-    fun clearAuth()
+    fun get(): Auth?
+    fun set(auth: Auth)
+    fun set(username: String, password: String) = set(Auth(username, password))
+    fun clear()
     fun exists(): Boolean
 }
