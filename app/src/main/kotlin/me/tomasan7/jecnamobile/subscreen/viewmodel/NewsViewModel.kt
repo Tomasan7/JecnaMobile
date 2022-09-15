@@ -25,27 +25,27 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.ArticlesRepository
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.subscreen.state.ArticlesState
+import me.tomasan7.jecnamobile.subscreen.state.NewsState
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
-class ArticlesViewModel @Inject constructor(
+class NewsViewModel @Inject constructor(
     private val articlesRepository: ArticlesRepository,
     private val webClient: JecnaWebClient,
     @ApplicationContext
     private val appContext: Context
 ) : ViewModel()
 {
-    var uiState by mutableStateOf(ArticlesState())
+    var uiState by mutableStateOf(NewsState())
         private set
 
-    private var loadArticlesJob: Job? = null
+    private var loadNewsJob: Job? = null
 
     init
     {
-        loadArticles()
+        loadNews()
     }
 
     @OptIn(InternalAPI::class)
@@ -92,17 +92,17 @@ class ArticlesViewModel @Inject constructor(
         }
     }
 
-    fun loadArticles()
+    fun loadNews()
     {
         uiState = uiState.copy(loading = true)
 
-        loadArticlesJob?.cancel()
+        loadNewsJob?.cancel()
 
-        loadArticlesJob = viewModelScope.launch {
+        loadNewsJob = viewModelScope.launch {
             try
             {
-                val articles = articlesRepository.queryArticlesPage()
-                uiState = uiState.copy(loading = false, articlesPage = articles)
+                val news = articlesRepository.queryArticlesPage()
+                uiState = uiState.copy(loading = false, newsPage = news)
             }
             catch (e: ParseException)
             {

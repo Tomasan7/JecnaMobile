@@ -30,5 +30,5 @@ internal object AppModule
 
     @Provides
     @Singleton
-    fun provideArticlesRepository(jecnaWebClient: JecnaWebClient): ArticlesRepository = WebArticlesRepository(jecnaWebClient)
+    fun provideNewsRepository(jecnaWebClient: JecnaWebClient): ArticlesRepository = WebArticlesRepository(jecnaWebClient)
 }

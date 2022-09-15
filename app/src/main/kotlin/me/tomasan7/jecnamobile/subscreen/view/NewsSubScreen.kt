@@ -36,7 +36,7 @@ import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.NewsViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.theme.label_dark
 import me.tomasan7.jecnamobile.ui.theme.label_light
@@ -45,8 +45,8 @@ import java.time.format.DateTimeFormatter
 @SubScreensNavGraph
 @Destination
 @Composable
-fun ArticlesSubScreen(
-    viewModel: ArticlesViewModel = hiltViewModel()
+fun NewsSubScreen(
+    viewModel: NewsViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState
@@ -54,14 +54,14 @@ fun ArticlesSubScreen(
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
         state = rememberSwipeRefreshState(uiState.loading),
-        onRefresh = { viewModel.loadArticles() }
+        onRefresh = { viewModel.loadNews() }
     ) {
         Column(
             modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            if (uiState.articlesPage != null)
-                uiState.articlesPage.articles.forEach { article ->
+            if (uiState.newsPage != null)
+                uiState.newsPage.articles.forEach { article ->
                     Article(
                         article = article,
                         onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }

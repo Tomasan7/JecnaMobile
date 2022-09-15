@@ -41,7 +41,7 @@ fun MainScreen(
 )
 {
     val destinationItems = listOf(
-        DrawerItem(Icons.Default.Newspaper, stringResource(R.string.sidebar_news), ArticlesSubScreenDestination),
+        DrawerItem(Icons.Default.Newspaper, stringResource(R.string.sidebar_news), NewsSubScreenDestination),
         DrawerItem(Icons.Default.Star, stringResource(R.string.sidebar_grades), GradesSubScreenDestination),
         DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination),
         DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination)
