@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -25,6 +26,7 @@ import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.screen.viewmodel.LoginViewModel
+import me.tomasan7.jecnamobile.screen.viewmodel.MainScreenViewModel
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
@@ -34,7 +36,8 @@ data class DrawerItem(val icon: ImageVector, val label: String, val destination:
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: MainScreenViewModel = hiltViewModel()
 )
 {
     val destinationItems = listOf(
@@ -107,9 +110,7 @@ fun MainScreen(
                                     }
                                 }
                             }
-                            context
-                                    .getSharedPreferences(LoginViewModel.AUTH_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
-                                    .edit().clear().apply()
+                            viewModel.logout()
                         }
                     )
                 }
