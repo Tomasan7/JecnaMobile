@@ -31,6 +31,12 @@
 
     <!-- ##### Grades SubScreen ##### -->
 
+    <plurals name="grades_count">
+        <item quantity="one">%d známka</item>
+        <item quantity="few">%d známky</item>
+        <item quantity="other">%d známek</item>
+    </plurals>
+
     <string name="grade_word_0">Nehodnocen</string>
     <string name="grade_word_1">Výborný</string>
     <string name="grade_word_2">Chvalitebný</string>

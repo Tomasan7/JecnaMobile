@@ -1,24 +1,27 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -38,6 +41,8 @@ import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
+import me.tomasan7.jecnamobile.ui.theme.label_dark
+import me.tomasan7.jecnamobile.ui.theme.label_light
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -116,7 +121,7 @@ fun GradesSubScreen(
 
 @Composable
 private fun Container(
-    title: String,
+    title: @Composable () -> Unit = {},
     rightColumnVisible: Boolean = true,
     rightColumnContent: @Composable ColumnScope.() -> Unit = {},
     onRightColumnClick: (() -> Unit)? = null,
@@ -142,10 +147,7 @@ private fun Container(
                     .onSizeChanged { rowHeightValue = it.height }
         ) {
             Column(Modifier.weight(1f, true)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                title()
 
                 Spacer(Modifier.height(15.dp))
 
@@ -176,6 +178,29 @@ private fun Container(
 }
 
 @Composable
+private fun Container(
+    title: String,
+    rightColumnVisible: Boolean = true,
+    rightColumnContent: @Composable ColumnScope.() -> Unit = {},
+    onRightColumnClick: (() -> Unit)? = null,
+    modifier: Modifier,
+    content: @Composable () -> Unit = {}
+) = Container(
+    title = {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+    },
+    rightColumnVisible = rightColumnVisible,
+    rightColumnContent = rightColumnContent,
+    onRightColumnClick = onRightColumnClick,
+    modifier = modifier,
+    content = content
+)
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
 private fun Subject(
     subject: Subject,
     onGradeClick: (Grade) -> Unit = {}
@@ -183,10 +208,23 @@ private fun Subject(
 {
     val average = remember { subject.grades.average() }
     var showAverage by rememberMutableStateOf(false)
+    val gradesCount = remember {
+        subject.grades.subjectParts.flatMap { subject.grades[it]!! }.size
+    }
 
     Container(
         modifier = Modifier.fillMaxWidth(),
-        title = subject.name.full,
+        title = {
+            Column {
+                Text(subject.name.full, style = MaterialTheme.typography.titleMedium)
+                if (gradesCount != 0)
+                    Text(
+                        text = pluralStringResource(R.plurals.grades_count, gradesCount, gradesCount),
+                        color = if (isSystemInDarkTheme()) label_dark else label_light,
+                        fontSize = 10.sp
+                    )
+            }
+        },
         rightColumnVisible = !subject.grades.isEmpty(),
         rightColumnContent = {
             if (subject.finalGrade == null)
