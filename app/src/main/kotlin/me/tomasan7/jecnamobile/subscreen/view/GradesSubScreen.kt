@@ -17,11 +17,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -41,8 +37,8 @@ import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
-import me.tomasan7.jecnamobile.ui.theme.label_dark
-import me.tomasan7.jecnamobile.ui.theme.label_light
+import me.tomasan7.jecnamobile.ui.theme.jm_label_dark
+import me.tomasan7.jecnamobile.ui.theme.jm_label_light
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -220,7 +216,7 @@ private fun Subject(
                 if (gradesCount != 0)
                     Text(
                         text = pluralStringResource(R.plurals.grades_count, gradesCount, gradesCount),
-                        color = if (isSystemInDarkTheme()) label_dark else label_light,
+                        color = if (isSystemInDarkTheme()) jm_label_dark else jm_label_light,
                         fontSize = 10.sp
                     )
             }

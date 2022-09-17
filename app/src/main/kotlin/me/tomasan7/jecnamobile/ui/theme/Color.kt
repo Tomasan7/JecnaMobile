@@ -1,5 +1,7 @@
 package me.tomasan7.jecnamobile.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF006875)
@@ -61,8 +63,8 @@ val md_theme_dark_shadow = Color(0xFF000000)
 
 val seed = Color(0xFF00A0B3)
 
-val label_light = Color.DarkGray
-val label_dark = Color.LightGray
+val jm_label_light = Color.DarkGray
+val jm_label_dark = Color.LightGray
 
 val grade_0 = Color(0xFFA3A7AD)
 val grade_1 = Color(0xFF00E03C)

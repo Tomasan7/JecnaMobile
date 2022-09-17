@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.tomasan7.jecnamobile.ui.theme.label_dark
-import me.tomasan7.jecnamobile.ui.theme.label_light
+import me.tomasan7.jecnamobile.ui.theme.jm_label_dark
+import me.tomasan7.jecnamobile.ui.theme.jm_label_light
 
 @Composable
 fun DialogRow(
@@ -28,7 +28,7 @@ fun DialogRow(
                 text = label,
                 textAlign = TextAlign.Center,
                 fontSize = 10.sp,
-                color = if (isSystemInDarkTheme()) label_dark else label_light,
+                color = if (isSystemInDarkTheme()) jm_label_dark else jm_label_light,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(5.dp))

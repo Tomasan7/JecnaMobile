@@ -38,8 +38,8 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.NewsViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
-import me.tomasan7.jecnamobile.ui.theme.label_dark
-import me.tomasan7.jecnamobile.ui.theme.label_light
+import me.tomasan7.jecnamobile.ui.theme.jm_label_dark
+import me.tomasan7.jecnamobile.ui.theme.jm_label_light
 import java.time.format.DateTimeFormatter
 
 @SubScreensNavGraph
@@ -121,7 +121,7 @@ private fun Article(
             else
                 "${article.date.format(DATE_FORMATTER)} | ${article.author} | ${stringResource(R.string.article_school_only)}",
             fontSize = 12.sp,
-            color = if (isSystemInDarkTheme()) label_dark else label_light
+            color = if (isSystemInDarkTheme()) jm_label_dark else jm_label_light
         )
     }
 }
@@ -150,7 +150,7 @@ private fun ArticleFile(
                 text = buildAnnotatedString {
                     append(articleFile.label)
 
-                    withStyle(SpanStyle(fontSize = 10.sp, color = if (isSystemInDarkTheme()) label_dark else label_light)) {
+                    withStyle(SpanStyle(fontSize = 10.sp, color = if (isSystemInDarkTheme()) jm_label_dark else jm_label_light)) {
                         append("." + articleFile.fileExtension)
                     }
                 }
