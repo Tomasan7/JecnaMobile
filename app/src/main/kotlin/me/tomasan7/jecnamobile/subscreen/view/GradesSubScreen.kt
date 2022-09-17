@@ -1,9 +1,12 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -37,8 +40,7 @@ import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
-import me.tomasan7.jecnamobile.ui.theme.jm_label_dark
-import me.tomasan7.jecnamobile.ui.theme.jm_label_light
+import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -216,7 +218,7 @@ private fun Subject(
                 if (gradesCount != 0)
                     Text(
                         text = pluralStringResource(R.plurals.grades_count, gradesCount, gradesCount),
-                        color = if (isSystemInDarkTheme()) jm_label_dark else jm_label_light,
+                        color = jm_label,
                         fontSize = 10.sp
                     )
             }

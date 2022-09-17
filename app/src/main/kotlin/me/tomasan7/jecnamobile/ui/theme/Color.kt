@@ -63,8 +63,11 @@ val md_theme_dark_shadow = Color(0xFF000000)
 
 val seed = Color(0xFF00A0B3)
 
-val jm_label_light = Color.DarkGray
-val jm_label_dark = Color.LightGray
+val jm_theme_light_label = Color.DarkGray
+val jm_theme_dark_label = Color.LightGray
+val jm_label: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) jm_theme_dark_label else jm_theme_light_label
 
 val grade_0 = Color(0xFFA3A7AD)
 val grade_1 = Color(0xFF00E03C)
