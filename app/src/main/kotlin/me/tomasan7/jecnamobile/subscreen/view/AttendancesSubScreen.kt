@@ -101,8 +101,12 @@ private fun AttendanceComposable(
             mainAxisSpacing = 7.dp,
             crossAxisSpacing = 7.dp
         ) {
+            var first = true
             attendanceRow.second.forEach { attendance ->
-                val late = remember { attendance.type == AttendanceType.ENTER && attendance.time > LATE_TIME }
+                /* Only check for late arrival on the first arrival.
+                Since the student can have a lesson-off in the middle of the day, go out and enter again and that's not late. */
+                val late = remember { first && attendance.type == AttendanceType.ENTER && attendance.time > LATE_TIME }
+                first = false
                 Surface(
                     tonalElevation = 10.dp,
                     shadowElevation = 2.dp,
