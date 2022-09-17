@@ -206,18 +206,15 @@ private fun Subject(
 {
     val average = remember { subject.grades.average() }
     var showAverage by rememberMutableStateOf(false)
-    val gradesCount = remember {
-        subject.grades.subjectParts.flatMap { subject.grades[it]!! }.size
-    }
 
     Container(
         modifier = Modifier.fillMaxWidth(),
         title = {
             Column {
                 Text(subject.name.full, style = MaterialTheme.typography.titleMedium)
-                if (gradesCount != 0)
+                if (subject.grades.count != 0)
                     Text(
-                        text = pluralStringResource(R.plurals.grades_count, gradesCount, gradesCount),
+                        text = pluralStringResource(R.plurals.grades_count, subject.grades.count, subject.grades.count),
                         color = jm_label,
                         fontSize = 10.sp
                     )

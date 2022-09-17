@@ -1,8 +1,8 @@
 package me.tomasan7.jecnamobile.subscreen.state
 
-import me.tomasan7.jecnaapi.data.article.ArticlesPage
+import me.tomasan7.jecnaapi.data.article.NewsPage
 
 data class NewsState(
-    val newsPage: ArticlesPage? = null,
+    val newsPage: NewsPage? = null,
     val loading: Boolean = false
 )
