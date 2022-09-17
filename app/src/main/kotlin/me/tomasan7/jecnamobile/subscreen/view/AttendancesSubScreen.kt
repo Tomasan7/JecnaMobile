@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
@@ -100,16 +102,18 @@ private fun AttendanceComposable(
             crossAxisSpacing = 7.dp
         ) {
             attendanceRow.second.forEach { attendance ->
-                    Surface(
-                        tonalElevation = 10.dp,
-                        shadowElevation = 2.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text(
-                            text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
+                val late = remember { attendance.type == AttendanceType.ENTER && attendance.time > LATE_TIME }
+                Surface(
+                    tonalElevation = 10.dp,
+                    shadowElevation = 2.dp,
+                    color = if (late) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(
+                        text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
                 }
             }
     }
@@ -125,3 +129,5 @@ private fun getAttendanceTypeName(type: AttendanceType) = when(type)
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
 
 private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+
+private val LATE_TIME = LocalTime.of(7, 15)
