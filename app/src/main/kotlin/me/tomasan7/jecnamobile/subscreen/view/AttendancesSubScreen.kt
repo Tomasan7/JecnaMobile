@@ -130,4 +130,4 @@ private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
 
 private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 
-private val LATE_TIME = LocalTime.of(7, 15)
+private val LATE_TIME = LocalTime.of(7, 25)
