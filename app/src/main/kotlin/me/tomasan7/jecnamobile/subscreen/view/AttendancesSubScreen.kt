@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +28,7 @@ import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.ui.theme.jm_late_attendance
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
 import java.time.LocalTime
@@ -107,15 +110,15 @@ private fun AttendanceComposable(
                 Since the student can have a lesson-off in the middle of the day, go out and enter again and that's not late. */
                 val late = remember { first && attendance.type == AttendanceType.ENTER && attendance.time > LATE_TIME }
                 first = false
+
                 Surface(
                     tonalElevation = 10.dp,
                     shadowElevation = 2.dp,
-                    color = if (late) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surface,
+                    border = if (late) BorderStroke(1.dp, jm_late_attendance) else null,
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
                         text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
-                        color = if (late) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(10.dp)
                     )
                 }
