@@ -95,7 +95,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
 
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     val composeDestinationsVersion = "1.6.20-beta"
     implementation("io.github.raamcosta.compose-destinations:core:$composeDestinationsVersion")
