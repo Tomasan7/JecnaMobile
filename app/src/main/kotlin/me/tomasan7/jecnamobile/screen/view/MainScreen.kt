@@ -117,7 +117,7 @@ fun MainScreen(
         content = {
             Scaffold(
                 topBar = {
-                    SmallTopAppBar(
+                    TopAppBar(
                         title = { Text(selectedItem.label) },
                         colors = TopAppBarDefaults.smallTopAppBarColors(),
                         navigationIcon = {
