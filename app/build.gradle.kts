@@ -80,14 +80,11 @@ dependencies {
     implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     val composeMaterial3Version = "1.0.0-beta02"
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
@@ -103,8 +100,6 @@ dependencies {
     val composeDestinationsVersion = "1.6.20-beta"
     implementation("io.github.raamcosta.compose-destinations:core:$composeDestinationsVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
-
-    testImplementation("junit:junit:4.13.2")
 
     /* Dagger-Hilt */
     implementation("com.google.dagger:hilt-android:2.43.2")
