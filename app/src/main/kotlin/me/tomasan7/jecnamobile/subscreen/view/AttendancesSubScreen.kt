@@ -115,6 +115,7 @@ private fun AttendanceComposable(
                 ) {
                     Text(
                         text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
+                        color = if (late) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(10.dp)
                     )
                 }
