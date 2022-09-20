@@ -1,5 +1,7 @@
 package me.tomasan7.jecnamobile.screen.view
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -12,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,13 +24,13 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.navigate
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.screen.viewmodel.MainScreenViewModel
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
-data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
@@ -38,11 +41,19 @@ fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel()
 )
 {
+    data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
+    data class DrawerLinkItem(val icon: ImageVector, val label: String, val link: String)
+
     val destinationItems = listOf(
         DrawerItem(Icons.Default.Newspaper, stringResource(R.string.sidebar_news), NewsSubScreenDestination),
         DrawerItem(Icons.Default.Star, stringResource(R.string.sidebar_grades), GradesSubScreenDestination),
         DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination),
         DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination)
+    )
+
+    val linkItems = listOf(
+        DrawerLinkItem(Icons.Default.RestaurantMenu, "Jídelna", "https://objednavky.jidelnasokolska.cz/faces/secured/mobile.jsp"),
+        DrawerLinkItem(Icons.Default.TableChart, "Mimořádný rozvrh", "${JecnaWebClient.ENDPOINT}/suplovani")
     )
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -86,6 +97,22 @@ fun MainScreen(
 
                                 contentNavController.navigate(item.destination.route)
                                 selectedItem = item
+                            }
+                        )
+                    }
+                    Divider(Modifier.fillMaxWidth().padding(vertical = 10.dp))
+                    val context = LocalContext.current
+                    linkItems.forEach { item ->
+                        NavigationDrawerItem(
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                            icon = { Icon(item.icon, null) },
+                            badge = { Icon(Icons.Default.OpenInBrowser, null) },
+                            label = { Text(item.label) },
+                            selected = false,
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(item.link)
+                                context.startActivity(intent)
                             }
                         )
                     }
