@@ -220,15 +220,15 @@ private fun Subject(
                     )
             }
         },
-        rightColumnVisible = !subject.grades.isEmpty(),
+        rightColumnVisible = subject.finalGrade != null || average != null,
         rightColumnContent = {
             if (subject.finalGrade == null)
-                GradeAverageComposable(average)
+                GradeAverageComposable(average!!)
             else
                 if (!showAverage)
                     GradeComposable(Grade(subject.finalGrade!!.value, false))
                 else
-                    GradeAverageComposable(average)
+                    GradeAverageComposable(average!!)
         },
         onRightColumnClick = { showAverage = !showAverage }
     ) {
