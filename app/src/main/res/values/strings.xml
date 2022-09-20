@@ -25,6 +25,9 @@
     <string name="sidebar_news">Novinky</string>
     <string name="sidebar_logout">Odhlásit se</string>
 
+    <string name="sidebar_link_canteen">Jídelna</string>
+    <string name="sidebar_link_substitution_timetable">Mimořádný rozvrh</string>
+
     <!-- ##### News SubScreen ##### -->
 
     <string name="article_school_only">Pouze pro školu</string>

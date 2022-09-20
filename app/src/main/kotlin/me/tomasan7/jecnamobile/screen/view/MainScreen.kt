@@ -50,10 +50,9 @@ fun MainScreen(
         DrawerItem(Icons.Default.TableChart, stringResource(R.string.sidebar_timetable), TimetableSubScreenDestination),
         DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination)
     )
-
     val linkItems = listOf(
-        DrawerLinkItem(Icons.Default.RestaurantMenu, "Jídelna", "https://objednavky.jidelnasokolska.cz/faces/secured/mobile.jsp"),
-        DrawerLinkItem(Icons.Default.TableChart, "Mimořádný rozvrh", "${JecnaWebClient.ENDPOINT}/suplovani")
+        DrawerLinkItem(Icons.Default.RestaurantMenu, stringResource(R.string.sidebar_link_canteen), "https://objednavky.jidelnasokolska.cz/faces/secured/mobile.jsp"),
+        DrawerLinkItem(Icons.Default.TableChart, stringResource(R.string.sidebar_link_substitution_timetable), "${JecnaWebClient.ENDPOINT}/suplovani")
     )
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -75,7 +74,9 @@ fun MainScreen(
             ModalDrawerSheet {
                 Column {
                     Row(
-                        modifier = Modifier.height(56.dp).padding(start = 28.dp),
+                        modifier = Modifier
+                            .height(56.dp)
+                            .padding(start = 28.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -100,7 +101,10 @@ fun MainScreen(
                             }
                         )
                     }
-                    Divider(Modifier.fillMaxWidth().padding(vertical = 10.dp))
+                    Divider(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp))
                     val context = LocalContext.current
                     linkItems.forEach { item ->
                         NavigationDrawerItem(
@@ -119,7 +123,9 @@ fun MainScreen(
                 }
 
                 Column(
-                    modifier = Modifier.fillMaxHeight().padding(bottom = 16.dp),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(bottom = 16.dp),
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     NavigationDrawerItem(
@@ -161,7 +167,9 @@ fun MainScreen(
                 DestinationsNavHost(
                     navGraph = NavGraphs.subScreens,
                     navController = contentNavController,
-                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
                 )
             }
         }
