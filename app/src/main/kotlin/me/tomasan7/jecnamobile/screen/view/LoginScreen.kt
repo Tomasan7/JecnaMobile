@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.screen.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Lock
@@ -100,6 +101,9 @@ private fun LoginState(viewModel: LoginViewModel = viewModel())
                 isError = state.passwordBlankError,
                 leadingIcon = { Icon(Icons.Outlined.Lock, null) },
                 label = { Text(stringResource(R.string.password)) },
+                keyboardActions = KeyboardActions(
+                    onDone = { viewModel.onLoginClick() }
+                ),
                 value = state.password,
                 onValueChange = { viewModel.onFieldValueChange(false, it) }
             )

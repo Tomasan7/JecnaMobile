@@ -3,7 +3,6 @@ package me.tomasan7.jecnamobile.subscreen.view
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,17 +35,16 @@ import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.subscreen.viewmodel.ArticlesViewModel
+import me.tomasan7.jecnamobile.subscreen.viewmodel.NewsViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
-import me.tomasan7.jecnamobile.ui.theme.label_dark
-import me.tomasan7.jecnamobile.ui.theme.label_light
+import me.tomasan7.jecnamobile.ui.theme.jm_label
 import java.time.format.DateTimeFormatter
 
 @SubScreensNavGraph
 @Destination
 @Composable
-fun ArticlesSubScreen(
-    viewModel: ArticlesViewModel = hiltViewModel()
+fun NewsSubScreen(
+    viewModel: NewsViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState
@@ -54,14 +52,14 @@ fun ArticlesSubScreen(
     SwipeRefresh(
         modifier = Modifier.fillMaxSize(),
         state = rememberSwipeRefreshState(uiState.loading),
-        onRefresh = { viewModel.loadArticles() }
+        onRefresh = { viewModel.loadNews() }
     ) {
         Column(
             modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            if (uiState.articlesPage != null)
-                uiState.articlesPage.articles.forEach { article ->
+            if (uiState.newsPage != null)
+                uiState.newsPage.articles.forEach { article ->
                     Article(
                         article = article,
                         onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
@@ -121,7 +119,7 @@ private fun Article(
             else
                 "${article.date.format(DATE_FORMATTER)} | ${article.author} | ${stringResource(R.string.article_school_only)}",
             fontSize = 12.sp,
-            color = if (isSystemInDarkTheme()) label_dark else label_light
+            color = jm_label
         )
     }
 }
@@ -150,7 +148,7 @@ private fun ArticleFile(
                 text = buildAnnotatedString {
                     append(articleFile.label)
 
-                    withStyle(SpanStyle(fontSize = 10.sp, color = if (isSystemInDarkTheme()) label_dark else label_light)) {
+                    withStyle(SpanStyle(fontSize = 10.sp, color = jm_label)) {
                         append("." + articleFile.fileExtension)
                     }
                 }

@@ -23,7 +23,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import me.tomasan7.jecnaapi.data.timetable.Lesson
 import me.tomasan7.jecnaapi.data.timetable.LessonPeriod
-import me.tomasan7.jecnaapi.data.timetable.LessonSpot
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.data.timetable.TimetableSpot
 import me.tomasan7.jecnamobile.R
@@ -36,8 +35,6 @@ import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.manipulate
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.toRoman
-import java.time.DayOfWeek
-import java.time.LocalDateTime
 
 @SubScreensNavGraph
 @Destination

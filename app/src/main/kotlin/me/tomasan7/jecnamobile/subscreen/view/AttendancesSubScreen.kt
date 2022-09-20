@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.subscreen.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,10 +25,13 @@ import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.AttendancesViewModel
+import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.MonthSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.ui.theme.jm_late_attendance
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
@@ -67,7 +73,9 @@ fun AttendancesSubScreen(
             if (uiState.attendancesPage != null)
                 uiState.daysSorted!!.forEach { day ->
                     val attendance = uiState.attendancesPage[day]
-                    AttendanceComposable(day to attendance)
+                    key(attendance) {
+                        AttendanceComposable(day to attendance)
+                    }
                 }
         }
     }
@@ -82,7 +90,7 @@ private fun AttendanceComposable(
     val dayName = getWeekDayName(attendanceRow.first.dayOfWeek)
     val dayDate = attendanceRow.first.format(DATE_FORMATTER)
 
-    me.tomasan7.jecnamobile.ui.component.Card(
+    Card(
         title = {
             Text(
                 text = "$dayName $dayDate",
@@ -98,19 +106,26 @@ private fun AttendanceComposable(
             mainAxisSpacing = 7.dp,
             crossAxisSpacing = 7.dp
         ) {
+            var first = true
             attendanceRow.second.forEach { attendance ->
-                    Surface(
-                        tonalElevation = 10.dp,
-                        shadowElevation = 2.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Text(
-                            text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
+                /* Only check for late arrival on the first arrival.
+                Since the student can have a lesson-off in the middle of the day, go out and enter again and that's not late. */
+                val late = remember { first && attendance.type == AttendanceType.ENTER && attendance.time > LATE_TIME }
+                first = false
+
+                Surface(
+                    tonalElevation = 10.dp,
+                    shadowElevation = 2.dp,
+                    border = if (late) BorderStroke(1.dp, jm_late_attendance) else null,
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(
+                        text = "${getAttendanceTypeName(attendance.type)} ${attendance.time.format(TIME_FORMATTER)}",
+                        modifier = Modifier.padding(10.dp)
+                    )
                 }
             }
+        }
     }
 }
 
@@ -124,3 +139,5 @@ private fun getAttendanceTypeName(type: AttendanceType) = when(type)
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
 
 private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+
+private val LATE_TIME = LocalTime.of(7, 25)

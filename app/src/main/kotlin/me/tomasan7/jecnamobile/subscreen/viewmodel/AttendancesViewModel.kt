@@ -16,6 +16,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.AttendancesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.state.AttendancesState
 import java.time.Month
 import javax.inject.Inject
 

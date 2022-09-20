@@ -17,13 +17,14 @@ import me.tomasan7.jecnaapi.repository.GradesRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.state.GradesState
 import javax.inject.Inject
 
 @HiltViewModel
 class GradesViewModel @Inject constructor(
     private val gradesRepository: GradesRepository,
     @ApplicationContext
-    val appContext: Context
+    private val appContext: Context
 ) : ViewModel()
 {
     var uiState by mutableStateOf(GradesState())

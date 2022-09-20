@@ -13,10 +13,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,7 @@ import me.tomasan7.jecnamobile.ui.component.DialogRow
 import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.ui.component.VerticalDivider
+import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.math.RoundingMode
@@ -116,7 +119,7 @@ fun GradesSubScreen(
 
 @Composable
 private fun Container(
-    title: String,
+    title: @Composable () -> Unit = {},
     rightColumnVisible: Boolean = true,
     rightColumnContent: @Composable ColumnScope.() -> Unit = {},
     onRightColumnClick: (() -> Unit)? = null,
@@ -142,10 +145,7 @@ private fun Container(
                     .onSizeChanged { rowHeightValue = it.height }
         ) {
             Column(Modifier.weight(1f, true)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                title()
 
                 Spacer(Modifier.height(15.dp))
 
@@ -176,6 +176,29 @@ private fun Container(
 }
 
 @Composable
+private fun Container(
+    title: String,
+    rightColumnVisible: Boolean = true,
+    rightColumnContent: @Composable ColumnScope.() -> Unit = {},
+    onRightColumnClick: (() -> Unit)? = null,
+    modifier: Modifier,
+    content: @Composable () -> Unit = {}
+) = Container(
+    title = {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+    },
+    rightColumnVisible = rightColumnVisible,
+    rightColumnContent = rightColumnContent,
+    onRightColumnClick = onRightColumnClick,
+    modifier = modifier,
+    content = content
+)
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
 private fun Subject(
     subject: Subject,
     onGradeClick: (Grade) -> Unit = {}
@@ -186,7 +209,17 @@ private fun Subject(
 
     Container(
         modifier = Modifier.fillMaxWidth(),
-        title = subject.name.full,
+        title = {
+            Column {
+                Text(subject.name.full, style = MaterialTheme.typography.titleMedium)
+                if (subject.grades.count != 0)
+                    Text(
+                        text = pluralStringResource(R.plurals.grades_count, subject.grades.count, subject.grades.count),
+                        color = jm_label,
+                        fontSize = 10.sp
+                    )
+            }
+        },
         rightColumnVisible = !subject.grades.isEmpty(),
         rightColumnContent = {
             if (subject.finalGrade == null)

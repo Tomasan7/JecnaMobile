@@ -16,6 +16,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.TimetableRepository
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.subscreen.state.TimetableState
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
