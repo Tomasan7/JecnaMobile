@@ -15,8 +15,8 @@ android {
         applicationId = "me.tomasan7.jecnamobile"
         minSdk = 21
         targetSdk = 32
-        versionCode = 6
-        versionName = "1.1.3"
+        versionCode = 7
+        versionName = "1.2.0-SNAPSHOT"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -71,7 +71,7 @@ kapt {
 
 dependencies {
     /* Main JecnaAPI dependency. */
-    implementation("me.tomasan7:jecna-api:1.2.4")
+    implementation("me.tomasan7:jecna-api:1.2.5")
 
     /* --- Jetpack compose --- */
     val composeVersion = rootProject.extra["compose_version"]

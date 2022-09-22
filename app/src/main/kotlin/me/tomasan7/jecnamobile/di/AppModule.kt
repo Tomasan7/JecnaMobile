@@ -4,10 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.tomasan7.jecnaapi.parser.parsers.HtmlAttendancesPageParserImpl
-import me.tomasan7.jecnaapi.parser.parsers.HtmlGradesPageParserImpl
-import me.tomasan7.jecnaapi.parser.parsers.HtmlNewsPageParserImpl
-import me.tomasan7.jecnaapi.parser.parsers.HtmlTimetableParserImpl
+import me.tomasan7.jecnaapi.parser.parsers.*
 import me.tomasan7.jecnaapi.repository.*
 import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import me.tomasan7.jecnaapi.web.JecnaWebClient
@@ -39,5 +36,9 @@ internal object AppModule
 
     @Provides
     @Singleton
-    fun provideCanteenClient(canteenWebClient: ICanteenWebClient): CanteenClient = WebCanteenClient(canteenWebClient)
+    fun provideICanteenWebClient() = ICanteenWebClient()
+
+    @Provides
+    @Singleton
+    fun provideCanteenClient(canteenWebClient: ICanteenWebClient): CanteenClient = WebCanteenClient(canteenWebClient, HtmlCanteenParserImpl)
 }

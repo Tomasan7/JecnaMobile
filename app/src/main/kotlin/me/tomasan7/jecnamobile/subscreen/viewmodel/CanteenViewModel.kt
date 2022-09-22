@@ -12,14 +12,19 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.repository.CanteenClient
+import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.repository.AuthRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class CanteenViewModel @Inject constructor(
+    private val iCanteenWebClient: ICanteenWebClient,
     private val canteenClient: CanteenClient,
+    private val authRepository: AuthRepository,
     @ApplicationContext
     private val appContext: Context
 ) : ViewModel()
@@ -31,7 +36,23 @@ class CanteenViewModel @Inject constructor(
 
     init
     {
-        loadMenu()
+        viewModelScope.launch {
+            iCanteenWebClient.login(authRepository.get()!!)
+            loadMenu()
+        }
+    }
+
+    fun orderMenuItem(menuItem: MenuItem)
+    {
+        if (uiState.orderInProcess)
+            return
+
+        uiState = uiState.copy(orderInProcess = true)
+
+        viewModelScope.launch {
+            canteenClient.order(menuItem, uiState.menu!!)
+            uiState = uiState.copy(orderInProcess = false)
+        }
     }
 
     fun loadMenu()

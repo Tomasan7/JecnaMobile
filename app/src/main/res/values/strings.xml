@@ -23,6 +23,7 @@
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+    <string name="sidebar_canteen">Jídelna</string>
     <string name="sidebar_logout">Odhlásit se</string>
 
     <string name="sidebar_link_canteen">Jídelna</string>
