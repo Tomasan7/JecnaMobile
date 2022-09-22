@@ -17,8 +17,9 @@ data class CanteenState(
         val isToday = it.day == nowDate
         val isTomorrow = it.day == nowDate.withDayOfMonth(nowDate.dayOfMonth + 1)
         val isItAfterOrderTime = LocalTime.now().isAfter(ORDER_END_TIME)
+        val isEmpty = it.items.isEmpty()
 
-        !(isBeforeToday || isToday || isTomorrow && isItAfterOrderTime)
+        !(isBeforeToday || isToday || isEmpty || isTomorrow && isItAfterOrderTime)
     }?.sortedBy { it.day }
 
     companion object
