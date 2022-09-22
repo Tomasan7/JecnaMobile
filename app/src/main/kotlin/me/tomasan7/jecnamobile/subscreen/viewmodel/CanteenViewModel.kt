@@ -18,6 +18,7 @@ import me.tomasan7.jecnaapi.repository.CanteenClient
 import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.repository.AuthRepository
+import me.tomasan7.jecnamobile.subscreen.state.CanteenState
 import javax.inject.Inject
 
 @HiltViewModel

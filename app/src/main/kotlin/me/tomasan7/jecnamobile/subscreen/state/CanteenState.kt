@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile.subscreen.viewmodel
+package me.tomasan7.jecnamobile.subscreen.state
 
 import me.tomasan7.jecnaapi.data.canteen.Menu
 import java.time.LocalDate
