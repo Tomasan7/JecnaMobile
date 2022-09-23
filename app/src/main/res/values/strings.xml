@@ -67,6 +67,10 @@
 
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
 
+    <!-- ##### Canteen SubScreen ##### -->
+
+    <string name="canteen_allergens">Alergeny</string>
+
     <!-- ##### Attendances SubScreen ##### -->
 
     <string name="attendance_type_enter">Příchod</string>

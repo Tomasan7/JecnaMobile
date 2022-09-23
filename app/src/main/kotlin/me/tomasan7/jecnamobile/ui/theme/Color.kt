@@ -69,6 +69,8 @@ val jm_label: Color
     @Composable
     get() = if (isSystemInDarkTheme()) jm_theme_dark_label else jm_theme_light_label
 
+val jm_canteen_ordered = Color(0x326DC00F)
+
 val jm_late_attendance = Color(0xFFDA1C1C)
 
 val grade_0 = Color(0xFFA3A7AD)
