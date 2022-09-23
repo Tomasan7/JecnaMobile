@@ -38,6 +38,7 @@ class CanteenViewModel @Inject constructor(
     init
     {
         viewModelScope.launch {
+            uiState = uiState.copy(loading = true)
             iCanteenWebClient.login(authRepository.get()!!)
             loadMenu()
         }
