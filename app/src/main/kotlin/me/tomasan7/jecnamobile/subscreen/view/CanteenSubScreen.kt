@@ -27,6 +27,7 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.CanteenViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
+import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
@@ -87,7 +88,7 @@ fun CanteenSubScreen(
                     key(dayMenu) {
                         DayMenu(
                             dayMenu = dayMenu,
-                            onMenuItemClick = { viewModel.orderMenuItem(it) },
+                            onMenuItemClick = { if (it.enabled) viewModel.orderMenuItem(it) },
                             onInfoClick = { showDialog(dayMenu) }
                         )
                     }
@@ -171,12 +172,18 @@ private fun MenuItem(
     onClick: () -> Unit = {}
 )
 {
+    val color = when {
+        menuItem.ordered -> jm_canteen_ordered
+        !menuItem.enabled -> jm_canteen_disabled
+        else -> MaterialTheme.colorScheme.surface
+    }
+
     Surface(
         tonalElevation = 10.dp,
         /* Semi-transparent background and shadow don't go together */
-        shadowElevation = if (!menuItem.ordered && jm_canteen_ordered.alpha != 1f) 2.dp else 0.dp,
+        shadowElevation = if (color == MaterialTheme.colorScheme.surface || color.alpha == 1f) 2.dp else 0.dp,
         modifier = modifier,
-        color = if (menuItem.ordered) jm_canteen_ordered else MaterialTheme.colorScheme.surface,
+        color = color,
         onClick = onClick,
         shape = RoundedCornerShape(10.dp)
     ) {

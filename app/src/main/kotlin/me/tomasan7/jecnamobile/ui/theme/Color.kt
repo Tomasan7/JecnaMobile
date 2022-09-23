@@ -70,6 +70,7 @@ val jm_label: Color
     get() = if (isSystemInDarkTheme()) jm_theme_dark_label else jm_theme_light_label
 
 val jm_canteen_ordered = Color(0x326DC00F)
+val jm_canteen_disabled = Color(0x33FD0320)
 
 val jm_late_attendance = Color(0xFFDA1C1C)
 
