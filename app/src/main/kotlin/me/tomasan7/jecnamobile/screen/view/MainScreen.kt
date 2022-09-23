@@ -52,7 +52,6 @@ fun MainScreen(
         DrawerItem(Icons.Default.DateRange, stringResource(R.string.sidebar_attendances), AttendancesSubScreenDestination)
     )
     val linkItems = listOf(
-        DrawerLinkItem(Icons.Default.RestaurantMenu, stringResource(R.string.sidebar_link_canteen), "https://objednavky.jidelnasokolska.cz/faces/secured/mobile.jsp"),
         DrawerLinkItem(Icons.Default.TableChart, stringResource(R.string.sidebar_link_substitution_timetable), "${JecnaWebClient.ENDPOINT}/suplovani")
     )
 
