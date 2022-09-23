@@ -67,8 +67,22 @@ fun CanteenSubScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            if (uiState.menu != null)
+            if (uiState.menuPage != null)
             {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Surface(
+                        tonalElevation = 10.dp,
+                        shadowElevation = 2.dp,
+                        shape = RoundedCornerShape(5.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.canteen_credit, uiState.menuPage.credit),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+
                 uiState.futureDayMenusSorted!!.forEach { dayMenu ->
                     key(dayMenu) {
                         DayMenu(

@@ -51,7 +51,7 @@ class CanteenViewModel @Inject constructor(
         uiState = uiState.copy(orderInProcess = true)
 
         viewModelScope.launch {
-            canteenClient.order(menuItem, uiState.menu!!)
+            canteenClient.order(menuItem, uiState.menuPage!!)
             uiState = uiState.copy(orderInProcess = false)
         }
     }
@@ -65,8 +65,8 @@ class CanteenViewModel @Inject constructor(
         loadMenuJob = viewModelScope.launch {
             try
             {
-                val menu = canteenClient.getMenu()
-                uiState = uiState.copy(loading = false, menu = menu)
+                val menuPage = canteenClient.getMenuPage()
+                uiState = uiState.copy(loading = false, menuPage = menuPage)
             }
             catch (e: ParseException)
             {

@@ -70,6 +70,7 @@
     <!-- ##### Canteen SubScreen ##### -->
 
     <string name="canteen_allergens">Alergeny</string>
+    <string name="canteen_credit">Kredit: %.2f Kč</string>
 
     <!-- ##### Attendances SubScreen ##### -->
 
