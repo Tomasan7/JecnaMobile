@@ -23,6 +23,7 @@
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+    <string name="sidebar_canteen">Jídelna</string>
     <string name="sidebar_logout">Odhlásit se</string>
 
     <string name="sidebar_link_canteen">Jídelna</string>
@@ -66,6 +67,11 @@
 
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
 
+    <!-- ##### Canteen SubScreen ##### -->
+
+    <string name="canteen_allergens">Alergeny</string>
+    <string name="canteen_credit">Kredit: %.2f Kč</string>
+
     <!-- ##### Attendances SubScreen ##### -->
 
     <string name="attendance_type_enter">Příchod</string>
@@ -106,6 +112,7 @@
     <string name="unsupported_articles">Novinky jsou v nepodporovaném formátu.</string>
     <string name="unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
     <string name="unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
+    <string name="unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
     <string name="error_load">Při načítání došlo k chybě.</string>
     <string name="error_download">Při stahování souboru došlo k chybě.</string>
 
