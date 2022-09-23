@@ -52,7 +52,21 @@ class CanteenViewModel @Inject constructor(
         uiState = uiState.copy(orderInProcess = true)
 
         viewModelScope.launch {
-            canteenClient.order(menuItem, uiState.menuPage!!)
+            try
+            {
+                canteenClient.order(menuItem, uiState.menuPage!!)
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                Toast.makeText(appContext, appContext.getString(R.string.error_order), Toast.LENGTH_LONG).show()
+            }
+
             uiState = uiState.copy(orderInProcess = false)
         }
     }

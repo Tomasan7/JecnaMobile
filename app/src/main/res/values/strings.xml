@@ -113,6 +113,7 @@
     <string name="error_unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
+    <string name="error_order">Při objednávání došlo k chybě. Zkuste to znovu později.</string>
     <string name="error_load">Při načítání došlo k chybě.</string>
     <string name="error_download">Při stahování souboru došlo k chybě.</string>
 
