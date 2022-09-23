@@ -108,11 +108,11 @@
 
     <!-- ##### Errors ##### -->
 
-    <string name="unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
-    <string name="unsupported_articles">Novinky jsou v nepodporovaném formátu.</string>
-    <string name="unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
-    <string name="unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
-    <string name="unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
+    <string name="error_unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
+    <string name="error_unsupported_articles">Novinky jsou v nepodporovaném formátu.</string>
+    <string name="error_unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
+    <string name="error_unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
+    <string name="error_unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
     <string name="error_load">Při načítání došlo k chybě.</string>
     <string name="error_download">Při stahování souboru došlo k chybě.</string>
 

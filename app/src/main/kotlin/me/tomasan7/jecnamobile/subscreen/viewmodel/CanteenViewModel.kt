@@ -72,7 +72,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: ParseException)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.unsupported_menu), Toast.LENGTH_LONG).show()
+                Toast.makeText(appContext, appContext.getString(R.string.error_unsupported_menu), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
             }
             catch (e: CancellationException)

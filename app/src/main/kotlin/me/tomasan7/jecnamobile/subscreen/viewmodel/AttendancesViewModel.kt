@@ -64,7 +64,7 @@ class AttendancesViewModel @Inject constructor(
             catch (e: ParseException)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.unsupported_attendances), Toast.LENGTH_LONG).show()
+                Toast.makeText(appContext, appContext.getString(R.string.error_unsupported_attendances), Toast.LENGTH_LONG).show()
                 uiState = uiState.copy(loading = false)
             }
             catch (e: CancellationException)
