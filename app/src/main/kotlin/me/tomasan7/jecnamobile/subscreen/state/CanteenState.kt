@@ -13,6 +13,10 @@ data class CanteenState(
     val futureDayMenusSorted = menuPage?.menu?.dayMenus?.filter {
         val nowDate = LocalDate.now()
 
+        /* Don't show empty day menus. */
+        if (it.items.isEmpty())
+            return@filter false
+
         val isAfterToday = it.day.isAfter(nowDate)
         val isToday = it.day == nowDate
         val isItAfterHandOutEndTime = LocalTime.now().isAfter(FOOD_HAND_OUT_END_TIME)
