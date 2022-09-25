@@ -71,6 +71,7 @@ val jm_label: Color
 
 val jm_canteen_ordered = Color(0x326DC00F)
 val jm_canteen_disabled = Color(0x33FD0320)
+val jm_canteen_ordered_disabled = Color(0x33C0930C)
 
 val jm_late_attendance = Color(0xFFDA1C1C)
 

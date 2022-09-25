@@ -29,6 +29,7 @@ import me.tomasan7.jecnamobile.subscreen.viewmodel.CanteenViewModel
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
+import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.time.format.DateTimeFormatter
@@ -172,10 +173,12 @@ private fun MenuItem(
     onClick: () -> Unit = {}
 )
 {
-    val color = when {
-        menuItem.ordered -> jm_canteen_ordered
-        !menuItem.enabled -> jm_canteen_disabled
-        else -> MaterialTheme.colorScheme.surface
+    val color = when
+    {
+        menuItem.ordered && !menuItem.enabled -> jm_canteen_ordered_disabled
+        menuItem.ordered                      -> jm_canteen_ordered
+        !menuItem.enabled                     -> jm_canteen_disabled
+        else                                  -> MaterialTheme.colorScheme.surface
     }
 
     Surface(
