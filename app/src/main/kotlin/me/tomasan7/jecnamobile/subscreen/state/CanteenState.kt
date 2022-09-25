@@ -13,20 +13,18 @@ data class CanteenState(
     val futureDayMenusSorted = menuPage?.menu?.dayMenus?.filter {
         val nowDate = LocalDate.now()
 
-        val isBeforeToday = it.day.isBefore(nowDate)
+        val isAfterToday = it.day.isAfter(nowDate)
         val isToday = it.day == nowDate
-        val isTomorrow = it.day == nowDate.withDayOfMonth(nowDate.dayOfMonth + 1)
-        val isItAfterOrderTime = LocalTime.now().isAfter(ORDER_END_TIME)
-        val isEmpty = it.items.isEmpty()
+        val isItAfterHandOutEndTime = LocalTime.now().isAfter(FOOD_HAND_OUT_END_TIME)
 
-        !(isBeforeToday || isToday || isEmpty || isTomorrow && isItAfterOrderTime)
+        isAfterToday || isToday && !isItAfterHandOutEndTime
     }?.sortedBy { it.day }
 
     companion object
     {
         /**
-         * The time after which you can no longer order food for tomorrow.
+         * The time after which you canteen no longer hands out food.
          */
-        private val ORDER_END_TIME = LocalTime.of(14, 0)
+        private val FOOD_HAND_OUT_END_TIME = LocalTime.of(14, 30)
     }
 }
