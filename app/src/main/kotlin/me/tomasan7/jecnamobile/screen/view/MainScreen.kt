@@ -59,7 +59,7 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val contentNavController = rememberNavController()
 
-    var selectedItem by rememberMutableStateOf(destinationItems[1])
+    var selectedItem by rememberMutableStateOf(destinationItems[2])
 
     contentNavController.addOnDestinationChangedListener { _, destination,_ ->
         val newSelectedItem = destinationItems.find { it.destination.route == destination.route }

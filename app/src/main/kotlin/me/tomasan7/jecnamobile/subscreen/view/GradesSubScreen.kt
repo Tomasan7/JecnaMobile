@@ -48,7 +48,7 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
-@SubScreensNavGraph(start = true)
+@SubScreensNavGraph
 @Destination
 @Composable
 fun GradesSubScreen(

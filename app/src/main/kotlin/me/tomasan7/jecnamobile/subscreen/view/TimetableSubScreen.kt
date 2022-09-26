@@ -36,7 +36,7 @@ import me.tomasan7.jecnamobile.util.manipulate
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.toRoman
 
-@SubScreensNavGraph
+@SubScreensNavGraph(start = true)
 @Destination
 @Composable
 fun TimetableSubScreen(
