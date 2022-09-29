@@ -412,7 +412,7 @@ private fun GradeDialog(grade: Grade, onDismiss: () -> Unit)
                 ) {
                     DialogRow(stringResource(R.string.grade_receive_date), grade.receiveDate?.format(Constants.gradeDateFormatter) ?: "")
                     DialogRow(stringResource(R.string.grade_description), grade.description ?: "")
-                    DialogRow(stringResource(R.string.grade_teacher), grade.teacher ?: "")
+                    DialogRow(stringResource(R.string.grade_teacher), grade.teacher?.full ?: "")
                 }
             }
         }

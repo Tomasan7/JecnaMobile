@@ -254,7 +254,8 @@ private fun TimetableLesson(
                 Text(lesson.subjectName.short!!, Modifier.align(Alignment.Center), fontWeight = FontWeight.Bold)
             if (lesson.teacherName.short != null)
                 Text(lesson.teacherName.short!!, Modifier.align(Alignment.TopStart))
-            Text(lesson.classroom, Modifier.align(Alignment.TopEnd))
+            if (lesson.classroom != null)
+                Text(lesson.classroom!!, Modifier.align(Alignment.TopEnd))
             if (lesson.group != 0)
                 Text(lesson.group.toRoman(), Modifier.align(Alignment.BottomEnd))
         }
@@ -294,7 +295,7 @@ private fun LessonDialog(lesson: Lesson, onDismiss: () -> Unit)
             ) {
                 DialogRow(stringResource(R.string.timetable_dialog_subject), lesson.subjectName.full)
                 DialogRow(stringResource(R.string.timetable_dialog_teacher), lesson.teacherName.full)
-                DialogRow(stringResource(R.string.timetable_dialog_classroom), lesson.classroom)
+                DialogRow(stringResource(R.string.timetable_dialog_classroom), lesson.classroom ?: "")
                 if (lesson.group != 0)
                     DialogRow(stringResource(R.string.timetable_dialog_group), lesson.group.toRoman())
             }
