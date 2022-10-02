@@ -70,9 +70,7 @@ fun TimetableSubScreen(
                     .verticalScroll(rememberScrollState())
         ) {
             Row(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 SchoolYearSelector(

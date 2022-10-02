@@ -55,7 +55,7 @@ fun NewsSubScreen(
         onRefresh = { viewModel.loadNews() }
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             if (uiState.newsPage != null)
