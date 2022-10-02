@@ -133,7 +133,9 @@ private fun DayMenu(
                     modifier = Modifier
                 )
 
-                Icon(Icons.Outlined.Info, null, Modifier.clip(CircleShape).clickable(onClick = onInfoClick))
+                IconButton(onClick = onInfoClick) {
+                    Icon(Icons.Outlined.Info, null)
+                }
             }
         },
         modifier = modifier
