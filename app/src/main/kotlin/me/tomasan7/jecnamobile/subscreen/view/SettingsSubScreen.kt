@@ -37,8 +37,7 @@ fun SettingsSubScreen(
         GradesSubScreenDestination.route to stringResource(R.string.sidebar_grades),
         TimetableSubScreenDestination.route to stringResource(R.string.sidebar_timetable),
         CanteenSubScreenDestination.route to stringResource(R.string.sidebar_canteen),
-        AttendancesSubScreenDestination.route to stringResource(R.string.sidebar_attendances),
-        SettingsSubScreenDestination.route to "Nastavení" // TODO: Delete
+        AttendancesSubScreenDestination.route to stringResource(R.string.sidebar_attendances)
     )
 
     val settings by viewModel.settingsDataStore.data.collectAsState(initial = Settings())
