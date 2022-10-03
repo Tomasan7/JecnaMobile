@@ -17,6 +17,17 @@
     <string name="login">Přihlásit se</string>
     <string name="login_error">Při přihlašování došlo k chybě. (internet?)</string>
 
+    <!-- ##### Settings Screen ##### -->
+
+    <string name="settings_theme_title">Motiv</string>
+    <string-array name="settings_theme_options">
+        <item>Tmavý</item>
+        <item>Světlý</item>
+        <item>Podle systému</item>
+    </string-array>
+    <string name="settings_open_subscreen_title">Hlavní obrazovka</string>
+    <string name="settings_open_subscreen_description">Obrazovka, která se otevře po spuštění aplikace.</string>
+
     <!-- ##### Main Screen ##### -->
 
     <string name="sidebar_grades">Známky</string>
@@ -24,6 +35,7 @@
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
     <string name="sidebar_canteen">Jídelna</string>
+    <string name="sidebar_settings">Nastavení</string>
     <string name="sidebar_logout">Odhlásit se</string>
 
     <string name="sidebar_link_substitution_timetable">Mimořádný rozvrh</string>

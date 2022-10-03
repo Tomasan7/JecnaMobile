@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -19,6 +20,7 @@ import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.destinations.NetworkErrorScreenDestination
 import me.tomasan7.jecnamobile.repository.AuthRepository
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
+import me.tomasan7.jecnamobile.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -67,7 +69,9 @@ class MainActivity : ComponentActivity()
                 }
             }
 
-            JecnaMobileTheme {
+            val settingsState by settingsAsStateAwaitFirst()
+
+            JecnaMobileTheme(isAppInDarkTheme(settingsState)) {
                 DestinationsNavHost(navGraph = NavGraphs.root,
                                     modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                                     startRoute = startRoute)

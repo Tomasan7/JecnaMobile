@@ -2,15 +2,13 @@ package me.tomasan7.jecnamobile.screen.view
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.utils.findDestination
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
@@ -30,6 +29,7 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.screen.viewmodel.MainScreenViewModel
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import me.tomasan7.jecnamobile.util.awaitSettings
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +41,9 @@ fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel()
 )
 {
+    val settings = awaitSettings()
+    val openSubScreen = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
+
     data class DrawerItem(val icon: ImageVector, val label: String, val destination: Destination)
     data class DrawerLinkItem(val icon: ImageVector, val label: String, val link: String)
 
@@ -54,12 +57,13 @@ fun MainScreen(
     val linkItems = listOf(
         DrawerLinkItem(Icons.Default.TableChart, stringResource(R.string.sidebar_link_substitution_timetable), "${JecnaWebClient.ENDPOINT}/suplovani")
     )
+    val settingsItem = DrawerItem(Icons.Default.Settings, stringResource(R.string.sidebar_settings), SettingsSubScreenDestination)
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val contentNavController = rememberNavController()
 
-    var selectedItem by rememberMutableStateOf(destinationItems[2])
+    var selectedItem by rememberMutableStateOf(destinationItems.find { it.destination == openSubScreen }!!)
 
     contentNavController.addOnDestinationChangedListener { _, destination,_ ->
         val newSelectedItem = destinationItems.find { it.destination.route == destination.route }
@@ -67,6 +71,7 @@ fun MainScreen(
             selectedItem = newSelectedItem
     }
 
+    val context = LocalContext.current
     ModalNavigationDrawer(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         drawerState = drawerState,
@@ -86,14 +91,14 @@ fun MainScreen(
                     }
 
                     destinationItems.forEach { item ->
-                        NavigationDrawerItem(
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                            icon = { Icon(item.icon, null) },
-                            label = { Text(item.label) },
-                            selected = item == selectedItem,
-                            onClick = onClick@{
+                        val selected by remember { derivedStateOf { item == selectedItem } }
+                        SidebarItem(
+                            label = item.label,
+                            icon = item.icon,
+                            selected = selected,
+                            onClick = onClick@ {
                                 scope.launch { drawerState.close() }
-                                if (selectedItem == item)
+                                if (selected)
                                     return@onClick
 
                                 contentNavController.navigate(item.destination.route)
@@ -101,18 +106,13 @@ fun MainScreen(
                             }
                         )
                     }
-                    Divider(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 10.dp))
-                    val context = LocalContext.current
+                    Divider(Modifier.fillMaxWidth().padding(vertical = 10.dp))
                     linkItems.forEach { item ->
-                        NavigationDrawerItem(
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                            icon = { Icon(item.icon, null) },
-                            badge = { Icon(Icons.Default.OpenInBrowser, null) },
-                            label = { Text(item.label) },
+                        SidebarItem(
+                            label = item.label,
+                            icon = item.icon,
                             selected = false,
+                            badgeIcon = Icons.Default.OpenInBrowser,
                             onClick = {
                                 val intent = Intent(Intent.ACTION_VIEW)
                                 intent.data = Uri.parse(item.link)
@@ -128,6 +128,20 @@ fun MainScreen(
                         .padding(bottom = 16.dp),
                     verticalArrangement = Arrangement.Bottom
                 ) {
+                    val selected by remember { derivedStateOf { settingsItem == selectedItem } }
+                    SidebarItem(
+                        icon = settingsItem.icon,
+                        label = settingsItem.label,
+                        selected = selected,
+                        onClick = onClick@{
+                            scope.launch { drawerState.close() }
+                            if (selected)
+                                return@onClick
+
+                            contentNavController.navigate(settingsItem.destination.route)
+                            selectedItem = settingsItem
+                        }
+                    )
                     NavigationDrawerItem(
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                         icon = { Icon(Icons.Default.Logout, null) },
@@ -164,8 +178,11 @@ fun MainScreen(
                     )
                 }
             ) { paddingValues ->
+                val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
+
                 DestinationsNavHost(
                     navGraph = NavGraphs.subScreens,
+                    startRoute = startRoute,
                     navController = contentNavController,
                     modifier = Modifier
                         .fillMaxSize()
@@ -173,5 +190,25 @@ fun MainScreen(
                 )
             }
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SidebarItem(
+    label: String,
+    icon: ImageVector,
+    selected: Boolean,
+    badgeIcon: ImageVector? = null,
+    onClick: () -> Unit = {}
+)
+{
+    NavigationDrawerItem(
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+        icon = { Icon(icon, label) },
+        label = { Text(label) },
+        badge = badgeIcon?.let { { Icon(it, label) } },
+        selected = selected,
+        onClick = onClick
     )
 }
