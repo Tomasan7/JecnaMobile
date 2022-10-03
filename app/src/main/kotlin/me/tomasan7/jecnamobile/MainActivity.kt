@@ -8,9 +8,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -72,8 +74,29 @@ class MainActivity : ComponentActivity()
             val settingsState by settingsAsStateAwaitFirst()
 
             JecnaMobileTheme(isAppInDarkTheme(settingsState)) {
+
+                val backgroundColor = MaterialTheme.colorScheme.background
+
+                /* Copied from https://google.github.io/accompanist/systemuicontroller/ */
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = !isAppInDarkTheme(settingsState)
+
+                DisposableEffect(systemUiController, useDarkIcons) {
+                    // Update all the system bar colors to be transparent, and use
+                    // dark icons if we're in light theme
+                    systemUiController.setSystemBarsColor(
+                        color = backgroundColor,
+                        isNavigationBarContrastEnforced = false,
+                        darkIcons = useDarkIcons
+                    )
+
+                    // setStatusBarColor() and setNavigationBarColor() also exist
+
+                    onDispose {}
+                }
+
                 DestinationsNavHost(navGraph = NavGraphs.root,
-                                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+                                    modifier = Modifier.fillMaxSize().background(backgroundColor),
                                     startRoute = startRoute)
             }
         }
