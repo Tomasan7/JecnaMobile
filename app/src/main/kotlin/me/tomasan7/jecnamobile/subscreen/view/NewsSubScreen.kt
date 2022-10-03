@@ -65,6 +65,8 @@ fun NewsSubScreen(
                         onArticleFileClick = { viewModel.downloadAndOpenArticleFile(it) }
                     )
                 }
+
+            Spacer(Modifier.height(16.dp))
         }
     }
 }

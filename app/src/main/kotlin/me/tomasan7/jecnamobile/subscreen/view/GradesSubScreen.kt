@@ -109,6 +109,9 @@ fun GradesSubScreen(
 
                 Behaviour(uiState.gradesPage.behaviour)
             }
+
+            /* 0 because the space is already created by the Column, because of Arrangement.spacedBy() */
+            Spacer(Modifier.height(0.dp))
         }
 
         /* Show the grade dialog. */
