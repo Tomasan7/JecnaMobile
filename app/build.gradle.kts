@@ -107,4 +107,8 @@ dependencies {
 
     /* Compose HTML */
     implementation("com.github.ireward:compose-html:1.0.2")
+
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 }
