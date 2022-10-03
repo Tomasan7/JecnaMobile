@@ -14,7 +14,7 @@ fun MonthSelector(
     onChange: (Month) -> Unit
 )
 {
-    PeriodSelector(
+    OutlinedDropDownSelector(
         label = stringResource(R.string.month),
         options = Month.values().toList(),
         optionStringMap = { getMonthName(it) },

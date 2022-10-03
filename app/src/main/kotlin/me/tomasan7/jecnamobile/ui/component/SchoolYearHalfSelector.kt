@@ -13,7 +13,7 @@ fun SchoolYearHalfSelector(
     onChange: (SchoolYearHalf) -> Unit
 )
 {
-    PeriodSelector(
+    OutlinedDropDownSelector(
         label = stringResource(R.string.school_year_half),
         options = SchoolYearHalf.values().toList(),
         optionStringMap = { when (it)

@@ -29,7 +29,7 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.subscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.subscreen.viewmodel.TimetableViewModel
 import me.tomasan7.jecnamobile.ui.component.DialogRow
-import me.tomasan7.jecnamobile.ui.component.PeriodSelectorNullable
+import me.tomasan7.jecnamobile.ui.component.OutlinedDropDownSelectorNullable
 import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.manipulate
@@ -155,7 +155,7 @@ private fun TimetablePeriodSelector(
     onChange: (TimetablePage.PeriodOption) -> Unit
 )
 {
-    PeriodSelectorNullable(
+    OutlinedDropDownSelectorNullable(
         modifier = modifier,
         label = stringResource(R.string.timetable_period),
         options = periodOptions ?: emptyList(),

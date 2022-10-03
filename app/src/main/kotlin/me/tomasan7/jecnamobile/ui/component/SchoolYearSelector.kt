@@ -23,7 +23,7 @@ fun SchoolYearSelector(
         ((currentSchoolYear - 3)..rangeEnd).toList()
     }
 
-    PeriodSelector(
+    OutlinedDropDownSelector(
         label = stringResource(R.string.school_year),
         options = past4SchoolYears,
         selectedValue = selectedSchoolYear,
