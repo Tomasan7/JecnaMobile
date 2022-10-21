@@ -117,9 +117,9 @@ private fun Article(
 
         Text(
             text = if (article.schoolOnly)
-                "${article.date.format(DATE_FORMATTER)} | ${article.author}"
+                "${article.date.format(DATE_FORMATTER)} | ${article.author} | ${stringResource(R.string.article_school_only)}"
             else
-                "${article.date.format(DATE_FORMATTER)} | ${article.author} | ${stringResource(R.string.article_school_only)}",
+                "${article.date.format(DATE_FORMATTER)} | ${article.author}",
             fontSize = 12.sp,
             color = jm_label
         )
