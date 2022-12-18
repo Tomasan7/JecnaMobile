@@ -136,9 +136,12 @@ private fun DayMenu(
                     modifier = Modifier
                 )
 
-                IconButton(onClick = onInfoClick) {
-                    Icon(Icons.Outlined.Info, null)
-                }
+                val anyMenuItemsWithAllergens = dayMenu.items.any { it.allergens != null }
+
+                if (anyMenuItemsWithAllergens)
+                    IconButton(onClick = onInfoClick) {
+                        Icon(Icons.Outlined.Info, null)
+                    }
             }
         },
         modifier = modifier
@@ -221,7 +224,7 @@ fun DayMenuDialog(dayMenu: DayMenu, onDismiss: () -> Unit)
 
                 dayMenu.items.forEach {  menuItem ->
                     Surface(tonalElevation = 10.dp, shadowElevation = 2.dp, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(5.dp)) {
-                        Text(text = menuItem.allergens.joinToString(), textAlign = TextAlign.Center, modifier = Modifier.padding(10.dp).fillMaxWidth())
+                        Text(text = menuItem.allergens?.joinToString() ?: "", textAlign = TextAlign.Center, modifier = Modifier.padding(10.dp).fillMaxWidth())
                     }
                 }
             }

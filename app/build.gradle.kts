@@ -71,7 +71,7 @@ kapt {
 
 dependencies {
     /* Main JecnaAPI dependency. */
-    implementation("me.tomasan7:jecna-api:1.2.11_NO_GIT")
+    implementation("me.tomasan7:jecna-api:1.2.11")
 
     /* --- Jetpack compose --- */
     val composeVersion = rootProject.extra["compose_version"]
