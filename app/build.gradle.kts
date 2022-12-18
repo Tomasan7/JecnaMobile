@@ -15,8 +15,8 @@ android {
         applicationId = "me.tomasan7.jecnamobile"
         minSdk = 21
         targetSdk = 32
-        versionCode = 12
-        versionName = "1.3.2"
+        versionCode = 13
+        versionName = "1.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
