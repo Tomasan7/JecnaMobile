@@ -10,6 +10,8 @@ plugins {
 android {
     compileSdk = 33
 
+    namespace = "me.tomasan7.jecnamobile"
+
     defaultConfig {
         applicationId = "me.tomasan7.jecnamobile"
         minSdk = 21
