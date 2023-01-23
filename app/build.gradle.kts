@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "me.tomasan7.jecnamobile"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 32
         versionCode = 14
         versionName = "2.0.0-SNAPSHOT"
