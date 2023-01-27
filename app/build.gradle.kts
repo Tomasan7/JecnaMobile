@@ -78,10 +78,10 @@ dependencies {
 
     implementation(libs.activity.compose)
 
-    implementation(libs.composeHtml)
+    implementation(libs.compose.html)
 
-    implementation(libs.composeDestinations.core)
-    ksp(libs.composeDestinations.ksp)
+    implementation(libs.compose.destinations.core)
+    ksp(libs.compose.destinations.ksp)
 
     implementation(libs.accompanist.swiperefresh)
     implementation(libs.accompanist.flowlayout)
