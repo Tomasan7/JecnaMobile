@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-            android:name=".di.JecnaMobileApplication"
+            android:name=".JecnaMobileApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher_jecna"
             android:label="@string/app_name"

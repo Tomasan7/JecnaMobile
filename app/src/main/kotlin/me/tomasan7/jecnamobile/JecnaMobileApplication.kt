@@ -1,4 +1,4 @@
-package me.tomasan7.jecnamobile.di
+package me.tomasan7.jecnamobile
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
