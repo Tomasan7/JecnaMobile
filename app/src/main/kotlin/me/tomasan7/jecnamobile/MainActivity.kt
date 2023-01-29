@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
+import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
+import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.login.AuthRepository
-import me.tomasan7.jecnamobile.login.NavGraphs
-import me.tomasan7.jecnamobile.login.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.util.*
 import javax.inject.Inject
@@ -35,11 +35,7 @@ class MainActivity : ComponentActivity()
         super.onCreate(savedInstanceState)
 
         val startDestination = if (authRepository.exists())
-        {
-            /* TODO: Make it MainScreen */
-            showLongToast("Navigation to MainScreen placeholder...")
-            return
-        }
+            MainScreenDestination
         else
             LoginScreenDestination
 
