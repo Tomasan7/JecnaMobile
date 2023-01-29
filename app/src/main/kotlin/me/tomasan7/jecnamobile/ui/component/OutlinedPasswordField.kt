@@ -14,9 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.*
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,10 +27,12 @@ fun OutlinedPasswordField(
     readOnly: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     label: @Composable (() -> Unit)? = null,
+    supportingText: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    imeAction: ImeAction = ImeAction.Default,
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -43,13 +43,18 @@ fun OutlinedPasswordField(
     var isVisible by rememberMutableStateOf(false)
 
     val trailingIcon = @Composable {
-        IconButton({ isVisible = !isVisible }) {
+        IconButton(onClick = { isVisible = !isVisible }) {
             Icon(if (isVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility, null)
         }
     }
 
     val visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
-    val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+    val keyboardOptions = KeyboardOptions(
+        autoCorrect = false,
+        capitalization = KeyboardCapitalization.None,
+        keyboardType = KeyboardType.Password,
+        imeAction = imeAction
+    )
 
     if (shape != null)
         OutlinedTextField(
@@ -60,6 +65,7 @@ fun OutlinedPasswordField(
             readOnly = readOnly,
             textStyle = textStyle,
             label = label,
+            supportingText = supportingText,
             placeholder = placeholder,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
@@ -82,6 +88,7 @@ fun OutlinedPasswordField(
             readOnly = readOnly,
             textStyle = textStyle,
             label = label,
+            supportingText = supportingText,
             placeholder = placeholder,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
