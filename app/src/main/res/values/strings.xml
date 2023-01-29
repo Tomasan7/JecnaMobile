@@ -8,14 +8,17 @@
     <!-- ##### Login Screen ##### -->
 
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_title">Přihlášení</string>
+    <string name="login_title">PŘIHLÁŠENÍ</string>
     <string name="username">Uživatel</string>
     <string name="username_error_blank">Nesmí být prázdné</string>
     <string name="password">Heslo</string>
     <string name="password_error_blank">Nesmí být prázdné</string>
     <string name="remember_auth_checkbox">Zapamatovat uživatele</string>
     <string name="login">Přihlásit se</string>
-    <string name="login_error">Při přihlašování došlo k chybě. (internet?)</string>
+
+    <string name="login_error_no_internet">Chybí připojení k internetu.</string>
+    <string name="login_error_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
+    <string name="login_error_unknown">Při přihlašování došlo k chybě.</string>
 
     <!-- ##### Settings Screen ##### -->
 
