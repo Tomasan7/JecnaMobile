@@ -1,7 +1,7 @@
 package me.tomasan7.jecnamobile.util
 
 import kotlinx.serialization.Serializable
-import me.tomasan7.jecnamobile.login.destinations.LoginScreenDestination
+import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 
 @Serializable
 data class Settings(
