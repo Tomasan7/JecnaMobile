@@ -18,7 +18,7 @@ fun SchoolYearSelector(
 {
     /* List of four past SchoolYears including the current one. (optionally the following one) */
     val past4SchoolYears = remember {
-        val currentSchoolYear = SchoolYear(LocalDate.now())
+        val currentSchoolYear = SchoolYear.fromDate(LocalDate.now())
         val rangeEnd = if (showYearAhead) currentSchoolYear + 1 else currentSchoolYear
         ((currentSchoolYear - 3)..rangeEnd).toList()
     }
