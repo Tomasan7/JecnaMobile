@@ -25,8 +25,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import de.palm.composestateevents.EventEffect
+import com.ramcosta.composedestinations.navigation.popUpTo
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
+import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
 import me.tomasan7.jecnamobile.util.showLongToast
 
@@ -34,21 +36,20 @@ import me.tomasan7.jecnamobile.util.showLongToast
 @Destination
 @Composable
 fun LoginScreen(
-    navigator: DestinationsNavigator, viewModel: LoginViewModel = hiltViewModel()
+    navigator: DestinationsNavigator,
+    viewModel: LoginViewModel = hiltViewModel()
 )
 {
     val uiState = viewModel.uiState
 
-    val context = LocalContext.current
-
     DisposableEffect(uiState.loginResult) {
         if (uiState.loginResult is LoginResult.Success)
         {
-            context.showLongToast("Navigation to MainScreen placeholder...")
-            /*navigator.navigate(MainScreenDestination()) {
-            popUpTo(LoginScreenDestination.route) {
-                inclusive = true
-            }*/
+            navigator.navigate(MainScreenDestination) {
+                popUpTo(LoginScreenDestination) {
+                    inclusive = true
+                }
+            }
         }
 
         onDispose { }
