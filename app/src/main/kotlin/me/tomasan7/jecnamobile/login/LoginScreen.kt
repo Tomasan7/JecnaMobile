@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,7 +29,6 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.ui.component.OutlinedPasswordField
-import me.tomasan7.jecnamobile.util.showLongToast
 
 @RootNavGraph(start = true)
 @Destination
