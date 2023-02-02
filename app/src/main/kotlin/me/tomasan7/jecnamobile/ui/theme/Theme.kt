@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 
@@ -73,11 +74,16 @@ val useDynamicColors = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 @Composable
 fun JecnaMobileTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit)
 {
-    val colors = when {
-        useDynamicColors && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        useDynamicColors && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-        darkTheme -> DarkColors
-        else -> LightColors
+    val context = LocalContext.current
+
+    val colors = remember(darkTheme) {
+        when
+        {
+            useDynamicColors && darkTheme  -> dynamicDarkColorScheme(context)
+            useDynamicColors && !darkTheme -> dynamicLightColorScheme(context)
+            darkTheme                      -> DarkColors
+            else                           -> LightColors
+        }
     }
 
     MaterialTheme(
