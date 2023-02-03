@@ -3,6 +3,8 @@ package me.tomasan7.jecnamobile.di
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.migration.DisableInstallInCheck
+import me.tomasan7.jecnamobile.grades.GradesRepository
+import me.tomasan7.jecnamobile.grades.GradesRepositoryImpl
 import me.tomasan7.jecnamobile.login.AuthRepository
 import me.tomasan7.jecnamobile.login.SharedPreferencesAuthRepository
 import javax.inject.Singleton
@@ -14,4 +16,8 @@ interface AppModuleBindings
     @Binds
     @Singleton
     fun bindAuthRepository(repository: SharedPreferencesAuthRepository): AuthRepository
+
+    @Binds
+    @Singleton
+    fun bindGradesRepository(repository: GradesRepositoryImpl): GradesRepository
 }
