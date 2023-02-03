@@ -40,7 +40,7 @@ fun LoginScreen(
 {
     val uiState = viewModel.uiState
 
-    DisposableEffect(uiState.loginResult) {
+    LaunchedEffect(uiState.loginResult) {
         if (uiState.loginResult is LoginResult.Success)
         {
             navigator.navigate(MainScreenDestination) {
@@ -49,8 +49,6 @@ fun LoginScreen(
                 }
             }
         }
-
-        onDispose { }
     }
 
     if (uiState.isLoading)
