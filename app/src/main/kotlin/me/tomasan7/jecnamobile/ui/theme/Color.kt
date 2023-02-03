@@ -81,3 +81,6 @@ val grade_2 = Color(0xFF008A25)
 val grade_3 = Color(0xFFBEDB00)
 val grade_4 = Color(0xFFCFA200)
 val grade_5 = Color(0xFFA63232)
+
+val grade_grades_warning = Color(0xFFFF8A8A)
+val grade_absence_warning = Color(0xFFFF8A8A)
