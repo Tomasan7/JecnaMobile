@@ -10,11 +10,11 @@ import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> OutlinedDropDownSelector(
+    modifier: Modifier = Modifier,
     label: String? = null,
     options: List<T>,
-    selectedValue: T = options[0],
-    optionStringMap: @Composable (T) -> String = { it.toString() },
-    modifier: Modifier = Modifier,
+    selectedValue: T?,
+    optionStringMap: @Composable (T?) -> String = { it.toString() },
     onChange: (T) -> Unit
 )
 {
