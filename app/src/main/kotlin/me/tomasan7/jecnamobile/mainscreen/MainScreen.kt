@@ -88,6 +88,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
         content = {
             DestinationsNavHost(
                 navGraph = NavGraphs.subScreens,
+                navController = subScreensNavController,
                 modifier = Modifier.fillMaxSize()
             ) {
                 composable(GradesSubScreenDestination) {
