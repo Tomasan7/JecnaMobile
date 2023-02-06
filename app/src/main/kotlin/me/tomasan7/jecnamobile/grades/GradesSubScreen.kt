@@ -113,7 +113,11 @@ fun GradesSubScreen(
                 }
             }
 
-            PullRefreshIndicator(uiState.loading, pullRefreshState, Modifier.align(Alignment.TopCenter))
+            PullRefreshIndicator(
+                refreshing = uiState.loading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
 
             ObjectDialog(
                 state = objectDialogState,
