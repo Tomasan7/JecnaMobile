@@ -51,7 +51,7 @@ class MainScreenViewModel @Inject constructor(
                 catch (e: Exception) { false }
 
                 if (loginResult == false)
-                    TODO() // Navigate back to login screen
+                    // TODO Navigate back to login screen
                 else
                     broadcastSuccessfulLogin()
             }
