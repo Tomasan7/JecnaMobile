@@ -31,7 +31,9 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
+import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
+import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +46,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
     val scope = rememberCoroutineScope()
     val destinationItems = SideBarDestination.values()
     val linkItems = SideBarLink.values()
-    var selectedItem by rememberMutableStateOf(destinationItems[0])
+    var selectedItem by rememberMutableStateOf(SideBarDestination.Timetable)
     val subScreensNavController = rememberNavController()
 
     ModalNavigationDrawer(
@@ -91,8 +93,14 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 navController = subScreensNavController,
                 modifier = Modifier.fillMaxSize()
             ) {
+                val onHamburgerClick: () -> Unit = { scope.launch { drawerState.open() } }
+
                 composable(GradesSubScreenDestination) {
-                    GradesSubScreen(onHamburgerClick = { scope.launch { drawerState.open() } })
+                    GradesSubScreen(onHamburgerClick = onHamburgerClick)
+                }
+
+                composable(TimetableSubScreenDestination) {
+                    TimetableSubScreen(onHamburgerClick = onHamburgerClick)
                 }
             }
         }
@@ -144,7 +152,8 @@ enum class SideBarDestination(
     val icon: ImageVector
 )
 {
-    Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star)
+    Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star),
+    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart)
 }
 
 enum class SideBarLink(
