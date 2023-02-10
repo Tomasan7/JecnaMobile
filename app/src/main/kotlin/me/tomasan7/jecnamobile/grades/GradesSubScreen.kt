@@ -47,7 +47,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-@SubScreensNavGraph(start = true)
+@SubScreensNavGraph
 @Destination
 @Composable
 fun GradesSubScreen(

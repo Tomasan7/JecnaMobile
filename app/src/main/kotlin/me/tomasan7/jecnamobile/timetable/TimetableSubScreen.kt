@@ -32,7 +32,7 @@ import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.manipulate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-@SubScreensNavGraph
+@SubScreensNavGraph(start = true)
 @Destination
 @Composable
 fun TimetableSubScreen(
