@@ -52,10 +52,10 @@ class NewsViewModel @Inject constructor(
     var uiState by mutableStateOf(NewsState())
         private set
 
-    private var loadGradesJob: Job? = null
+    private var loadNewsJob: Job? = null
 
     private val loginBroadcastReceiver = createBroadcastReceiver { _, _ ->
-        if (loadGradesJob == null || loadGradesJob!!.isCompleted)
+        if (loadNewsJob == null || loadNewsJob!!.isCompleted)
         {
             changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
             loadReal()
@@ -83,7 +83,7 @@ class NewsViewModel @Inject constructor(
 
     fun leftComposition()
     {
-        loadGradesJob?.cancel()
+        loadNewsJob?.cancel()
         appContext.unregisterReceiver(loginBroadcastReceiver)
     }
 
@@ -176,11 +176,11 @@ class NewsViewModel @Inject constructor(
 
     private fun loadReal()
     {
-        loadGradesJob?.cancel()
+        loadNewsJob?.cancel()
 
         changeUiState(loading = true)
 
-        loadGradesJob = viewModelScope.launch {
+        loadNewsJob = viewModelScope.launch {
             try
             {
                 val realNews = repository.getRealNews()
