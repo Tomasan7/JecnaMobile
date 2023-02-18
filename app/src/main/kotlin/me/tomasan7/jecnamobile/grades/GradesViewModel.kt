@@ -127,12 +127,12 @@ class GradesViewModel @Inject constructor(
         {
             val time = localDateTime.toLocalTime()
             val timeStr = time.format(OFFLINE_MESSAGE_TIME_FORMATTER)
-            appContext.getString(R.string.grade_showing_offline_data_time, timeStr)
+            appContext.getString(R.string.showing_offline_data_time, timeStr)
         }
         else
         {
             val dateStr = localDateTime.format(OFFLINE_MESSAGE_DATE_FORMATTER)
-            appContext.getString(R.string.grade_showing_offline_data_date, dateStr)
+            appContext.getString(R.string.showing_offline_data_date, dateStr)
         }
     }
 
