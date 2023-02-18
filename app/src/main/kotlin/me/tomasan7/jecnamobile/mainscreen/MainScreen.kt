@@ -27,7 +27,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import kotlinx.coroutines.launch
-import me.tomasan7.jecnaapi.web.JecnaWebClient
+import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
