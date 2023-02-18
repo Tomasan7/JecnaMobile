@@ -14,8 +14,8 @@
             android:theme="@style/Theme.JecnaMobile">
 
         <provider
-                android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}.provider"
+                android:name="me.tomasan7.jecnamobile.JecnaFileProvider"
+                android:authorities="${applicationId}.fileprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
