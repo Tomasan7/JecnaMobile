@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TableChart
@@ -31,8 +32,10 @@ import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
+import me.tomasan7.jecnamobile.destinations.NewsSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
+import me.tomasan7.jecnamobile.news.NewsSubScreen
 import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
@@ -102,6 +105,10 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 composable(TimetableSubScreenDestination) {
                     TimetableSubScreen(onHamburgerClick = onHamburgerClick)
                 }
+
+                composable(NewsSubScreenDestination) {
+                    NewsSubScreen(onHamburgerClick = onHamburgerClick)
+                }
             }
         }
     )
@@ -152,6 +159,7 @@ enum class SideBarDestination(
     val icon: ImageVector
 )
 {
+    News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Default.Newspaper),
     Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star),
     Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart)
 }
