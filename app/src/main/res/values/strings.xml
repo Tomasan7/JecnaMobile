@@ -95,6 +95,21 @@
 
     <string name="teachers_filter">Filter</string>
 
+    <!-- ##### Teacher Screen ##### -->
+
+    <string name="teacher_name">Jméno</string>
+    <string name="teacher_tag">Zkratka</string>
+    <string name="teacher_school_mail">E-mail</string>
+    <string name="teacher_private_email">Soukromý e-mail</string>
+    <string name="teacher_phone">Telefon</string>
+    <string name="teacher_landline">Linka</string>
+    <string name="teacher_private_phone">Soukromý telefon</string>
+    <string name="teacher_cabinet">Kabinet</string>
+    <string name="teacher_class">Třídní</string>
+    <string name="teacher_consultation_hours">Konzultační hodiny</string>
+
+    <string name="teacher_title_timetable">Rozvrh hodin</string>
+
     <!-- ##### Timetable ##### -->
 
     <string name="timetable_dialog_subject">Předmět</string>
