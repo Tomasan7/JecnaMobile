@@ -77,7 +77,7 @@ fun TeachersSubScreen(
 
                 uiState.teacherReferencesSortedFiltered?.forEach {
                     TeacherCard(
-                        teacher = it,
+                        teacherReference = it,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -133,7 +133,7 @@ private fun FilterFieldRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherCard(
-    teacher: TeacherReference,
+    teacherReference: TeacherReference,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 )
@@ -150,8 +150,8 @@ fun TeacherCard(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(teacher.fullName)
-            Text(teacher.tag)
+            Text(teacherReference.fullName)
+            Text(teacherReference.tag)
         }
     }
 }
