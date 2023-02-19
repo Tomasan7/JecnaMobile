@@ -122,6 +122,7 @@ private fun FilterFieldRow(
             modifier = Modifier,
             label = { Text(stringResource(R.string.teachers_filter)) },
             value = value,
+            singleLine = true,
             trailingIcon = trailingIcon,
             onValueChange = onValueChange,
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
