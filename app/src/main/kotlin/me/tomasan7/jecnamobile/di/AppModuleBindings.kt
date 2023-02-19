@@ -9,6 +9,8 @@ import me.tomasan7.jecnamobile.login.AuthRepository
 import me.tomasan7.jecnamobile.login.SharedPreferencesAuthRepository
 import me.tomasan7.jecnamobile.news.NewsRepository
 import me.tomasan7.jecnamobile.news.NewsRepositoryImpl
+import me.tomasan7.jecnamobile.teachers.TeachersRepository
+import me.tomasan7.jecnamobile.teachers.TeachersRepositoryImpl
 import me.tomasan7.jecnamobile.timetable.TimetableRepository
 import me.tomasan7.jecnamobile.timetable.TimetableRepositoryImpl
 import javax.inject.Singleton
@@ -32,4 +34,8 @@ interface AppModuleBindings
     @Binds
     @Singleton
     fun bindNewsRepository(repository: NewsRepositoryImpl): NewsRepository
+
+    @Binds
+    @Singleton
+    fun bindTeachersRepository(repository: TeachersRepositoryImpl): TeachersRepository
 }
