@@ -23,7 +23,7 @@ fun <T> OutlinedDropDownSelector(
     ExposedDropdownMenuBox(
         modifier = modifier,
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
+        onExpandedChange = { expanded = it },
     ) {
         OutlinedTextField(
             modifier = Modifier.menuAnchor(),
