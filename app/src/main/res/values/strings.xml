@@ -37,6 +37,7 @@
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+    <string name="sidebar_teachers">Učitelé</string>
     <string name="sidebar_canteen">Jídelna</string>
     <string name="sidebar_settings">Nastavení</string>
     <string name="sidebar_logout">Odhlásit se</string>
@@ -95,6 +96,10 @@
     <string name="attendance_type_enter">Příchod</string>
     <string name="attendance_type_exit">Odchod</string>
 
+    <!-- ##### Teachers SubScreen ##### -->
+
+    <string name="teachers_filter">Filter</string>
+
     <!-- ##### General ##### -->
 
     <string name="monday">Pondělí</string>
@@ -127,6 +132,7 @@
     <string name="back_online">Zpět online</string>
     <string name="showing_offline_data_time">Naposledy aktualizováno v %1s</string>
     <string name="showing_offline_data_date">Naposledy aktualizováno %1s</string>
+    <string name="no_internet_connection">Chybí připojení k internetu</string>
 
     <!-- ##### Errors ##### -->
 
