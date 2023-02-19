@@ -18,9 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
 import me.tomasan7.jecnamobile.ui.component.VerticalSpacer
@@ -31,6 +33,7 @@ import me.tomasan7.jecnamobile.ui.component.VerticalSpacer
 @Composable
 fun TeachersSubScreen(
     onHamburgerClick: () -> Unit,
+    navigator: DestinationsNavigator,
     viewModel: TeachersViewModel = hiltViewModel()
 )
 {
@@ -78,6 +81,7 @@ fun TeachersSubScreen(
                 uiState.teacherReferencesSortedFiltered?.forEach {
                     TeacherCard(
                         teacherReference = it,
+                        onClick = { navigator.navigate(TeacherScreenDestination(it)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

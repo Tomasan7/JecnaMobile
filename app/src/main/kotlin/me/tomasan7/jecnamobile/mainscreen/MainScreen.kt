@@ -110,7 +110,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 }
 
                 composable(TeachersSubScreenDestination) {
-                    TeachersSubScreen(onHamburgerClick = onHamburgerClick)
+                    TeachersSubScreen(onHamburgerClick = onHamburgerClick, navigator = destinationsNavigator)
                 }
             }
         }
