@@ -80,10 +80,6 @@
     <!-- ##### Timetable SubScreen ##### -->
 
     <string name="timetable_period">Období</string>
-    <string name="timetable_dialog_subject">Předmět</string>
-    <string name="timetable_dialog_teacher">Učitel</string>
-    <string name="timetable_dialog_classroom">Učebna</string>
-    <string name="timetable_dialog_group">Skupina</string>
 
     <!-- ##### Canteen SubScreen ##### -->
 
@@ -98,6 +94,13 @@
     <!-- ##### Teachers SubScreen ##### -->
 
     <string name="teachers_filter">Filter</string>
+
+    <!-- ##### Timetable ##### -->
+
+    <string name="timetable_dialog_subject">Předmět</string>
+    <string name="timetable_dialog_teacher">Učitel</string>
+    <string name="timetable_dialog_classroom">Učebna</string>
+    <string name="timetable_dialog_group">Skupina</string>
 
     <!-- ##### General ##### -->
 

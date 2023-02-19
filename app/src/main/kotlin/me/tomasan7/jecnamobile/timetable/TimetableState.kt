@@ -16,21 +16,3 @@ data class TimetableState(
     val selectedPeriod: TimetablePage.PeriodOption? = timetablePage?.periodOptions?.find { it.selected },
     val snackBarMessageEvent: StateEventWithContent<String> = consumed()
 )
-{
-    val mostLessonsInLessonSpotInEachDay: Map<DayOfWeek, Int>? = timetablePage?.timetable?.run {
-        val result = mutableMapOf<DayOfWeek, Int>()
-
-        for (day in days)
-        {
-            var dayResult = 0
-
-            for (lessonSpot in getLessonSpotsForDay(day)!!)
-                if (lessonSpot.size > dayResult)
-                    dayResult = lessonSpot.size
-
-            result[day] = dayResult
-        }
-
-        result
-    }
-}
