@@ -5,10 +5,7 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Newspaper
-import androidx.compose.material.icons.filled.OpenInBrowser
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TableChart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,9 +30,11 @@ import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.NewsSubScreenDestination
+import me.tomasan7.jecnamobile.destinations.TeachersSubScreenDestination
 import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
 import me.tomasan7.jecnamobile.news.NewsSubScreen
+import me.tomasan7.jecnamobile.teachers.TeachersSubScreen
 import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
@@ -109,6 +108,10 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 composable(NewsSubScreenDestination) {
                     NewsSubScreen(onHamburgerClick = onHamburgerClick)
                 }
+
+                composable(TeachersSubScreenDestination) {
+                    TeachersSubScreen(onHamburgerClick = onHamburgerClick)
+                }
             }
         }
     )
@@ -161,7 +164,8 @@ enum class SideBarDestination(
 {
     News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Default.Newspaper),
     Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star),
-    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart)
+    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart),
+    Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Default.People)
 }
 
 enum class SideBarLink(
