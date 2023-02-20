@@ -134,17 +134,24 @@ private fun TopAppBar(
 @Composable
 private fun TeacherPicture(
     picturePath: String,
-    imageRequestCreator: (String) -> ImageRequest,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageRequestCreator: (String) -> ImageRequest
 )
 {
-    AsyncImage(
-        modifier = modifier
-            .aspectRatio(200f / 257f)
-            .clip(RoundedCornerShape(4.dp)),
-        model = imageRequestCreator(picturePath),
-        contentDescription = null
-    )
+    Surface(
+        modifier = modifier,
+        tonalElevation = 4.dp,
+        shape = RoundedCornerShape(4.dp)
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .padding(12.dp)
+                .aspectRatio(200f / 257f)
+                .clip(RoundedCornerShape(4.dp)),
+            model = imageRequestCreator(picturePath),
+            contentDescription = null
+        )
+    }
 }
 
 @Composable
