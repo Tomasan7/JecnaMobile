@@ -191,13 +191,19 @@ private fun InfoRow(
         Surface(
             tonalElevation = 20.dp,
             shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.width(150.dp)
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(150.dp)
         ) {
-            Text(
-                text = label,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp)
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = label,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
 
         HorizontalSpacer(size = 5.dp)
