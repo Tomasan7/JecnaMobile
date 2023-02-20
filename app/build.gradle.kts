@@ -16,7 +16,7 @@ android {
         applicationId = "me.tomasan7.jecnamobile"
         minSdk = 26
         targetSdk = 32
-        versionCode = 15
+        versionCode = 16
         versionName = "2.0.0-SNAPSHOT"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
