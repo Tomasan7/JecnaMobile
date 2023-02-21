@@ -28,10 +28,8 @@ import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.destinations.GradesSubScreenDestination
-import me.tomasan7.jecnamobile.destinations.NewsSubScreenDestination
-import me.tomasan7.jecnamobile.destinations.TeachersSubScreenDestination
-import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
+import me.tomasan7.jecnamobile.attendances.AttendancesSubScreen
+import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
 import me.tomasan7.jecnamobile.news.NewsSubScreen
 import me.tomasan7.jecnamobile.teachers.TeachersSubScreen
@@ -109,6 +107,10 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                     NewsSubScreen(onHamburgerClick = onHamburgerClick)
                 }
 
+                composable(AttendancesSubScreenDestination) {
+                    AttendancesSubScreen(onHamburgerClick = onHamburgerClick)
+                }
+
                 composable(TeachersSubScreenDestination) {
                     TeachersSubScreen(onHamburgerClick = onHamburgerClick, navigator = destinationsNavigator)
                 }
@@ -165,6 +167,7 @@ enum class SideBarDestination(
     News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Default.Newspaper),
     Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star),
     Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart),
+    Attendances(AttendancesSubScreenDestination, R.string.sidebar_attendances, Icons.Default.DateRange),
     Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Default.People)
 }
 
