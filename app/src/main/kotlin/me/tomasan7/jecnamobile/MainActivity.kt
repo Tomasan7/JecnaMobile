@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.MainScreenDestination
 import me.tomasan7.jecnamobile.login.AuthRepository
+import me.tomasan7.jecnamobile.settings.isAppInDarkTheme
 import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.util.*
 import javax.inject.Inject

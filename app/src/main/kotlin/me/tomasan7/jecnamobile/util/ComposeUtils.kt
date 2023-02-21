@@ -19,14 +19,3 @@ fun Color.manipulate(factor: Float): Color
 
     return Color(r, g, b, alpha)
 }
-
-@Composable
-fun isAppInDarkTheme(settings: Settings) = when(settings.theme)
-{
-    Theme.DARK   -> true
-    Theme.LIGHT  -> false
-    Theme.SYSTEM -> isSystemInDarkTheme()
-}
-
-@Composable
-fun isAppInDarkTheme() = isAppInDarkTheme(settings = awaitSettings())

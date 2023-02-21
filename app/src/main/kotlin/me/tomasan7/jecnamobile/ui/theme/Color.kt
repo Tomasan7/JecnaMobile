@@ -2,7 +2,7 @@ package me.tomasan7.jecnamobile.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import me.tomasan7.jecnamobile.util.isAppInDarkTheme
+import me.tomasan7.jecnamobile.settings.isAppInDarkTheme
 
 val md_theme_light_primary = Color(0xFF006875)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
