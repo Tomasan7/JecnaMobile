@@ -3,6 +3,8 @@ package me.tomasan7.jecnamobile.di
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.migration.DisableInstallInCheck
+import me.tomasan7.jecnamobile.attendances.AttendancesRepository
+import me.tomasan7.jecnamobile.attendances.AttendancesRepositoryImpl
 import me.tomasan7.jecnamobile.grades.GradesRepository
 import me.tomasan7.jecnamobile.grades.GradesRepositoryImpl
 import me.tomasan7.jecnamobile.login.AuthRepository
@@ -34,6 +36,10 @@ interface AppModuleBindings
     @Binds
     @Singleton
     fun bindNewsRepository(repository: NewsRepositoryImpl): NewsRepository
+
+    @Binds
+    @Singleton
+    fun bindAttendancesRepository(repository: AttendancesRepositoryImpl): AttendancesRepository
 
     @Binds
     @Singleton
