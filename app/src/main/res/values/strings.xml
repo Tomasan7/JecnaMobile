@@ -88,8 +88,9 @@
 
     <!-- ##### Attendances SubScreen ##### -->
 
-    <string name="attendance_type_enter">Příchod</string>
-    <string name="attendance_type_exit">Odchod</string>
+    <string name="attendances_attendance_type_enter">Příchod</string>
+    <string name="attendances_attendance_type_exit">Odchod</string>
+    <string name="attendances_no_attendances">V tomto období nemáš žádné záznamy.</string>
 
     <!-- ##### Teachers SubScreen ##### -->
 
