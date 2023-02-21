@@ -8,10 +8,11 @@ data class Settings(
     val theme: Theme = Theme.SYSTEM,
     val openSubScreenRoute: String = LoginScreenDestination.route,
 )
-
-enum class Theme
 {
-    DARK,
-    LIGHT,
-    SYSTEM
+    enum class Theme
+    {
+        DARK,
+        LIGHT,
+        SYSTEM
+    }
 }

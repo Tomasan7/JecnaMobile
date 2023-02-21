@@ -7,9 +7,9 @@ import me.tomasan7.jecnamobile.util.awaitSettings
 @Composable
 fun isAppInDarkTheme(settings: Settings) = when(settings.theme)
 {
-    Theme.DARK   -> true
-    Theme.LIGHT  -> false
-    Theme.SYSTEM -> isSystemInDarkTheme()
+    Settings.Theme.DARK   -> true
+    Settings.Theme.LIGHT  -> false
+    Settings.Theme.SYSTEM -> isSystemInDarkTheme()
 }
 
 @Composable
