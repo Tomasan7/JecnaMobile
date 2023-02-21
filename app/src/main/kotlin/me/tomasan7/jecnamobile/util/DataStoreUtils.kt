@@ -9,6 +9,7 @@ import androidx.datastore.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import me.tomasan7.jecnamobile.settings.Settings
 
 val Context.settingsDataStore by dataStore("settings.json", SettingsSerializer)
 

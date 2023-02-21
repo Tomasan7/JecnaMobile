@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import me.tomasan7.jecnamobile.settings.Settings
+import me.tomasan7.jecnamobile.settings.Theme
 
 @Composable
 fun <T> rememberMutableStateOf(value: T) = remember { mutableStateOf(value) }
@@ -21,8 +23,8 @@ fun Color.manipulate(factor: Float): Color
 @Composable
 fun isAppInDarkTheme(settings: Settings) = when(settings.theme)
 {
-    Theme.DARK -> true
-    Theme.LIGHT -> false
+    Theme.DARK   -> true
+    Theme.LIGHT  -> false
     Theme.SYSTEM -> isSystemInDarkTheme()
 }
 
