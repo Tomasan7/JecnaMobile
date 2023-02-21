@@ -83,7 +83,8 @@ fun TimetableSubScreen(
                 if (uiState.timetablePage != null)
                     Timetable(
                         modifier = Modifier.fillMaxSize(),
-                        timetable = uiState.timetablePage.timetable
+                        timetable = uiState.timetablePage.timetable,
+                        hideClass = true
                     )
             }
 

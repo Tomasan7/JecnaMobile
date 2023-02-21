@@ -23,7 +23,8 @@ import java.time.DayOfWeek
 @Composable
 fun Timetable(
     timetable: Timetable,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hideClass: Boolean = false
 )
 {
     val mostLessonsInLessonSpotInEachDay = remember(timetable) {
@@ -84,7 +85,8 @@ fun Timetable(
                             lessonSpot = lessonSpot,
                             onLessonClick = { dialogState.show(it) },
                             current = timetable.getCurrentLessonSpot() === lessonSpot,
-                            next = timetable.getCurrentNextLessonSpot(takeEmpty = true) === lessonSpot
+                            next = timetable.getCurrentNextLessonSpot(takeEmpty = true) === lessonSpot,
+                            hideClass = hideClass
                         )
                         HorizontalSpacer(5.dp)
                     }
@@ -132,7 +134,8 @@ private fun LessonSpot(
     lessonSpot: LessonSpot,
     onLessonClick: (Lesson) -> Unit = {},
     current: Boolean = false,
-    next: Boolean = false
+    next: Boolean = false,
+    hideClass: Boolean = false
 )
 {
     var lessonSpotModifier = Modifier.width(100.dp)
@@ -154,7 +157,8 @@ private fun LessonSpot(
                 onClick = { onLessonClick(lesson) },
                 lesson = lesson,
                 current = current,
-                next = next
+                next = next,
+                hideClass = hideClass
             )
         }
     }
@@ -167,7 +171,8 @@ private fun Lesson(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     current: Boolean = false,
-    next: Boolean = false
+    next: Boolean = false,
+    hideClass: Boolean = false
 )
 {
     val shape = RoundedCornerShape(5.dp)
@@ -182,6 +187,8 @@ private fun Lesson(
         Box(Modifier.padding(4.dp)) {
             if (lesson.subjectName.short != null)
                 Text(lesson.subjectName.short!!, Modifier.align(Alignment.Center), fontWeight = FontWeight.Bold)
+            if (!hideClass && lesson.clazz != null)
+                Text(lesson.clazz!!, Modifier.align(Alignment.BottomStart))
             if (lesson.teacherName?.short != null)
                 Text(lesson.teacherName!!.short!!, Modifier.align(Alignment.TopStart))
             if (lesson.classroom != null)
