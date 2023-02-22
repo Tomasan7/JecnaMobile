@@ -133,8 +133,7 @@ private fun FilterFieldRow(
             value = value,
             singleLine = true,
             trailingIcon = trailingIcon,
-            onValueChange = onValueChange,
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+            onValueChange = onValueChange
         )
     }
 }
