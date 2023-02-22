@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -26,6 +28,8 @@ import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
 import me.tomasan7.jecnamobile.ui.component.VerticalSpacer
+import me.tomasan7.jecnamobile.ui.theme.teacher_search_query_highlight
+import me.tomasan7.jecnamobile.util.removeAccent
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @SubScreensNavGraph
@@ -82,6 +86,7 @@ fun TeachersSubScreen(
                     TeacherCard(
                         teacherReference = it,
                         onClick = { navigator.navigate(TeacherScreenDestination(it)) },
+                        searchQuery = uiState.filterFieldValue,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -139,6 +144,7 @@ private fun FilterFieldRow(
 fun TeacherCard(
     teacherReference: TeacherReference,
     modifier: Modifier = Modifier,
+    searchQuery: String = "",
     onClick: () -> Unit = {}
 )
 {
@@ -154,8 +160,31 @@ fun TeacherCard(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(teacherReference.fullName)
-            Text(teacherReference.tag)
+            Text(buildHighlightedAnnotatedString(text = teacherReference.fullName, searchQuery = searchQuery))
+            Text(buildHighlightedAnnotatedString(text = teacherReference.tag, searchQuery = searchQuery))
         }
     }
+}
+
+@Composable
+private fun buildHighlightedAnnotatedString(
+    text: String,
+    searchQuery: String
+): AnnotatedString
+{
+    val annotatedString = AnnotatedString.Builder(text)
+
+    if (searchQuery.isNotEmpty())
+    {
+        val searchQueryRegex = Regex(searchQuery.removeAccent(), RegexOption.IGNORE_CASE)
+        val match = searchQueryRegex.find(text.removeAccent()) ?: return annotatedString.toAnnotatedString()
+
+        annotatedString.addStyle(
+            style = SpanStyle(color = teacher_search_query_highlight),
+            start = match.range.first,
+            end = match.range.last + 1
+        )
+    }
+
+    return annotatedString.toAnnotatedString()
 }

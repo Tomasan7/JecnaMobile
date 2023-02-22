@@ -84,3 +84,5 @@ val grade_5 = Color(0xFFA63232)
 
 val grade_grades_warning = Color(0xFFFF8A8A)
 val grade_absence_warning = Color(0xFFFF8A8A)
+
+val teacher_search_query_highlight = Color(0xFFCDDC39)
