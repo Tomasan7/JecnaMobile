@@ -20,6 +20,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
@@ -98,7 +99,8 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 ) {
                     SidebarButtonsRow(
                         onSettingsClick = {
-                            TODO("Settings")
+                            scope.launch { drawerState.close() }
+                            subScreensNavController.navigate(SettingsScreenDestination)
                         },
                         onLogoutClick = {
                             TODO("Logout")
