@@ -3,6 +3,7 @@ package me.tomasan7.jecnamobile.util
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import me.tomasan7.jecnamobile.R
+import java.text.Normalizer
 import java.time.DayOfWeek
 import java.time.Month
 import java.util.*
@@ -65,3 +66,5 @@ fun Int.toRoman(): String
     else
         ROMAN_MAP[l!!] + (this - l).toRoman()
 }
+
+fun String.removeAccent() = Normalizer.normalize(this, Normalizer.Form.NFKD).replace(Regex("""\p{M}"""), "")

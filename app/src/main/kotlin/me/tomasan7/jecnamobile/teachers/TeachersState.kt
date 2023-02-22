@@ -4,6 +4,7 @@ import android.icu.text.Collator
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
+import me.tomasan7.jecnamobile.util.removeAccent
 import java.text.Normalizer
 import java.util.*
 
@@ -26,7 +27,5 @@ data class TeachersState(
         private val SURNAME_REGEX = Regex("""(?:\w+\. )*$NAME_CHAR+ (?<surname>$NAME_CHAR+).*""")
 
         private fun String.surname() = SURNAME_REGEX.matchEntire(this)?.groups?.get("surname")?.value ?: this
-
-        private fun String.removeAccent() = Normalizer.normalize(this, Normalizer.Form.NFKD).replace(Regex("""\p{M}"""), "")
     }
 }
