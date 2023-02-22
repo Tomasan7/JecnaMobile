@@ -12,11 +12,13 @@ import de.palm.composestateevents.StateEvent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import io.ktor.util.network.*
+import io.ktor.utils.io.*
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnamobile.util.showShortToast
 import javax.inject.Inject
+import kotlin.Exception
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -88,6 +90,11 @@ class LoginViewModel @Inject constructor(
             catch (e: UnresolvedAddressException)
             {
                 LoginResult.Error.NoInternetConnection
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
             }
             catch (e: Exception)
             {
