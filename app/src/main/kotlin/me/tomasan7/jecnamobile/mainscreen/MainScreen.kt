@@ -58,7 +58,6 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-
                 Text(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleSmall,
@@ -90,6 +89,22 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                 )
 
                 linkItems.forEach { LinkItem(it) }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 28.dp, end = 28.dp, bottom = 28.dp),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    SidebarButtonsRow(
+                        onSettingsClick = {
+                            TODO("Settings")
+                        },
+                        onLogoutClick = {
+                            TODO("Logout")
+                        }
+                    )
+                }
             }
         },
         content = {
@@ -122,6 +137,26 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
             }
         }
     )
+}
+
+@Composable
+private fun SidebarButtonsRow(
+    onSettingsClick: () -> Unit,
+    onLogoutClick: () -> Unit
+)
+{
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        IconButton(onClick = onSettingsClick) {
+            Icon(Icons.Filled.Settings, contentDescription = null)
+        }
+
+        IconButton(onClick = onLogoutClick) {
+            Icon(Icons.Filled.ExitToApp, contentDescription = null)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
