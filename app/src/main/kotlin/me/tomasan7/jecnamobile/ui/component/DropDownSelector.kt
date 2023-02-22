@@ -9,13 +9,13 @@ import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> OutlinedDropDownSelector(
+fun <T> DropDownSelector(
     modifier: Modifier = Modifier,
-    label: String? = null,
     options: List<T>,
     selectedValue: T?,
     optionStringMap: @Composable (T?) -> String = { it.toString() },
-    onChange: (T) -> Unit
+    onChange: (T) -> Unit,
+    textField: @Composable ExposedDropdownMenuBoxScope.(String, Boolean) -> Unit
 )
 {
     var expanded by rememberMutableStateOf(false)
@@ -25,15 +25,7 @@ fun <T> OutlinedDropDownSelector(
         expanded = expanded,
         onExpandedChange = { expanded = it },
     ) {
-        OutlinedTextField(
-            modifier = Modifier.menuAnchor(),
-            label = label?.let { { Text(label) } },
-            value = optionStringMap(selectedValue),
-            readOnly = true,
-            onValueChange = {},
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
-        )
+        textField(optionStringMap(selectedValue), expanded)
 
         ExposedDropdownMenu(
             expanded = expanded,
@@ -48,4 +40,66 @@ fun <T> OutlinedDropDownSelector(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T> FilledDropDownSelector(
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    options: List<T>,
+    selectedValue: T?,
+    optionStringMap: @Composable (T?) -> String = { it.toString() },
+    onChange: (T) -> Unit
+)
+{
+    DropDownSelector(
+        modifier = modifier,
+        options = options,
+        selectedValue = selectedValue,
+        optionStringMap = optionStringMap,
+        onChange = onChange,
+        textField = { value, expanded ->
+            TextField(
+                modifier = Modifier.menuAnchor(),
+                label = label?.let { { Text(label) } },
+                value = value,
+                readOnly = true,
+                onValueChange = {},
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T> OutlinedDropDownSelector(
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    options: List<T>,
+    selectedValue: T?,
+    optionStringMap: @Composable (T?) -> String = { it.toString() },
+    onChange: (T) -> Unit
+)
+{
+    DropDownSelector(
+        modifier = modifier,
+        options = options,
+        selectedValue = selectedValue,
+        optionStringMap = optionStringMap,
+        onChange = onChange,
+        textField = { value, expanded ->
+            OutlinedTextField(
+                modifier = Modifier.menuAnchor(),
+                label = label?.let { { Text(label) } },
+                value = value,
+                readOnly = true,
+                onValueChange = {},
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+            )
+        }
+    )
 }
