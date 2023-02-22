@@ -23,6 +23,7 @@ import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
+import com.ramcosta.composedestinations.utils.findDestination
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
@@ -34,6 +35,7 @@ import me.tomasan7.jecnamobile.news.NewsSubScreen
 import me.tomasan7.jecnamobile.teachers.TeachersSubScreen
 import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
@@ -44,6 +46,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel()
 )
 {
+    val settings by settingsAsStateAwaitFirst()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val destinationItems = SideBarDestination.values()
@@ -117,6 +120,7 @@ fun MainScreen(
         content = {
             DestinationsNavHost(
                 navGraph = NavGraphs.subScreens,
+                startRoute = NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!!,
                 navController = subScreensNavController,
                 modifier = Modifier.fillMaxSize()
             ) {
