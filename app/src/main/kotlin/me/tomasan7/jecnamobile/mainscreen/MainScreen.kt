@@ -221,6 +221,7 @@ enum class SideBarLink(
 )
 {
     SubstitutionTimetable(
-        "${JecnaWebClient.ENDPOINT}/suplovani", R.string.sidebar_link_substitution_timetable, Icons.Default.TableChart
+        JecnaWebClient.getUrlForPath("/suplovani"), R.string.sidebar_link_substitution_timetable,
+        Icons.Default.TableChart
     )
 }

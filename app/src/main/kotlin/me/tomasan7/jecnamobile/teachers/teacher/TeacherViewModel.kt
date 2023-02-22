@@ -53,7 +53,7 @@ class TeacherViewModel @Inject constructor(
     }
 
     fun createImageRequest(path: String) = ImageRequest.Builder(appContext).apply {
-        data(JecnaWebClient.ENDPOINT + path)
+        data(JecnaWebClient.getUrlForPath(path))
         crossfade(true)
         val sessionCookie = getSessionCookieBlocking() ?: return@apply
         headers(Headers.headersOf("Cookie", sessionCookie.toHeaderString()))
