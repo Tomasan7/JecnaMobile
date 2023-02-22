@@ -20,6 +20,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import kotlinx.coroutines.launch
@@ -38,7 +39,10 @@ import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 @RootNavGraph
 @Destination
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
+fun MainScreen(
+    navigator: DestinationsNavigator,
+    viewModel: MainScreenViewModel = hiltViewModel()
+)
 {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -103,7 +107,8 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
                             subScreensNavController.navigate(SettingsScreenDestination)
                         },
                         onLogoutClick = {
-                            TODO("Logout")
+                            viewModel.logout()
+                            navigator.navigate(LoginScreenDestination)
                         }
                     )
                 }
