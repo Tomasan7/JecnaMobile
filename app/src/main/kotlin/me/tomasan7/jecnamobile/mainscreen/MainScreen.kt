@@ -48,7 +48,7 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
     val subScreensNavController = rememberNavController()
 
     LaunchedEffect(subScreensNavController) {
-        subScreensNavController.addOnDestinationChangedListener { _, destination,_ ->
+        subScreensNavController.addOnDestinationChangedListener { _, destination, _ ->
             val newSelectedItem = destinationItems.find { it.destination.route == destination.route }
             if (newSelectedItem != null)
                 selectedItem = newSelectedItem
