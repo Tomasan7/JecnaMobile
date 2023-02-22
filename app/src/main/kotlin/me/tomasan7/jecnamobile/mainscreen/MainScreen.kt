@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +45,14 @@ fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel())
     val linkItems = SideBarLink.values()
     var selectedItem by rememberMutableStateOf(SideBarDestination.Timetable)
     val subScreensNavController = rememberNavController()
+
+    LaunchedEffect(subScreensNavController) {
+        subScreensNavController.addOnDestinationChangedListener { _, destination,_ ->
+            val newSelectedItem = destinationItems.find { it.destination.route == destination.route }
+            if (newSelectedItem != null)
+                selectedItem = newSelectedItem
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
