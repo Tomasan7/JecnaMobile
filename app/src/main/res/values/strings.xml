@@ -95,6 +95,7 @@
     <!-- ##### Teachers SubScreen ##### -->
 
     <string name="teachers_search">Vyhledat</string>
+    <string name="teachers_search_placeholder">"Jméno/Příjmení/Zkratka"</string>
 
     <!-- ##### Teacher Screen ##### -->
 
