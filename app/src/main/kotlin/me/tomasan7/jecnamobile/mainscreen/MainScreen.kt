@@ -118,9 +118,11 @@ fun MainScreen(
             }
         },
         content = {
+            val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
+
             DestinationsNavHost(
                 navGraph = NavGraphs.subScreens,
-                startRoute = NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!!,
+                startRoute = startRoute,
                 navController = subScreensNavController,
                 modifier = Modifier.fillMaxSize()
             ) {
