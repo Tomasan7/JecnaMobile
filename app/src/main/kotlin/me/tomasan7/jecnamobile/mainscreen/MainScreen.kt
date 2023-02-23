@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -163,11 +164,11 @@ private fun SidebarButtonsRow(
         horizontalArrangement = Arrangement.End
     ) {
         IconButton(onClick = onSettingsClick) {
-            Icon(Icons.Filled.Settings, contentDescription = null)
+            Icon(Icons.Outlined.Settings, contentDescription = null)
         }
 
         IconButton(onClick = onLogoutClick) {
-            Icon(Icons.Filled.ExitToApp, contentDescription = null)
+            Icon(Icons.Outlined.ExitToApp, contentDescription = null)
         }
     }
 }
@@ -181,7 +182,7 @@ fun DestinationItem(
 )
 {
     NavigationDrawerItem(
-        icon = { Icon(item.icon, contentDescription = null) },
+        icon = { Icon(if (selected) item.iconSelected else item.icon, contentDescription = null) },
         label = { Text(stringResource(item.label)) },
         selected = selected,
         onClick = onClick,
@@ -205,7 +206,7 @@ fun LinkItem(item: SideBarLink)
             intent.data = Uri.parse(item.link)
             context.startActivity(intent)
         },
-        badge = { Icon(Icons.Default.OpenInBrowser, label) },
+        badge = { Icon(Icons.Outlined.OpenInBrowser, label) },
         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
     )
 }
@@ -214,14 +215,15 @@ enum class SideBarDestination(
     val destination: DirectionDestinationSpec,
     @StringRes
     val label: Int,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val iconSelected: ImageVector = icon
 )
 {
-    News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Default.Newspaper),
-    Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Default.Star),
-    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Default.TableChart),
-    Attendances(AttendancesSubScreenDestination, R.string.sidebar_attendances, Icons.Default.DateRange),
-    Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Default.People)
+    News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Outlined.Newspaper, Icons.Filled.Newspaper),
+    Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Outlined.Grade, Icons.Filled.Grade),
+    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Outlined.TableChart, Icons.Filled.TableChart),
+    Attendances(AttendancesSubScreenDestination, R.string.sidebar_attendances, Icons.Outlined.DateRange, Icons.Filled.DateRange),
+    Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Outlined.People, Icons.Filled.People)
 }
 
 enum class SideBarLink(
@@ -233,6 +235,6 @@ enum class SideBarLink(
 {
     SubstitutionTimetable(
         JecnaWebClient.getUrlForPath("/suplovani"), R.string.sidebar_link_substitution_timetable,
-        Icons.Default.TableChart
+        Icons.Outlined.TableChart
     )
 }
