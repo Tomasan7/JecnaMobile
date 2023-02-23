@@ -37,6 +37,7 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
+import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
 import me.tomasan7.jecnamobile.ui.theme.*
 import me.tomasan7.jecnamobile.util.getGradeColor
@@ -173,9 +174,9 @@ private fun Container(
 
     Surface(
         modifier = modifier,
-        tonalElevation = 2.dp,
-        shadowElevation = 4.dp,
-        shape = RoundedCornerShape(10.dp)
+        tonalElevation = ElevationLevel.level1,
+        shadowElevation = ElevationLevel.level1,
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             Modifier
