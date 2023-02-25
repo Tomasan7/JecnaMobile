@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.migration.DisableInstallInCheck
+import me.tomasan7.jecnaapi.CanteenClient
 import me.tomasan7.jecnaapi.JecnaClient
 import javax.inject.Singleton
 
@@ -15,4 +16,8 @@ internal object AppModule
     @Provides
     @Singleton
     fun provideJecnaClient() = JecnaClient(autoLogin = true)
+
+    @Provides
+    @Singleton
+    fun provideCanteenClient() = CanteenClient()
 }
