@@ -85,7 +85,8 @@ class AttendancesViewModel @Inject constructor(
 
             changeUiState(
                 attendancePage = cachedGrades.data,
-                lastUpdateTimestamp = cachedGrades.timestamp
+                lastUpdateTimestamp = cachedGrades.timestamp,
+                isCache = true
             )
         }
     }
@@ -106,7 +107,8 @@ class AttendancesViewModel @Inject constructor(
 
                 changeUiState(
                     attendancePage = realGrades,
-                    lastUpdateTimestamp = Instant.now()
+                    lastUpdateTimestamp = Instant.now(),
+                    isCache = false
                 )
             }
             catch (e: UnresolvedAddressException)
@@ -150,6 +152,7 @@ class AttendancesViewModel @Inject constructor(
         loading: Boolean = uiState.loading,
         attendancePage: AttendancesPage? = uiState.attendancesPage,
         lastUpdateTimestamp: Instant? = uiState.lastUpdateTimestamp,
+        isCache: Boolean = uiState.isCache,
         selectedSchoolYear: SchoolYear = uiState.selectedSchoolYear,
         selectedMonth: Month = uiState.selectedMonth,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent
@@ -159,6 +162,7 @@ class AttendancesViewModel @Inject constructor(
             loading = loading,
             attendancesPage = attendancePage,
             lastUpdateTimestamp = lastUpdateTimestamp,
+            isCache = isCache,
             selectedSchoolYear = selectedSchoolYear,
             selectedMonth = selectedMonth,
             snackBarMessageEvent = snackBarMessageEvent

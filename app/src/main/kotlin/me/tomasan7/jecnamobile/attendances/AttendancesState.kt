@@ -12,6 +12,7 @@ data class AttendancesState(
     val loading: Boolean = false,
     val attendancesPage: AttendancesPage? = null,
     val lastUpdateTimestamp: Instant? = null,
+    val isCache: Boolean = false,
     val selectedSchoolYear: SchoolYear = attendancesPage?.selectedSchoolYear ?: SchoolYear.current(),
     val selectedMonth: Month = attendancesPage?.selectedMonth ?: LocalDate.now().month,
     val snackBarMessageEvent: StateEventWithContent<String> = consumed()
