@@ -85,7 +85,8 @@ class TimetableViewModel @Inject constructor(
 
             changeUiState(
                 timetablePage = cachedGrades.data,
-                lastUpdateTimestamp = cachedGrades.timestamp
+                lastUpdateTimestamp = cachedGrades.timestamp,
+                isCache = true
             )
         }
     }
@@ -106,7 +107,8 @@ class TimetableViewModel @Inject constructor(
 
                 changeUiState(
                     timetablePage = realTimetable,
-                    lastUpdateTimestamp = Instant.now()
+                    lastUpdateTimestamp = Instant.now(),
+                    isCache = false
                 )
             }
             catch (e: UnresolvedAddressException)
@@ -147,6 +149,7 @@ class TimetableViewModel @Inject constructor(
         loading: Boolean = uiState.loading,
         timetablePage: TimetablePage? = uiState.timetablePage,
         lastUpdateTimestamp: Instant? = uiState.lastUpdateTimestamp,
+        isCache: Boolean = uiState.isCache,
         selectedSchoolYear: SchoolYear = uiState.selectedSchoolYear,
         selectedPeriod: TimetablePage.PeriodOption? = uiState.selectedPeriod,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent
@@ -156,6 +159,7 @@ class TimetableViewModel @Inject constructor(
             loading = loading,
             timetablePage = timetablePage,
             lastUpdateTimestamp = lastUpdateTimestamp,
+            isCache = isCache,
             selectedSchoolYear = selectedSchoolYear,
             selectedPeriod = selectedPeriod,
             snackBarMessageEvent = snackBarMessageEvent
