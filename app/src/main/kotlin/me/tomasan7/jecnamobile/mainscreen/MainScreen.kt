@@ -30,6 +30,7 @@ import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.attendances.AttendancesSubScreen
+import me.tomasan7.jecnamobile.canteen.CanteenSubScreen
 import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
 import me.tomasan7.jecnamobile.news.NewsSubScreen
@@ -148,6 +149,10 @@ fun MainScreen(
                 composable(TeachersSubScreenDestination) {
                     TeachersSubScreen(onHamburgerClick = onHamburgerClick, navigator = destinationsNavigator)
                 }
+
+                composable(CanteenSubScreenDestination) {
+                    CanteenSubScreen(onHamburgerClick = onHamburgerClick)
+                }
             }
         }
     )
@@ -222,6 +227,7 @@ enum class SideBarDestination(
     News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Outlined.Newspaper, Icons.Filled.Newspaper),
     Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Outlined.Grade, Icons.Filled.Grade),
     Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Outlined.TableChart, Icons.Filled.TableChart),
+    Canteen(CanteenSubScreenDestination, R.string.sidebar_canteen, Icons.Outlined.Restaurant, Icons.Filled.Restaurant),
     Attendances(AttendancesSubScreenDestination, R.string.sidebar_attendances, Icons.Outlined.DateRange, Icons.Filled.DateRange),
     Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Outlined.People, Icons.Filled.People)
 }
