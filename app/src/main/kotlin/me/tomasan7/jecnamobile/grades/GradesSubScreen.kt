@@ -241,7 +241,6 @@ private fun Container(
     content = content
 )
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Subject(
     subject: Subject,
@@ -320,34 +319,29 @@ private fun SubjectPart(
 private fun GradeBox(
     text: String,
     color: Color,
+    modifier: Modifier = Modifier,
     height: Dp = Constants.gradeWidth,
-    onClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    onClick: (() -> Unit)? = null
 )
 {
     var newModifier = modifier
         .size(Constants.gradeWidth, height)
-        .shadow(Constants.gradeShadowElevation, Constants.gradeShape, true)
+        .clip(Constants.gradeShape)
         .background(color)
 
     if (onClick != null)
         newModifier = newModifier.clickable(onClick = onClick)
 
-    /* Using Surface here for dropping the shadow. */
     Box(
-        modifier = newModifier
+        modifier = newModifier,
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = text,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        }
+        Text(
+            text = text,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
     }
 }
 
@@ -377,8 +371,7 @@ private fun GradeAverage(value: Float)
         modifier = Modifier.size(Constants.gradeWidth),
         border = BorderStroke(1.dp, getGradeColor(value.roundToInt())),
         tonalElevation = 10.dp,
-        shape = Constants.gradeShape,
-        shadowElevation = Constants.gradeShadowElevation
+        shape = Constants.gradeShape
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
@@ -493,7 +486,6 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
 {
     Surface(
         tonalElevation = 10.dp,
-        shadowElevation = Constants.gradeShadowElevation,
         shape = RoundedCornerShape(7.dp)
     ) {
         Row(
@@ -513,7 +505,7 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
                         tint = getGradeColor(1)
                     )
 
-                Behaviour.NotificationType.BAD  ->
+                Behaviour.NotificationType.BAD ->
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
@@ -527,12 +519,12 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
 @Composable
 private fun getGradeWord(grade: Grade) = when (grade.value)
 {
-    0    -> stringResource(R.string.grade_word_0)
-    1    -> stringResource(R.string.grade_word_1)
-    2    -> stringResource(R.string.grade_word_2)
-    3    -> stringResource(R.string.grade_word_3)
-    4    -> stringResource(R.string.grade_word_4)
-    5    -> stringResource(R.string.grade_word_5)
+    0 -> stringResource(R.string.grade_word_0)
+    1 -> stringResource(R.string.grade_word_1)
+    2 -> stringResource(R.string.grade_word_2)
+    3 -> stringResource(R.string.grade_word_3)
+    4 -> stringResource(R.string.grade_word_4)
+    5 -> stringResource(R.string.grade_word_5)
     else -> throw IllegalArgumentException("Grade value must be between 0 and 5. (got ${grade.value})")
 }
 
@@ -544,6 +536,5 @@ private object Constants
         roundingMode = RoundingMode.HALF_UP
     }
     val gradeDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
-    val gradeShadowElevation = 2.dp
     val gradeShape = RoundedCornerShape(7.dp)
 }
