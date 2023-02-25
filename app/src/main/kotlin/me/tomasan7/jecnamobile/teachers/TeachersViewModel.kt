@@ -31,9 +31,14 @@ class TeachersViewModel @Inject constructor(
 
     private var loadTeachersJob: Job? = null
 
-    fun enteredComposition()
+    init
     {
         loadReal()
+    }
+
+    fun enteredComposition()
+    {
+
     }
 
     fun leftComposition()

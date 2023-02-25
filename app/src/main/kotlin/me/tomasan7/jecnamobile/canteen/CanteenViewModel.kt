@@ -36,7 +36,7 @@ class CanteenViewModel @Inject constructor(
 
     private var loadMenuJob: Job? = null
 
-    fun enteredComposition()
+    init
     {
         viewModelScope.launch {
             if (uiState.menuPage != null)
@@ -48,8 +48,14 @@ class CanteenViewModel @Inject constructor(
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
             else
                 canteenClient.login(jecnaClient.lastLoginAuth!!)
+
             loadMenu()
         }
+    }
+
+    fun enteredComposition()
+    {
+
     }
 
     fun leftComposition()

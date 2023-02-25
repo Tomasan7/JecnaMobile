@@ -69,10 +69,14 @@ class NewsViewModel @Inject constructor(
         openDownloadedFile(downloadId)
     }
 
-    fun enteredComposition()
+    init
     {
         loadCache()
         loadReal()
+    }
+
+    fun enteredComposition()
+    {
         appContext.registerReceiver(
             loginBroadcastReceiver, IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
         )

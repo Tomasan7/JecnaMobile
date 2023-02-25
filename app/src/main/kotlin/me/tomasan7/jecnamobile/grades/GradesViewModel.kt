@@ -45,12 +45,18 @@ class GradesViewModel @Inject constructor(
         }
     }
 
-    fun enteredComposition()
+    init
     {
         loadCache()
         loadReal()
+    }
+
+    fun enteredComposition()
+    {
+
         appContext.registerReceiver(
-            loginBroadcastReceiver, IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
         )
     }
 

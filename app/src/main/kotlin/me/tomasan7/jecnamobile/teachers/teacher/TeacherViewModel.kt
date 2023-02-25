@@ -44,7 +44,9 @@ class TeacherViewModel @Inject constructor(
     fun enteredComposition(teacherReference: TeacherReference)
     {
         this.teacherReference = teacherReference
-        loadReal()
+
+        if (!this::teacherReference.isInitialized)
+            loadReal()
     }
 
     fun leftComposition()
