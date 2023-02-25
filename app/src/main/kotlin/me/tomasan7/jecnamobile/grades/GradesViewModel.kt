@@ -88,7 +88,8 @@ class GradesViewModel @Inject constructor(
 
             changeUiState(
                 gradesPage = cachedGrades.data,
-                lastUpdateTimestamp = cachedGrades.timestamp
+                lastUpdateTimestamp = cachedGrades.timestamp,
+                isCache = true
             )
         }
     }
@@ -109,7 +110,8 @@ class GradesViewModel @Inject constructor(
 
                 changeUiState(
                     gradesPage = realGrades,
-                    lastUpdateTimestamp = Instant.now()
+                    lastUpdateTimestamp = Instant.now(),
+                    isCache = false
                 )
             }
             catch (e: UnresolvedAddressException)
@@ -154,6 +156,7 @@ class GradesViewModel @Inject constructor(
         gradesPage: GradesPage? = uiState.gradesPage,
         lastUpdateTimestamp: Instant? = uiState.lastUpdateTimestamp,
         selectedSchoolYear: SchoolYear = uiState.selectedSchoolYear,
+        isCache: Boolean = uiState.isCache,
         selectedSchoolYearHalf: SchoolYearHalf = uiState.selectedSchoolYearHalf,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
@@ -162,6 +165,7 @@ class GradesViewModel @Inject constructor(
             loading = loading,
             gradesPage = gradesPage,
             lastUpdateTimestamp = lastUpdateTimestamp,
+            isCache = isCache,
             selectedSchoolYear = selectedSchoolYear,
             selectedSchoolYearHalf = selectedSchoolYearHalf,
             snackBarMessageEvent = snackBarMessageEvent

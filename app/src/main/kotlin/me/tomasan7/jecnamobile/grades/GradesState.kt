@@ -13,6 +13,7 @@ data class GradesState(
     val loading: Boolean = false,
     val gradesPage: GradesPage? = null,
     val lastUpdateTimestamp: Instant? = null,
+    val isCache: Boolean = false,
     val selectedSchoolYear: SchoolYear = gradesPage?.selectedSchoolYear ?: SchoolYear.current(),
     val selectedSchoolYearHalf: SchoolYearHalf = gradesPage?.selectedSchoolYearHalf ?: SchoolYearHalf.current(),
     val snackBarMessageEvent: StateEventWithContent<String> = consumed()
