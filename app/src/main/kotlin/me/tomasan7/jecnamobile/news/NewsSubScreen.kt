@@ -143,7 +143,7 @@ private fun Article(
         title = {
             Text(
                 text = article.title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.fillMaxWidth()
             )
         },
