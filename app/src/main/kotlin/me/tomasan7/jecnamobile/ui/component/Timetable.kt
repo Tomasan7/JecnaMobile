@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.tomasan7.jecnaapi.data.timetable.*
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.manipulate
 import java.time.DayOfWeek
@@ -110,7 +111,7 @@ private fun TimetableLessonPeriod(
 {
     Surface(
         modifier = modifier,
-        shadowElevation = 4.dp,
+        shadowElevation = ElevationLevel.level1,
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp).manipulate(1.5f),
         shape = RoundedCornerShape(5.dp),
     ) {
@@ -178,8 +179,8 @@ private fun Lesson(
     val shape = RoundedCornerShape(5.dp)
     Surface(
         modifier = if (next) modifier.border(1.dp, MaterialTheme.colorScheme.inverseSurface, shape) else modifier,
-        tonalElevation = 4.dp,
-        shadowElevation = 4.dp,
+        tonalElevation = ElevationLevel.level2,
+        shadowElevation = ElevationLevel.level1,
         shape = shape,
         color = if (current) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.surface,
         onClick = onClick
@@ -208,7 +209,7 @@ private fun DayLabel(
     Surface(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp).manipulate(1.5f),
-        shadowElevation = 4.dp,
+        shadowElevation = ElevationLevel.level1,
         shape = RoundedCornerShape(5.dp)
     ) {
         Box(Modifier.padding(4.dp), contentAlignment = Alignment.Center) {
