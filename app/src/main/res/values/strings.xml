@@ -83,8 +83,14 @@
 
     <!-- ##### Canteen SubScreen ##### -->
 
+    <string name="canteen_login_error">Při přihlašování došlo k chybě.</string>
     <string name="canteen_allergens">Alergeny</string>
-    <string name="canteen_credit">Kredit: %.2f Kč</string>
+    <string name="canteen_credit">%1s Kč</string>
+    <string name="canteen_lunch">Oběd %1d</string>
+    <string name="canteen_order">Objednat</string>
+    <string name="canteen_cancel_order">Odobjednat</string>
+    <string name="canteen_take_from_exchange">Z burzy</string>
+    <string name="canteen_put_on_exchange">Do burzy</string>
 
     <!-- ##### Attendances SubScreen ##### -->
 
@@ -147,6 +153,8 @@
     <string name="school_year_half">Pololetí</string>
     <string name="school_year_half_1">1.</string>
     <string name="school_year_half_2">2.</string>
+
+    <string name="close">Zavřít</string>
 
     <string name="back_online">Zpět online</string>
     <string name="showing_offline_data_time">Naposledy aktualizováno v %1s</string>
