@@ -28,6 +28,7 @@ import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
@@ -42,7 +43,7 @@ import java.time.format.DateTimeFormatter
 @Destination
 @Composable
 fun CanteenSubScreen(
-    onHamburgerClick: () -> Unit = {},
+    navDrawerController: NavDrawerController,
     viewModel: CanteenViewModel = hiltViewModel()
 )
 {
@@ -70,7 +71,7 @@ fun CanteenSubScreen(
         topBar = {
             SubScreenTopAppBar(
                 R.string.sidebar_canteen,
-                onHamburgerClick = onHamburgerClick,
+                navDrawerController = navDrawerController,
                 actions = {
                     if (uiState.menuPage != null)
                         Credit(uiState.menuPage.credit)

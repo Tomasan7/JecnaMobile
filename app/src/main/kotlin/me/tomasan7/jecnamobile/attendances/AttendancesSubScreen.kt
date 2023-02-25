@@ -27,6 +27,7 @@ import me.tomasan7.jecnaapi.data.attendance.Attendance
 import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.*
 import me.tomasan7.jecnamobile.ui.theme.jm_late_attendance
@@ -41,7 +42,7 @@ import java.time.format.DateTimeFormatter
 @Destination
 @Composable
 fun AttendancesSubScreen(
-    onHamburgerClick: () -> Unit,
+    navDrawerController: NavDrawerController,
     viewModel: AttendancesViewModel = hiltViewModel()
 )
 {
@@ -64,7 +65,7 @@ fun AttendancesSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_attendances, onHamburgerClick = onHamburgerClick) },
+        topBar = { SubScreenTopAppBar(R.string.sidebar_attendances, navDrawerController) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(

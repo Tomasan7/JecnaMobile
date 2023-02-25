@@ -24,6 +24,7 @@ import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.*
 
@@ -32,7 +33,7 @@ import me.tomasan7.jecnamobile.ui.component.*
 @Destination
 @Composable
 fun TimetableSubScreen(
-    onHamburgerClick: () -> Unit,
+    navDrawerController: NavDrawerController,
     viewModel: TimetableViewModel = hiltViewModel()
 )
 {
@@ -55,7 +56,7 @@ fun TimetableSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_timetable, onHamburgerClick = onHamburgerClick) },
+        topBar = { SubScreenTopAppBar(R.string.sidebar_timetable, navDrawerController) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
 

@@ -22,6 +22,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.findDestination
@@ -55,6 +56,8 @@ fun MainScreen(
     val linkItems = SideBarLink.values()
     var selectedItem by rememberMutableStateOf(SideBarDestination.Timetable)
     val subScreensNavController = rememberNavController()
+    val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
+    val navDrawerController = rememberNavDrawerController(drawerState, scope)
 
     LaunchedEffect(subScreensNavController) {
         subScreensNavController.addOnDestinationChangedListener { _, destination, _ ->
@@ -120,40 +123,15 @@ fun MainScreen(
             }
         },
         content = {
-            val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
-
             DestinationsNavHost(
                 navGraph = NavGraphs.subScreens,
                 startRoute = startRoute,
                 navController = subScreensNavController,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                val onHamburgerClick: () -> Unit = { scope.launch { drawerState.open() } }
-
-                composable(GradesSubScreenDestination) {
-                    GradesSubScreen(onHamburgerClick = onHamburgerClick)
+                modifier = Modifier.fillMaxSize(),
+                dependenciesContainerBuilder = {
+                    dependency(NavGraphs.subScreens) { navDrawerController }
                 }
-
-                composable(TimetableSubScreenDestination) {
-                    TimetableSubScreen(onHamburgerClick = onHamburgerClick)
-                }
-
-                composable(NewsSubScreenDestination) {
-                    NewsSubScreen(onHamburgerClick = onHamburgerClick)
-                }
-
-                composable(AttendancesSubScreenDestination) {
-                    AttendancesSubScreen(onHamburgerClick = onHamburgerClick)
-                }
-
-                composable(TeachersSubScreenDestination) {
-                    TeachersSubScreen(onHamburgerClick = onHamburgerClick, navigator = destinationsNavigator)
-                }
-
-                composable(CanteenSubScreenDestination) {
-                    CanteenSubScreen(onHamburgerClick = onHamburgerClick)
-                }
-            }
+            )
         }
     )
 }

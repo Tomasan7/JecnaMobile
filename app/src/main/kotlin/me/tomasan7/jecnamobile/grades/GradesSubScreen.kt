@@ -36,6 +36,7 @@ import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
@@ -52,7 +53,7 @@ import kotlin.math.roundToInt
 @Destination
 @Composable
 fun GradesSubScreen(
-    onHamburgerClick: () -> Unit,
+    navDrawerController: NavDrawerController,
     viewModel: GradesViewModel = hiltViewModel()
 )
 {
@@ -76,7 +77,7 @@ fun GradesSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_grades, onHamburgerClick = onHamburgerClick) },
+        topBar = { SubScreenTopAppBar(R.string.sidebar_grades, navDrawerController) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(

@@ -44,6 +44,7 @@ import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.ObjectDialog
@@ -57,7 +58,7 @@ import java.time.format.DateTimeFormatter
 @Destination
 @Composable
 fun NewsSubScreen(
-    onHamburgerClick: () -> Unit,
+    navDrawerController: NavDrawerController,
     viewModel: NewsViewModel = hiltViewModel()
 )
 {
@@ -79,7 +80,7 @@ fun NewsSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_news, onHamburgerClick = onHamburgerClick) },
+        topBar = { SubScreenTopAppBar(R.string.sidebar_news, navDrawerController) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(

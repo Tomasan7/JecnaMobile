@@ -25,6 +25,7 @@ import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
+import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
 import me.tomasan7.jecnamobile.ui.component.VerticalSpacer
@@ -36,7 +37,7 @@ import me.tomasan7.jecnamobile.util.removeAccent
 @Destination
 @Composable
 fun TeachersSubScreen(
-    onHamburgerClick: () -> Unit,
+    navDrawerController: NavDrawerController,
     navigator: DestinationsNavigator,
     viewModel: TeachersViewModel = hiltViewModel()
 )
@@ -60,7 +61,7 @@ fun TeachersSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_teachers, onHamburgerClick = onHamburgerClick) },
+        topBar = { SubScreenTopAppBar(R.string.sidebar_teachers, navDrawerController) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
