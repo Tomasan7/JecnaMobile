@@ -24,6 +24,7 @@ import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.findDestination
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ import me.tomasan7.jecnamobile.attendances.AttendancesSubScreen
 import me.tomasan7.jecnamobile.canteen.CanteenSubScreen
 import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.grades.GradesSubScreen
+import me.tomasan7.jecnamobile.grades.GradesViewModel
 import me.tomasan7.jecnamobile.news.NewsSubScreen
 import me.tomasan7.jecnamobile.teachers.TeachersSubScreen
 import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
@@ -89,7 +91,15 @@ fun MainScreen(
                             if (selected)
                                 return@onClick
 
-                            subScreensNavController.navigate(item.destination.route)
+                            /* https://developer.android.com/jetpack/compose/navigation#bottom-nav */
+                            subScreensNavController.navigate(item.destination.route) {
+                                popUpTo(startRoute) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+
+                            }
                             selectedItem = item
                         }
                     )
