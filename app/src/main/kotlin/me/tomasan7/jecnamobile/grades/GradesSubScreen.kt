@@ -432,7 +432,7 @@ private fun GradeDialogContent(grade: Grade)
     Surface(
         tonalElevation = 2.dp,
         modifier = Modifier.width(300.dp),
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(28.dp),
         border = BorderStroke(2.dp, getGradeColor(grade))
     ) {
         Column {
@@ -441,7 +441,7 @@ private fun GradeDialogContent(grade: Grade)
                     .fillMaxWidth()
                     .height(50.dp)
                     .background(getGradeColor(grade))
-                    .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)),
+                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
