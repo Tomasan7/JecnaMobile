@@ -173,7 +173,8 @@ class NewsViewModel @Inject constructor(
 
             changeUiState(
                 newsPage = cachedGrades.data,
-                lastUpdateTimestamp = cachedGrades.timestamp
+                lastUpdateTimestamp = cachedGrades.timestamp,
+                isCache = true
             )
         }
     }
@@ -191,7 +192,8 @@ class NewsViewModel @Inject constructor(
 
                 changeUiState(
                     newsPage = realNews,
-                    lastUpdateTimestamp = Instant.now()
+                    lastUpdateTimestamp = Instant.now(),
+                    isCache = false
                 )
             }
             catch (e: UnresolvedAddressException)
@@ -232,6 +234,7 @@ class NewsViewModel @Inject constructor(
         loading: Boolean = uiState.loading,
         newsPage: NewsPage? = uiState.newsPage,
         lastUpdateTimestamp: Instant? = uiState.lastUpdateTimestamp,
+        isCache: Boolean = uiState.isCache,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
     {
@@ -239,6 +242,7 @@ class NewsViewModel @Inject constructor(
             loading = loading,
             newsPage = newsPage,
             lastUpdateTimestamp = lastUpdateTimestamp,
+            isCache = isCache,
             snackBarMessageEvent = snackBarMessageEvent
         )
     }

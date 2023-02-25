@@ -10,5 +10,6 @@ data class NewsState(
     val loading: Boolean = false,
     val newsPage: NewsPage? = null,
     val lastUpdateTimestamp: Instant? = null,
+    val isCache: Boolean = false,
     val snackBarMessageEvent: StateEventWithContent<String> = consumed()
 )
