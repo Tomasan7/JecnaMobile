@@ -14,6 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import me.tomasan7.jecnaapi.CanteenClient
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.login.AuthRepository
@@ -25,7 +26,7 @@ class MainScreenViewModel @Inject constructor(
     private val appContext: Context,
     private val authRepository: AuthRepository,
     private val jecnaClient: JecnaClient,
-    //private val canteenClient: CanteenClient
+    private val canteenClient: CanteenClient
 ) : ViewModel()
 {
     private val connectivityManager = getSystemService(appContext, ConnectivityManager::class.java) as ConnectivityManager
@@ -76,7 +77,7 @@ class MainScreenViewModel @Inject constructor(
                 jecnaClient.logout()
             }
             launch {
-                //canteenClient.logout()
+                canteenClient.logout()
             }
         }
 
