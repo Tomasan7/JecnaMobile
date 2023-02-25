@@ -1,5 +1,5 @@
 [versions]
-plugin-android = "7.4.0"
+plugin-android = "7.4.1"
 plugin-kotlin = "1.7.20"
 plugin-ksp = "1.7.20-1.0.8"
 
