@@ -224,7 +224,7 @@ private fun LessonDialogContent(lesson: Lesson)
     Surface(
         tonalElevation = 5.dp,
         modifier = Modifier.width(300.dp),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(28.dp)
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
