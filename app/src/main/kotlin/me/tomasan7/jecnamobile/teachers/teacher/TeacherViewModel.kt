@@ -1,6 +1,7 @@
 package me.tomasan7.jecnamobile.teachers.teacher
 
 import android.content.Context
+import android.content.IntentFilter
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,8 +24,10 @@ import me.tomasan7.jecnaapi.data.schoolStaff.Teacher
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
+import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.teachers.TeachersRepository
+import me.tomasan7.jecnamobile.util.createBroadcastReceiver
 import okhttp3.Headers
 import javax.inject.Inject
 
@@ -43,17 +46,31 @@ class TeacherViewModel @Inject constructor(
 
     private var loadTeacherJob: Job? = null
 
+    private val loginBroadcastReceiver = createBroadcastReceiver { _, _ ->
+        if (loadTeacherJob == null || loadTeacherJob!!.isCompleted)
+        {
+            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+            loadReal()
+        }
+    }
+
     fun enteredComposition(teacherReference: TeacherReference)
     {
         this.teacherReference = teacherReference
 
         if (this::teacherReference.isInitialized)
             loadReal()
+
+        appContext.registerReceiver(
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+        )
     }
 
     fun leftComposition()
     {
         loadTeacherJob?.cancel()
+        appContext.unregisterReceiver(loginBroadcastReceiver)
     }
 
     fun createImageRequest(path: String) = ImageRequest.Builder(appContext).apply {
