@@ -13,6 +13,7 @@ import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import io.ktor.util.network.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
@@ -118,6 +119,14 @@ class AttendancesViewModel @Inject constructor(
                 else
                     changeUiState(snackBarMessageEvent =
                     triggered(appContext.getString(R.string.no_internet_connection)))
+            }
+            catch (e: CancellationException)
+            {
+                throw e
+            }
+            catch (e: Exception)
+            {
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.attendances_load_error)))
             }
             finally
             {

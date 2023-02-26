@@ -98,6 +98,7 @@
     <string name="attendances_attendance_type_enter">Příchod</string>
     <string name="attendances_attendance_type_exit">Odchod</string>
     <string name="attendances_no_attendances">V tomto období nemáš žádné záznamy.</string>
+    <string name="attendances_load_error">Při načítání příchodů došlo k chybě.</string>
 
     <!-- ##### Teachers SubScreen ##### -->
 
