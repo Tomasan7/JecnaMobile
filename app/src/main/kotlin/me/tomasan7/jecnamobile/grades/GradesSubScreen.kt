@@ -37,7 +37,7 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
-import me.tomasan7.jecnamobile.mainscreen.SideBarDestination
+import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
@@ -82,7 +82,7 @@ fun GradesSubScreen(
             SubScreenTopAppBar(R.string.sidebar_grades, navDrawerController) {
                 OfflineDataIndicator(
                     modifier = Modifier.padding(end = 16.dp),
-                    underlyingIcon = SideBarDestination.Grades.iconSelected,
+                    underlyingIcon = SubScreenDestination.Grades.iconSelected,
                     lastUpdateTimestamp = uiState.lastUpdateTimestamp,
                     visible = uiState.isCache
                 )

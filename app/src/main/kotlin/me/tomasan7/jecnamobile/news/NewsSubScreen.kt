@@ -45,7 +45,7 @@ import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
-import me.tomasan7.jecnamobile.mainscreen.SideBarDestination
+import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.ObjectDialog
@@ -86,7 +86,7 @@ fun NewsSubScreen(
             SubScreenTopAppBar(R.string.sidebar_news, navDrawerController) {
                 OfflineDataIndicator(
                     modifier = Modifier.padding(end = 16.dp),
-                    underlyingIcon = SideBarDestination.News.iconSelected,
+                    underlyingIcon = SubScreenDestination.News.iconSelected,
                     lastUpdateTimestamp = uiState.lastUpdateTimestamp,
                     visible = uiState.isCache
                 )

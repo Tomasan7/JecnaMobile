@@ -20,25 +20,16 @@ import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
-import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.findDestination
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.attendances.AttendancesSubScreen
-import me.tomasan7.jecnamobile.canteen.CanteenSubScreen
 import me.tomasan7.jecnamobile.destinations.*
-import me.tomasan7.jecnamobile.grades.GradesSubScreen
-import me.tomasan7.jecnamobile.grades.GradesViewModel
-import me.tomasan7.jecnamobile.news.NewsSubScreen
-import me.tomasan7.jecnamobile.teachers.TeachersSubScreen
-import me.tomasan7.jecnamobile.timetable.TimetableSubScreen
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 
@@ -54,9 +45,9 @@ fun MainScreen(
     val settings by settingsAsStateAwaitFirst()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val destinationItems = SideBarDestination.values()
+    val destinationItems = SubScreenDestination.values()
     val linkItems = SideBarLink.values()
-    var selectedItem by rememberMutableStateOf(SideBarDestination.Timetable)
+    var selectedItem by rememberMutableStateOf(SubScreenDestination.Timetable)
     val subScreensNavController = rememberNavController()
     val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
     val navDrawerController = rememberNavDrawerController(drawerState, scope)
@@ -169,7 +160,7 @@ private fun SidebarButtonsRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DestinationItem(
-    item: SideBarDestination,
+    item: SubScreenDestination,
     selected: Boolean,
     onClick: () -> Unit
 )
@@ -202,22 +193,6 @@ fun LinkItem(item: SideBarLink)
         badge = { Icon(Icons.Outlined.OpenInBrowser, label) },
         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
     )
-}
-
-enum class SideBarDestination(
-    val destination: DirectionDestinationSpec,
-    @StringRes
-    val label: Int,
-    val icon: ImageVector,
-    val iconSelected: ImageVector = icon
-)
-{
-    News(NewsSubScreenDestination, R.string.sidebar_news, Icons.Outlined.Newspaper, Icons.Filled.Newspaper),
-    Grades(GradesSubScreenDestination, R.string.sidebar_grades, Icons.Outlined.Grade, Icons.Filled.Grade),
-    Timetable(TimetableSubScreenDestination, R.string.sidebar_timetable, Icons.Outlined.TableChart, Icons.Filled.TableChart),
-    Canteen(CanteenSubScreenDestination, R.string.sidebar_canteen, Icons.Outlined.Restaurant, Icons.Filled.Restaurant),
-    Attendances(AttendancesSubScreenDestination, R.string.sidebar_attendances, Icons.Outlined.DateRange, Icons.Filled.DateRange),
-    Teachers(TeachersSubScreenDestination, R.string.sidebar_teachers, Icons.Outlined.People, Icons.Filled.People)
 }
 
 enum class SideBarLink(
