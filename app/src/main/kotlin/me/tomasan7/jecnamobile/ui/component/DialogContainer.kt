@@ -48,10 +48,9 @@ fun DialogContainer(
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    buttons()
-                }
+                    modifier = Modifier.fillMaxWidth(),
+                    content = buttons
+                )
             }
         }
     }
