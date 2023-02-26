@@ -20,7 +20,7 @@ class CacheAttendancesRepository @Inject constructor(
     private val attendancesRepository: AttendancesRepository
 )
 {
-    private val cacheFile = File(appContext.filesDir, FILE_NAME)
+    private val cacheFile = File(appContext.cacheDir, FILE_NAME)
 
     fun isCacheAvailable() = cacheFile.exists()
 

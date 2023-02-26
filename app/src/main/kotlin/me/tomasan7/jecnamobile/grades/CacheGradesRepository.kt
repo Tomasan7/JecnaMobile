@@ -18,7 +18,7 @@ class CacheGradesRepository @Inject constructor(
     private val gradesRepository: GradesRepository
 )
 {
-    private val cacheFile = File(appContext.filesDir, FILE_NAME)
+    private val cacheFile = File(appContext.cacheDir, FILE_NAME)
 
     fun isCacheAvailable() = cacheFile.exists()
 
