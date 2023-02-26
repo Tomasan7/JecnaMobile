@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.mainscreen
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -127,7 +128,11 @@ fun MainScreen(
                         },
                         onLogoutClick = {
                             viewModel.logout()
-                            navigator.navigate(LoginScreenDestination)
+                            navigator.navigate(LoginScreenDestination) {
+                                popUpTo(MainScreenDestination) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     )
                 }
