@@ -113,7 +113,11 @@ class TimetableViewModel @Inject constructor(
             }
             catch (e: UnresolvedAddressException)
             {
-                changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()))
+                if (uiState.lastUpdateTimestamp != null && uiState.isCache)
+                    changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()!!))
+                else
+                    changeUiState(snackBarMessageEvent =
+                    triggered(appContext.getString(R.string.no_internet_connection)))
             }
             finally
             {
@@ -122,9 +126,9 @@ class TimetableViewModel @Inject constructor(
         }
     }
 
-    private fun getOfflineMessage(): String
+    private fun getOfflineMessage(): String?
     {
-        val cacheTimestamp = uiState.lastUpdateTimestamp
+        val cacheTimestamp = uiState.lastUpdateTimestamp ?: return null
         val localDateTime = LocalDateTime.ofInstant(cacheTimestamp, ZoneId.systemDefault())
         val localDate = localDateTime.toLocalDate()
 
