@@ -1,5 +1,9 @@
 package me.tomasan7.jecnamobile.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
@@ -40,7 +44,7 @@ fun OfflineDataIndicator(
     visible: Boolean = true,
 )
 {
-    if (!visible) return
+    if (lastUpdateTimestamp == null) return
 
     val tooltipState = remember { PlainTooltipState() }
     val scope = rememberCoroutineScope()
@@ -65,31 +69,37 @@ fun OfflineDataIndicator(
         tooltipState = tooltipState,
         tooltip = { Text(text) }
     ) {
-        Box(
-            modifier = modifier
-                .width(35.dp)
-                .clip(RoundedCornerShape(5.dp))
-                .clickable {
-                    scope.launch {
-                        if (tooltipState.isVisible) tooltipState.dismiss() else tooltipState.show()
+        AnimatedVisibility(
+            enter = fadeIn(tween(200)),
+            exit = fadeOut(tween(200)),
+            visible = visible
+        ) {
+            Box(
+                modifier = modifier
+                    .width(35.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .clickable {
+                        scope.launch {
+                            if (tooltipState.isVisible) tooltipState.dismiss() else tooltipState.show()
+                        }
                     }
-                }
-        )
-        {
-            Icon(
-                modifier = Modifier.drawWithContent {
-                    clipRect(right = size.width - size.width / 3.5f) {
-                        this@drawWithContent.drawContent()
-                    }
-                },
-                imageVector = underlyingIcon,
-                contentDescription = null
             )
-            Icon(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                imageVector = Icons.Filled.PriorityHigh,
-                contentDescription = null
-            )
+            {
+                Icon(
+                    modifier = Modifier.drawWithContent {
+                        clipRect(right = size.width - size.width / 3.5f) {
+                            this@drawWithContent.drawContent()
+                        }
+                    },
+                    imageVector = underlyingIcon,
+                    contentDescription = null
+                )
+                Icon(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    imageVector = Icons.Filled.PriorityHigh,
+                    contentDescription = null
+                )
+            }
         }
     }
 }
