@@ -83,7 +83,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.error_order), Toast.LENGTH_LONG).show()
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_order)))
             }
 
             changeUiState(orderInProcess = false)
@@ -110,7 +110,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.error_order), Toast.LENGTH_LONG).show()
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_order)))
             }
 
             changeUiState(orderInProcess = false)
@@ -132,8 +132,10 @@ class CanteenViewModel @Inject constructor(
             catch (e: ParseException)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.error_unsupported_menu), Toast.LENGTH_LONG).show()
-                changeUiState(loading = false)
+                changeUiState(
+                    loading = false,
+                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_menu))
+                )
             }
             catch (e: CancellationException)
             {
@@ -143,8 +145,10 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
-                Toast.makeText(appContext, appContext.getString(R.string.error_load), Toast.LENGTH_LONG).show()
-                changeUiState(loading = false)
+                changeUiState(
+                    loading = false,
+                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_load))
+                )
             }
         }
     }
