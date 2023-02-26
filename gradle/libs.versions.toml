@@ -18,7 +18,7 @@ accompanist = "0.28.0"
 hilt = "2.44"
 hilt-navigation-compose = "1.0.0"
 datastore = "1.0.0"
-serialization = "1.4.1"
+serialization = "1.5.0"
 
 [libraries]
 jecnaAPI = { module = "me.tomasan7:jecna-api", version.ref = "jecnaAPI" }
