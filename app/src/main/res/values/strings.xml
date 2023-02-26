@@ -84,6 +84,7 @@
     <!-- ##### Timetable SubScreen ##### -->
 
     <string name="timetable_period">Období</string>
+    <string name="timetable_load_error">Při načítání rozvrhu došlo k chybě.</string>
 
     <!-- ##### Canteen SubScreen ##### -->
 
