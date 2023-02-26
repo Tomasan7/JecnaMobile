@@ -46,7 +46,7 @@ fun MainScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val destinationItems = SubScreenDestination.values()
-    val linkItems = SideBarLink.values()
+    val linkItems = SidebarLink.values()
     var selectedItem by rememberMutableStateOf(SubScreenDestination.Timetable)
     val subScreensNavController = rememberNavController()
     val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
@@ -176,7 +176,7 @@ fun DestinationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LinkItem(item: SideBarLink)
+fun LinkItem(item: SidebarLink)
 {
     val context = LocalContext.current
     val label = stringResource(item.label)
@@ -192,18 +192,5 @@ fun LinkItem(item: SideBarLink)
         },
         badge = { Icon(Icons.Outlined.OpenInBrowser, label) },
         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
-}
-
-enum class SideBarLink(
-    val link: String,
-    @StringRes
-    val label: Int,
-    val icon: ImageVector
-)
-{
-    SubstitutionTimetable(
-        JecnaWebClient.getUrlForPath("/suplovani"), R.string.sidebar_link_substitution_timetable,
-        Icons.Outlined.TableChart
     )
 }
