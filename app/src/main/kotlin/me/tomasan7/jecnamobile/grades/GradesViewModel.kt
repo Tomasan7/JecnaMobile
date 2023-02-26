@@ -54,7 +54,6 @@ class GradesViewModel @Inject constructor(
 
     fun enteredComposition()
     {
-
         appContext.registerReceiver(
             loginBroadcastReceiver,
             IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
@@ -120,8 +119,10 @@ class GradesViewModel @Inject constructor(
                 if (uiState.lastUpdateTimestamp != null && uiState.isCache)
                     changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()!!))
                 else
-                    changeUiState(snackBarMessageEvent =
-                    triggered(appContext.getString(R.string.no_internet_connection)))
+                    changeUiState(
+                        snackBarMessageEvent =
+                        triggered(appContext.getString(R.string.no_internet_connection))
+                    )
             }
             catch (e: CancellationException)
             {
