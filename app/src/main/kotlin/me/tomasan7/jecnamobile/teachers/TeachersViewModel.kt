@@ -16,6 +16,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.R
 import javax.inject.Inject
 
@@ -61,6 +62,12 @@ class TeachersViewModel @Inject constructor(
             catch (e: UnresolvedAddressException)
             {
                 changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()))
+            }
+            catch (e: ParseException)
+            {
+                changeUiState(
+                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_teachers))
+                )
             }
             catch (e: CancellationException)
             {
