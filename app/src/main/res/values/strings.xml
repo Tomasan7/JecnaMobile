@@ -50,6 +50,7 @@
     <string name="article_school_only">Pouze pro školu</string>
     <string name="article_images">Obrázky</string>
     <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
+    <string name="article_load_error">Při načítání známek novinek k chybě.</string>
 
     <!-- ##### Grades SubScreen ##### -->
 
