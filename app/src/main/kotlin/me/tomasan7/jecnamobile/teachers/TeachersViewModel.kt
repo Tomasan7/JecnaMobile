@@ -1,6 +1,7 @@
 package me.tomasan7.jecnamobile.teachers
 
 import android.content.Context
+import android.content.IntentFilter
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +18,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
 import me.tomasan7.jecnaapi.parser.ParseException
+import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.util.createBroadcastReceiver
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +35,14 @@ class TeachersViewModel @Inject constructor(
 
     private var loadTeachersJob: Job? = null
 
+    private val loginBroadcastReceiver = createBroadcastReceiver { _, _ ->
+        if (loadTeachersJob == null || loadTeachersJob!!.isCompleted)
+        {
+            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+            loadReal()
+        }
+    }
+
     init
     {
         loadReal()
@@ -39,11 +50,16 @@ class TeachersViewModel @Inject constructor(
 
     fun enteredComposition()
     {
+        appContext.registerReceiver(
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+        )
     }
 
     fun leftComposition()
     {
         loadTeachersJob?.cancel()
+        appContext.unregisterReceiver(loginBroadcastReceiver)
     }
 
     fun onFilterFieldValueChange(value: String) = changeUiState(filterFieldValue = value)
