@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.tomasan7.jecnaapi.data.timetable.*
@@ -97,7 +98,12 @@ fun Timetable(
         ObjectDialog(
             state = dialogState,
             onDismissRequest = { dialogState.hide() },
-            content = { LessonDialogContent(it) }
+            content = { lesson ->
+                LessonDialogContent(
+                    lesson = lesson,
+                    onCloseClick = { dialogState.hide() }
+                )
+            }
         )
     }
 }
@@ -219,18 +225,29 @@ private fun DayLabel(
 }
 
 @Composable
-private fun LessonDialogContent(lesson: Lesson)
+private fun LessonDialogContent(
+    lesson: Lesson,
+    onCloseClick: () -> Unit = {}
+)
 {
-    Surface(
-        tonalElevation = 5.dp,
-        modifier = Modifier.width(300.dp),
-        shape = RoundedCornerShape(28.dp)
+    DialogContainer(
+        title = {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(
+                    text = lesson.subjectName.full,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        },
+        buttons = {
+            TextButton(onClick = onCloseClick) {
+                Text(stringResource(R.string.close))
+            }
+        }
     ) {
         Column(
-            modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            DialogRow(stringResource(R.string.timetable_dialog_subject), lesson.subjectName.full)
             if (lesson.teacherName != null)
                 DialogRow(stringResource(R.string.timetable_dialog_teacher), lesson.teacherName!!.full)
             if (lesson.classroom != null)
