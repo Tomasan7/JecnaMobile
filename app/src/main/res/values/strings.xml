@@ -126,6 +126,8 @@
 
     <string name="teacher_title_timetable">Rozvrh hodin</string>
 
+    <string name="teacher_load_error">Při načítání učitele došlo k chybě.</string>
+
     <!-- ##### Timetable ##### -->
 
     <string name="timetable_dialog_subject">Předmět</string>
@@ -178,6 +180,7 @@
     <string name="error_unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
+    <string name="error_unsupported_teacher">Stránka učitele je v nepodporovaném formátu.</string>
     <string name="error_order">Při objednávání došlo k chybě. Zkuste to znovu později.</string>
     <string name="error_load">Při načítání došlo k chybě.</string>
     <string name="error_download">Při stahování souboru došlo k chybě.</string>

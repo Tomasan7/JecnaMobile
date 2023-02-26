@@ -14,12 +14,14 @@ import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import io.ktor.http.*
 import io.ktor.util.network.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.schoolStaff.Teacher
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.teachers.TeachersRepository
@@ -79,6 +81,20 @@ class TeacherViewModel @Inject constructor(
             catch (e: UnresolvedAddressException)
             {
                 changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()))
+            }
+            catch (e: ParseException)
+            {
+                changeUiState(
+                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_teacher))
+                )
+            }
+            catch (e: CancellationException)
+            {
+                throw e
+            }
+            catch (e: Exception)
+            {
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.teacher_load_error)))
             }
             finally
             {
