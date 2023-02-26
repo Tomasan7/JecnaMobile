@@ -19,6 +19,7 @@
     <string name="login_error_no_internet">Chybí připojení k internetu.</string>
     <string name="login_error_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
     <string name="login_error_unknown">Při přihlašování došlo k chybě.</string>
+    <string name="login_error_credentials_saved">Přihlášení selhalo. Nové heslo?</string>
 
     <!-- ##### Settings Screen ##### -->
 

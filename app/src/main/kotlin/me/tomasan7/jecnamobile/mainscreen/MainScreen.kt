@@ -25,6 +25,7 @@ import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.utils.findDestination
+import de.palm.composestateevents.EventEffect
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.NavGraphs
@@ -57,6 +58,15 @@ fun MainScreen(
             val newSelectedItem = destinationItems.find { it.destination.route == destination.route }
             if (newSelectedItem != null)
                 selectedItem = newSelectedItem
+        }
+    }
+
+    EventEffect(
+        event = viewModel.navigateToLoginEvent,
+        onConsumed = viewModel::onLoginEventConsumed
+    ) {
+        navigator.navigate(LoginScreenDestination) {
+            popUpTo(LoginScreenDestination)
         }
     }
 

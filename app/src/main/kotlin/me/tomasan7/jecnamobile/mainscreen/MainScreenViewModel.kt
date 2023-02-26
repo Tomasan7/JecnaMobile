@@ -6,17 +6,26 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import de.palm.composestateevents.StateEvent
+import de.palm.composestateevents.consumed
+import de.palm.composestateevents.triggered
+import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.tomasan7.jecnaapi.CanteenClient
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnamobile.JecnaMobileApplication
+import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.login.AuthRepository
 import javax.inject.Inject
 
@@ -29,7 +38,11 @@ class MainScreenViewModel @Inject constructor(
     private val canteenClient: CanteenClient
 ) : ViewModel()
 {
-    private val connectivityManager = getSystemService(appContext, ConnectivityManager::class.java) as ConnectivityManager
+    var navigateToLoginEvent: StateEvent by mutableStateOf(consumed)
+        private set
+
+    private val connectivityManager =
+        getSystemService(appContext, ConnectivityManager::class.java) as ConnectivityManager
     private val loginNetworkCallback = LoginNetworkCallback()
 
     init
@@ -39,28 +52,46 @@ class MainScreenViewModel @Inject constructor(
 
     fun tryLogin()
     {
-        val auth = jecnaClient.lastLoginAuth ?: authRepository.get() ?: TODO()  // Navigate back to login screen
+        val auth = jecnaClient.lastLoginAuth ?: authRepository.get()
+
+        if (auth == null)
+        {
+            navigateToLoginEvent = triggered
+            return
+        }
 
         viewModelScope.launch {
-            try
+            val loginResult = try
             {
-                val loginResult = try
-                {
-                    Log.d("MainScreenViewModel", "Logging in...")
-                    jecnaClient.login(auth)
+                jecnaClient.login(auth).also {
+                    if (!it)
+                        Toast.makeText(appContext, R.string.login_error_credentials_saved, Toast.LENGTH_SHORT).show()
                 }
-                catch (e: Exception) { false }
-
-                if (loginResult == false)
-                    // TODO Navigate back to login screen
-                else
-                    broadcastSuccessfulLogin()
+            }
+            /* This method (tryLogin()) should only run, when internet is available, but if it fails anyway,
+            * just leave it as is and try again on new broadcast. */
+            catch (e: UnresolvedAddressException)
+            {
+                return@launch
             }
             catch (e: CancellationException)
             {
                 throw e
             }
-            catch (e: Exception) {}
+            catch (e: Exception)
+            {
+                Toast.makeText(appContext, R.string.login_error_unknown, Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+                false
+            }
+
+            if (loginResult)
+                broadcastSuccessfulLogin()
+            else
+            {
+                authRepository.clear()
+                navigateToLoginEvent = triggered
+            }
         }
     }
 
@@ -82,6 +113,11 @@ class MainScreenViewModel @Inject constructor(
         }
 
         authRepository.clear()
+    }
+
+    fun onLoginEventConsumed()
+    {
+        navigateToLoginEvent = consumed
     }
 
     private fun registerNetworkAvailabilityListener()
