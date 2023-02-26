@@ -45,9 +45,11 @@ import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
+import me.tomasan7.jecnamobile.mainscreen.SideBarDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.Card
 import me.tomasan7.jecnamobile.ui.component.ObjectDialog
+import me.tomasan7.jecnamobile.ui.component.OfflineDataIndicator
 import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
 import me.tomasan7.jecnamobile.ui.component.rememberObjectDialogState
 import me.tomasan7.jecnamobile.ui.theme.jm_label
@@ -80,7 +82,16 @@ fun NewsSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_news, navDrawerController) },
+        topBar = {
+            SubScreenTopAppBar(R.string.sidebar_news, navDrawerController) {
+                OfflineDataIndicator(
+                    modifier = Modifier.padding(end = 16.dp),
+                    underlyingIcon = SideBarDestination.News.iconSelected,
+                    lastUpdateTimestamp = uiState.lastUpdateTimestamp,
+                    visible = uiState.isCache
+                )
+            }
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(

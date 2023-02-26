@@ -28,6 +28,7 @@ import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
+import me.tomasan7.jecnamobile.mainscreen.SideBarDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.*
 import me.tomasan7.jecnamobile.ui.theme.jm_late_attendance
@@ -65,7 +66,16 @@ fun AttendancesSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_attendances, navDrawerController) },
+        topBar = {
+            SubScreenTopAppBar(R.string.sidebar_attendances, navDrawerController) {
+                OfflineDataIndicator(
+                    modifier = Modifier.padding(end = 16.dp),
+                    underlyingIcon = SideBarDestination.Attendances.iconSelected,
+                    lastUpdateTimestamp = uiState.lastUpdateTimestamp,
+                    visible = uiState.isCache
+                )
+            }
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(

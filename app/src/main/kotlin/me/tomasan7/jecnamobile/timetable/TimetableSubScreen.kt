@@ -25,6 +25,7 @@ import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
+import me.tomasan7.jecnamobile.mainscreen.SideBarDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.*
 
@@ -56,7 +57,16 @@ fun TimetableSubScreen(
     }
 
     Scaffold(
-        topBar = { SubScreenTopAppBar(R.string.sidebar_timetable, navDrawerController) },
+        topBar = {
+            SubScreenTopAppBar(R.string.sidebar_timetable, navDrawerController) {
+                OfflineDataIndicator(
+                    modifier = Modifier.padding(end = 16.dp),
+                    underlyingIcon = SideBarDestination.Timetable.iconSelected,
+                    lastUpdateTimestamp = uiState.lastUpdateTimestamp,
+                    visible = uiState.isCache
+                )
+            }
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
 
