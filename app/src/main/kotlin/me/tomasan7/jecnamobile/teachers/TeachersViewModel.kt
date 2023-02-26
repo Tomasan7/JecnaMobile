@@ -38,7 +38,6 @@ class TeachersViewModel @Inject constructor(
 
     fun enteredComposition()
     {
-
     }
 
     fun leftComposition()
@@ -89,11 +88,5 @@ class TeachersViewModel @Inject constructor(
             filterFieldValue = filterFieldValue,
             snackBarMessageEvent = snackBarMessageEvent
         )
-    }
-
-    companion object
-    {
-        val OFFLINE_MESSAGE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
-        val OFFLINE_MESSAGE_DATE_FORMATTER = DateTimeFormatter.ofPattern("d. M.")
     }
 }
