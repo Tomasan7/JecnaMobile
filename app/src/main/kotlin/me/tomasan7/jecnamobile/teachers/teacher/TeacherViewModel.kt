@@ -47,7 +47,7 @@ class TeacherViewModel @Inject constructor(
     {
         this.teacherReference = teacherReference
 
-        if (!this::teacherReference.isInitialized)
+        if (this::teacherReference.isInitialized)
             loadReal()
     }
 
