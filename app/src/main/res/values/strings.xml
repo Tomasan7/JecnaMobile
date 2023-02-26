@@ -109,6 +109,8 @@
     <string name="teachers_search">Vyhledat</string>
     <string name="teachers_search_placeholder">"Jméno/Příjmení/Zkratka"</string>
 
+    <string name="teachers_load_error">Při načítání učitelů došlo k chybě.</string>
+
     <!-- ##### Teacher Screen ##### -->
 
     <string name="teacher_name">Jméno</string>

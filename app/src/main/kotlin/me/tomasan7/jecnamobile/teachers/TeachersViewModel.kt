@@ -12,11 +12,11 @@ import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import io.ktor.util.network.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
 import me.tomasan7.jecnamobile.R
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,6 +61,14 @@ class TeachersViewModel @Inject constructor(
             catch (e: UnresolvedAddressException)
             {
                 changeUiState(snackBarMessageEvent = triggered(getOfflineMessage()))
+            }
+            catch (e: CancellationException)
+            {
+                throw e
+            }
+            catch (e: Exception)
+            {
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.teachers_load_error)))
             }
             finally
             {
