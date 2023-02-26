@@ -134,7 +134,12 @@ fun GradesSubScreen(
             ObjectDialog(
                 state = objectDialogState,
                 onDismissRequest = { objectDialogState.hide() },
-                content = { grade -> GradeDialogContent(grade = grade) }
+                content = { grade ->
+                    GradeDialogContent(
+                        grade = grade,
+                        onCloseClick = { objectDialogState.hide() }
+                    )
+                }
             )
         }
     }
@@ -430,7 +435,10 @@ private fun GradesAndAbsenceWarning()
 }
 
 @Composable
-private fun GradeDialogContent(grade: Grade)
+private fun GradeDialogContent(
+    grade: Grade,
+    onCloseClick: () -> Unit = {}
+)
 {
     Surface(
         tonalElevation = 2.dp,
@@ -454,15 +462,29 @@ private fun GradeDialogContent(grade: Grade)
                 )
             }
             Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier.padding(24.dp)
             ) {
-                DialogRow(
-                    stringResource(R.string.grade_receive_date),
-                    grade.receiveDate?.format(Constants.gradeDateFormatter) ?: ""
-                )
-                DialogRow(stringResource(R.string.grade_description), grade.description ?: "")
-                DialogRow(stringResource(R.string.grade_teacher), grade.teacher?.full ?: "")
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    DialogRow(
+                        stringResource(R.string.grade_receive_date),
+                        grade.receiveDate?.format(Constants.gradeDateFormatter) ?: ""
+                    )
+                    DialogRow(stringResource(R.string.grade_description), grade.description ?: "")
+                    DialogRow(stringResource(R.string.grade_teacher), grade.teacher?.full ?: "")
+                }
+
+                VerticalSpacer(24.dp)
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = onCloseClick) {
+                        Text(stringResource(R.string.close))
+                    }
+                }
             }
         }
     }
