@@ -191,7 +191,6 @@ private fun AttendanceChip(attendance: Attendance, late: Boolean = false)
 {
     Surface(
         tonalElevation = 10.dp,
-        shadowElevation = 2.dp,
         border = if (late) BorderStroke(1.dp, jm_late_attendance) else null,
         shape = RoundedCornerShape(10.dp)
     ) {
