@@ -4,10 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.tomasan7.jecnaapi.parser.parsers.*
-import me.tomasan7.jecnaapi.repository.*
-import me.tomasan7.jecnaapi.web.ICanteenWebClient
-import me.tomasan7.jecnaapi.web.JecnaWebClient
+import dagger.hilt.migration.DisableInstallInCheck
+import me.tomasan7.jecnaapi.CanteenClient
+import me.tomasan7.jecnaapi.JecnaClient
 import javax.inject.Singleton
 
 @Module(includes = [AppModuleBindings::class])
@@ -16,29 +15,9 @@ internal object AppModule
 {
     @Provides
     @Singleton
-    fun provideJecnaWebClient() = JecnaWebClient(autoLogin = true)
+    fun provideJecnaClient() = JecnaClient(autoLogin = true)
 
     @Provides
     @Singleton
-    fun provideGradesRepository(jecnaWebClient: JecnaWebClient): GradesRepository = WebGradesRepository(jecnaWebClient, HtmlGradesPageParserImpl)
-
-    @Provides
-    @Singleton
-    fun provideAttendancesRepository(jecnaWebClient: JecnaWebClient): AttendancesRepository = WebAttendancesRepository(jecnaWebClient, HtmlAttendancesPageParserImpl)
-
-    @Provides
-    @Singleton
-    fun provideTimetableRepository(jecnaWebClient: JecnaWebClient): TimetableRepository = WebTimetableRepository(jecnaWebClient, HtmlTimetableParserImpl)
-
-    @Provides
-    @Singleton
-    fun provideNewsRepository(jecnaWebClient: JecnaWebClient): NewsRepository = WebNewsRepository(jecnaWebClient, HtmlNewsPageParserImpl)
-
-    @Provides
-    @Singleton
-    fun provideICanteenWebClient() = ICanteenWebClient()
-
-    @Provides
-    @Singleton
-    fun provideCanteenClient(canteenWebClient: ICanteenWebClient): CanteenClient = WebCanteenClient(canteenWebClient, HtmlCanteenParserImpl)
+    fun provideCanteenClient() = CanteenClient()
 }

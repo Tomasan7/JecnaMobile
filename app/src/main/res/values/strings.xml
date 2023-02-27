@@ -8,14 +8,18 @@
     <!-- ##### Login Screen ##### -->
 
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_title">Přihlášení</string>
+    <string name="login_title">PŘIHLÁŠENÍ</string>
     <string name="username">Uživatel</string>
     <string name="username_error_blank">Nesmí být prázdné</string>
     <string name="password">Heslo</string>
     <string name="password_error_blank">Nesmí být prázdné</string>
     <string name="remember_auth_checkbox">Zapamatovat uživatele</string>
     <string name="login">Přihlásit se</string>
-    <string name="login_error">Při přihlašování došlo k chybě. (internet?)</string>
+
+    <string name="login_error_no_internet">Chybí připojení k internetu.</string>
+    <string name="login_error_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
+    <string name="login_error_unknown">Při přihlašování došlo k chybě.</string>
+    <string name="login_error_credentials_saved">Přihlášení selhalo. Nové heslo?</string>
 
     <!-- ##### Settings Screen ##### -->
 
@@ -34,6 +38,7 @@
     <string name="sidebar_attendances">Příchody</string>
     <string name="sidebar_timetable">Rozvrh</string>
     <string name="sidebar_news">Novinky</string>
+    <string name="sidebar_teachers">Učitelé</string>
     <string name="sidebar_canteen">Jídelna</string>
     <string name="sidebar_settings">Nastavení</string>
     <string name="sidebar_logout">Odhlásit se</string>
@@ -43,6 +48,9 @@
     <!-- ##### News SubScreen ##### -->
 
     <string name="article_school_only">Pouze pro školu</string>
+    <string name="article_images">Obrázky</string>
+    <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
+    <string name="article_load_error">Při načítání známek novinek k chybě.</string>
 
     <!-- ##### Grades SubScreen ##### -->
 
@@ -59,6 +67,9 @@
     <string name="grade_word_4">Dostatečný</string>
     <string name="grade_word_5">Nedostatečný</string>
 
+    <string name="grade_grades_warning_content">5?</string>
+    <string name="grade_absence_warning_content">N?</string>
+
     <string name="grade_weight">Váha</string>
     <string name="grade_weight_small">Malá</string>
     <string name="grade_weight_big">Velká</string>
@@ -68,25 +79,61 @@
 
     <string name="no_grades">Zatím nemáš žádné známky</string>
 
+    <string name="grade_load_error">Při načítání známek došlo k chybě.</string>
+
     <!-- ##### Timetable SubScreen ##### -->
 
     <string name="timetable_period">Období</string>
+    <string name="timetable_load_error">Při načítání rozvrhu došlo k chybě.</string>
+
+    <!-- ##### Canteen SubScreen ##### -->
+
+    <string name="canteen_login_error">Při přihlašování došlo k chybě.</string>
+    <string name="canteen_allergens">Alergeny</string>
+    <string name="canteen_credit">%1s Kč</string>
+    <string name="canteen_lunch">Oběd %1d</string>
+    <string name="canteen_order">Objednat</string>
+    <string name="canteen_cancel_order">Odobjednat</string>
+    <string name="canteen_take_from_exchange">Z burzy</string>
+    <string name="canteen_put_on_exchange">Do burzy</string>
+
+    <!-- ##### Attendances SubScreen ##### -->
+
+    <string name="attendances_attendance_type_enter">Příchod</string>
+    <string name="attendances_attendance_type_exit">Odchod</string>
+    <string name="attendances_no_attendances">V tomto období nemáš žádné záznamy.</string>
+    <string name="attendances_load_error">Při načítání příchodů došlo k chybě.</string>
+
+    <!-- ##### Teachers SubScreen ##### -->
+
+    <string name="teachers_search">Vyhledat</string>
+    <string name="teachers_search_placeholder">"Jméno/Příjmení/Zkratka"</string>
+
+    <string name="teachers_load_error">Při načítání učitelů došlo k chybě.</string>
+
+    <!-- ##### Teacher Screen ##### -->
+
+    <string name="teacher_name">Jméno</string>
+    <string name="teacher_tag">Zkratka</string>
+    <string name="teacher_school_mail">E-mail</string>
+    <string name="teacher_private_email">Soukromý e-mail</string>
+    <string name="teacher_phone">Telefon</string>
+    <string name="teacher_landline">Linka</string>
+    <string name="teacher_private_phone">Soukromý telefon</string>
+    <string name="teacher_cabinet">Kabinet</string>
+    <string name="teacher_class">Třídní</string>
+    <string name="teacher_consultation_hours">Konzultační hodiny</string>
+
+    <string name="teacher_title_timetable">Rozvrh hodin</string>
+
+    <string name="teacher_load_error">Při načítání učitele došlo k chybě.</string>
+
+    <!-- ##### Timetable ##### -->
+
     <string name="timetable_dialog_subject">Předmět</string>
     <string name="timetable_dialog_teacher">Učitel</string>
     <string name="timetable_dialog_classroom">Učebna</string>
     <string name="timetable_dialog_group">Skupina</string>
-
-    <string name="error_unable_to_open_file">Soubor nelze otevřít.</string>
-
-    <!-- ##### Canteen SubScreen ##### -->
-
-    <string name="canteen_allergens">Alergeny</string>
-    <string name="canteen_credit">Kredit: %.2f Kč</string>
-
-    <!-- ##### Attendances SubScreen ##### -->
-
-    <string name="attendance_type_enter">Příchod</string>
-    <string name="attendance_type_exit">Odchod</string>
 
     <!-- ##### General ##### -->
 
@@ -117,6 +164,15 @@
     <string name="school_year_half_1">1.</string>
     <string name="school_year_half_2">2.</string>
 
+    <string name="close">Zavřít</string>
+
+    <string name="back_online">Zpět online</string>
+    <string name="showing_offline_data_time">Naposledy aktualizováno v %1s</string>
+    <string name="showing_offline_data_date">Naposledy aktualizováno %1s</string>
+    <string name="showing_offline_data_time_description">Zobrazují se offline data z %1s</string>
+    <string name="showing_offline_data_date_description">Zobrazují se offline data z %1s</string>
+    <string name="no_internet_connection">Chybí připojení k internetu</string>
+
     <!-- ##### Errors ##### -->
 
     <string name="error_unsupported_timetable">Žádaný rozvrh je v nepodporovaném formátu.</string>
@@ -124,6 +180,8 @@
     <string name="error_unsupported_grades">Žádané známky jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_attendances">Žádané příchody a odchody jsou v nepodporovaném formátu.</string>
     <string name="error_unsupported_menu">Žádané menu je v nepodporovaném formátu.</string>
+    <string name="error_unsupported_teachers">Stránka s učiteli je v nepodporovaném formátu.</string>
+    <string name="error_unsupported_teacher">Stránka učitele je v nepodporovaném formátu.</string>
     <string name="error_order">Při objednávání došlo k chybě. Zkuste to znovu později.</string>
     <string name="error_load">Při načítání došlo k chybě.</string>
     <string name="error_download">Při stahování souboru došlo k chybě.</string>

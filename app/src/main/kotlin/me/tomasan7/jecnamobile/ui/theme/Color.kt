@@ -1,11 +1,8 @@
 package me.tomasan7.jecnamobile.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import me.tomasan7.jecnamobile.util.awaitSettings
-import me.tomasan7.jecnamobile.util.isAppInDarkTheme
+import me.tomasan7.jecnamobile.settings.isAppInDarkTheme
 
 val md_theme_light_primary = Color(0xFF006875)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -84,3 +81,8 @@ val grade_2 = Color(0xFF008A25)
 val grade_3 = Color(0xFFBEDB00)
 val grade_4 = Color(0xFFCFA200)
 val grade_5 = Color(0xFFA63232)
+
+val grade_grades_warning = Color(0xFFFF8A8A)
+val grade_absence_warning = Color(0xFFFF8A8A)
+
+val teacher_search_query_highlight = Color(0xFFCDDC39)

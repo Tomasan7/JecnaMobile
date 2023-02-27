@@ -7,6 +7,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.tomasan7.jecnamobile.settings.Settings
 import java.io.InputStream
 import java.io.OutputStream
 

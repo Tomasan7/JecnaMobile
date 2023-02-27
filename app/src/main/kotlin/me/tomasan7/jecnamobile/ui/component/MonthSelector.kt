@@ -17,7 +17,7 @@ fun MonthSelector(
     OutlinedDropDownSelector(
         label = stringResource(R.string.month),
         options = Month.values().toList(),
-        optionStringMap = { getMonthName(it) },
+        optionStringMap = { getMonthName(it!!) },
         selectedValue = selectedMonth,
         modifier = modifier,
         onChange = onChange
