@@ -16,6 +16,7 @@ import io.ktor.util.network.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.JecnaMobileApplication
@@ -29,6 +30,7 @@ import javax.inject.Inject
 class TimetableViewModel @Inject constructor(
     @ApplicationContext
     private val appContext: Context,
+    jecnaClient: JecnaClient,
     private val repository: CacheTimetableRepository
 ) : ViewModel()
 {
@@ -51,7 +53,8 @@ class TimetableViewModel @Inject constructor(
     init
     {
         loadCache()
-        loadReal()
+        if (jecnaClient.lastSuccessfulLoginAuth != null)
+            loadReal()
     }
 
     fun enteredComposition()

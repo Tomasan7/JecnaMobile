@@ -76,7 +76,8 @@ class NewsViewModel @Inject constructor(
     init
     {
         loadCache()
-        loadReal()
+        if (jecnaClient.lastSuccessfulLoginAuth != null)
+            loadReal()
     }
 
     fun enteredComposition()

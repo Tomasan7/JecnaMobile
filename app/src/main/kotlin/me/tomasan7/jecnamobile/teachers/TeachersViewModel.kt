@@ -16,6 +16,7 @@ import io.ktor.util.network.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.JecnaMobileApplication
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class TeachersViewModel @Inject constructor(
     @ApplicationContext
     private val appContext: Context,
+    jecnaClient: JecnaClient,
     private val repository: TeachersRepository
 ) : ViewModel()
 {
@@ -48,7 +50,8 @@ class TeachersViewModel @Inject constructor(
 
     init
     {
-        loadReal()
+        if (jecnaClient.lastSuccessfulLoginAuth != null)
+            loadReal()
     }
 
     fun enteredComposition()

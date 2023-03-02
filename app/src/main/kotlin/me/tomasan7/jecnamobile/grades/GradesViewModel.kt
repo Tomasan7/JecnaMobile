@@ -16,6 +16,7 @@ import io.ktor.util.network.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.grade.GradesPage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
@@ -30,6 +31,7 @@ import javax.inject.Inject
 class GradesViewModel @Inject constructor(
     @ApplicationContext
     private val appContext: Context,
+    jecnaClient: JecnaClient,
     private val repository: CacheGradesRepository
 ) : ViewModel()
 {
@@ -52,7 +54,8 @@ class GradesViewModel @Inject constructor(
     init
     {
         loadCache()
-        loadReal()
+        if (jecnaClient.lastSuccessfulLoginAuth != null)
+            loadReal()
     }
 
     fun enteredComposition()
