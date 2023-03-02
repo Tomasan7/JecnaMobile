@@ -4,9 +4,7 @@ import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
-import java.time.DayOfWeek
 import java.time.Instant
-import java.util.*
 
 data class TimetableState(
     val loading: Boolean = false,

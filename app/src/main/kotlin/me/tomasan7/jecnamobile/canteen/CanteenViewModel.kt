@@ -1,7 +1,6 @@
 package me.tomasan7.jecnamobile.canteen
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

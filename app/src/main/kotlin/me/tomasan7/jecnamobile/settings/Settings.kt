@@ -1,7 +1,6 @@
 package me.tomasan7.jecnamobile.settings
 
 import kotlinx.serialization.Serializable
-import me.tomasan7.jecnamobile.destinations.LoginScreenDestination
 import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 
 @Serializable

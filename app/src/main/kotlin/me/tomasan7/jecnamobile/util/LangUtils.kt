@@ -6,7 +6,7 @@ import me.tomasan7.jecnamobile.R
 import java.text.Normalizer
 import java.time.DayOfWeek
 import java.time.Month
-import java.util.*
+import java.util.TreeMap
 
 @Composable
 fun getWeekDayName(dayOfWeek: DayOfWeek) = when (dayOfWeek)

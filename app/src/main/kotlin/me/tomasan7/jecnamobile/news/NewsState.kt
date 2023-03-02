@@ -3,7 +3,6 @@ package me.tomasan7.jecnamobile.news
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import me.tomasan7.jecnaapi.data.article.NewsPage
-import me.tomasan7.jecnaapi.data.grade.GradesPage
 import java.time.Instant
 
 data class NewsState(

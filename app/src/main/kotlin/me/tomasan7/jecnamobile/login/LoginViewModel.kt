@@ -8,17 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import de.palm.composestateevents.StateEvent
-import de.palm.composestateevents.consumed
-import de.palm.composestateevents.triggered
-import io.ktor.util.network.*
-import io.ktor.utils.io.*
+import io.ktor.util.network.UnresolvedAddressException
+import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.web.Auth
-import me.tomasan7.jecnamobile.util.showShortToast
 import javax.inject.Inject
-import kotlin.Exception
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(

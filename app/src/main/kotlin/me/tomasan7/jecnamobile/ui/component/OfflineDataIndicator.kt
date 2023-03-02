@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnamobile.R
-import me.tomasan7.jecnamobile.timetable.TimetableViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
