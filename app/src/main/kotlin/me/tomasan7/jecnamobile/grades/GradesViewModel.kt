@@ -38,10 +38,13 @@ class GradesViewModel @Inject constructor(
 
     private var loadGradesJob: Job? = null
 
-    private val loginBroadcastReceiver = createBroadcastReceiver { _, _ ->
+    private val loginBroadcastReceiver = createBroadcastReceiver { _, intent ->
+        val first = intent.getBooleanExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, false)
+
         if (loadGradesJob == null || loadGradesJob!!.isCompleted)
         {
-            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+            if (!first)
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
             loadReal()
         }
     }

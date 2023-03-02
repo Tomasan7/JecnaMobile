@@ -55,10 +55,13 @@ class NewsViewModel @Inject constructor(
 
     private var loadNewsJob: Job? = null
 
-    private val loginBroadcastReceiver = createBroadcastReceiver { _, _ ->
+    private val loginBroadcastReceiver = createBroadcastReceiver { _, intent ->
+        val first = intent.getBooleanExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, false)
+
         if (loadNewsJob == null || loadNewsJob!!.isCompleted)
         {
-            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+            if (!first)
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
             loadReal()
         }
     }
