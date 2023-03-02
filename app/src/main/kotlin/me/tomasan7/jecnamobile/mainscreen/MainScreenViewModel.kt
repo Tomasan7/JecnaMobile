@@ -52,6 +52,7 @@ class MainScreenViewModel @Inject constructor(
 
     fun tryLogin()
     {
+        val hasBeenLoggedIn = jecnaClient.lastSuccessfulLoginAuth != null
         val auth = jecnaClient.lastSuccessfulLoginAuth ?: authRepository.get()
 
         if (auth == null)
@@ -86,7 +87,7 @@ class MainScreenViewModel @Inject constructor(
             }
 
             if (loginResult)
-                broadcastSuccessfulLogin()
+                broadcastSuccessfulLogin(!hasBeenLoggedIn)
             else
             {
                 authRepository.clear()
@@ -95,9 +96,10 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun broadcastSuccessfulLogin()
+    private fun broadcastSuccessfulLogin(first: Boolean = false)
     {
         val intent = Intent(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+        intent.putExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, first)
         appContext.sendBroadcast(intent)
     }
 

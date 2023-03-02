@@ -9,5 +9,6 @@ class JecnaMobileApplication : Application()
     companion object
     {
         const val SUCCESSFUL_LOGIN_ACTION = "me.tomasan7.jecnamobile.SUCCESSFULL_LOGIN"
+        const val SUCCESSFUL_LOGIN_FIRST_EXTRA = "first"
     }
 }
