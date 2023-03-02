@@ -88,11 +88,6 @@ class MainScreenViewModel @Inject constructor(
 
             if (loginResult)
                 broadcastSuccessfulLogin(!hasBeenLoggedIn)
-            else
-            {
-                authRepository.clear()
-                navigateToLoginEvent = triggered
-            }
         }
     }
 
