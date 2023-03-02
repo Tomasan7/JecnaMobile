@@ -44,10 +44,10 @@ class CanteenViewModel @Inject constructor(
 
             changeUiState(loading = true)
 
-            if (jecnaClient.lastLoginAuth == null)
+            if (jecnaClient.lastSuccessfulLoginAuth == null)
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
             else
-                canteenClient.login(jecnaClient.lastLoginAuth!!)
+                canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
 
             loadMenu()
         }
