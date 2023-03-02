@@ -38,7 +38,7 @@ import java.time.Month
 import java.time.format.DateTimeFormatter
 
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
 @Destination
 @Composable

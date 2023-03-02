@@ -49,7 +49,7 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
 @Destination
 @Composable

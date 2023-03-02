@@ -68,7 +68,6 @@ private fun LoadingState()
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginState(viewModel: LoginViewModel)
 {
@@ -191,7 +190,6 @@ private fun RememberUserCheckBox(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UsernameField(
     onValueChanged: (String) -> Unit,

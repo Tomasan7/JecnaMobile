@@ -35,7 +35,6 @@ import me.tomasan7.jecnamobile.destinations.*
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
 @Destination
 @Composable
@@ -172,7 +171,6 @@ private fun SidebarButtonsRow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DestinationItem(
     item: SubScreenDestination,
@@ -189,7 +187,6 @@ fun DestinationItem(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinkItem(item: SidebarLink)
 {
