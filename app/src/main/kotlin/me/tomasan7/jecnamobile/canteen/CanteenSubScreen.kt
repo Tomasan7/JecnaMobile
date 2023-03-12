@@ -1,5 +1,9 @@
 package me.tomasan7.jecnamobile.canteen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -16,13 +21,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
@@ -32,10 +45,13 @@ import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
+import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
+import me.tomasan7.jecnamobile.ui.theme.teacher_search_query_highlight
 import me.tomasan7.jecnamobile.util.getWeekDayName
+import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -55,7 +71,7 @@ fun CanteenSubScreen(
     }
 
     val uiState = viewModel.uiState
-    val menuItemDialogState = rememberObjectDialogState<MenuItemWithNumber>()
+    val menuItemDialogState = rememberObjectDialogState<MenuItem>()
     val allergensDialogState = rememberObjectDialogState<DayMenu>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -75,6 +91,12 @@ fun CanteenSubScreen(
                 actions = {
                     if (uiState.menuPage != null)
                         Credit(uiState.menuPage.credit)
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Default.HelpOutline,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         },
@@ -99,6 +121,7 @@ fun CanteenSubScreen(
                             DayMenu(
                                 dayMenu = dayMenu,
                                 onMenuItemClick = { menuItemDialogState.show(it) },
+                                onMenuItemLongClick = { viewModel.orderMenuItem(it) },
                                 onInfoClick = { allergensDialogState.show(dayMenu) }
                             )
                         }
@@ -117,21 +140,27 @@ fun CanteenSubScreen(
 
             ObjectDialog(
                 state = menuItemDialogState,
+                /* https://stackoverflow.com/questions/68818202/animatedvisibility-doesnt-expand-height-in-dialog-in-jetpack-compose/68818540#68818540 */
+                properties = DialogProperties(usePlatformDefaultWidth = false),
                 onDismissRequest = { menuItemDialogState.hide() },
-                content = { menuItemWithNumber ->
+                content = { menuItem ->
                     MenuItemDialogContent(
-                        menuItemWithNumber = menuItemWithNumber,
+                        menuItem = menuItem,
+                        dishMatchResult = uiState.images[menuItem],
+                        onOpen = {
+                            viewModel.requestImage(menuItem)
+                        },
                         onOrderClick = {
-                            viewModel.orderMenuItem(
-                                menuItemWithNumber.menuItem
-                            ); menuItemDialogState.hide()
+                            viewModel.orderMenuItem(menuItem)
+                            menuItemDialogState.hide()
                         },
                         onPutOnExchangeClick = {
-                            viewModel.putMenuItemOnExchange(
-                                menuItemWithNumber.menuItem
-                            ); menuItemDialogState.hide()
+                            viewModel.putMenuItemOnExchange(menuItem)
+                            menuItemDialogState.hide()
                         },
-                        onCloseCLick = { menuItemDialogState.hide() }
+                        onCloseCLick = {
+                            menuItemDialogState.hide()
+                        }
                     )
                 }
             )
@@ -159,7 +188,8 @@ private fun DayMenu(
     dayMenu: DayMenu,
     modifier: Modifier = Modifier,
     onInfoClick: () -> Unit = {},
-    onMenuItemClick: (MenuItemWithNumber) -> Unit = {}
+    onMenuItemClick: (MenuItem) -> Unit = {},
+    onMenuItemLongClick: (MenuItem) -> Unit = {}
 )
 {
     val dayName = getWeekDayName(dayMenu.day.dayOfWeek)
@@ -196,14 +226,13 @@ private fun DayMenu(
             if (isSoupSameForAllItems)
                 dayMenu.items.firstOrNull()?.description?.soup?.let { Soup(it) }
 
-            dayMenu.items.forEachIndexed { index, menuItem ->
-                val menuItemWithNumber = MenuItemWithNumber(menuItem, index + 1)
-
+            dayMenu.items.forEach { menuItem ->
                 key(menuItem) {
                     MenuItem(
                         modifier = Modifier.fillMaxWidth(),
-                        menuItemWithNumber = menuItemWithNumber,
-                        onClick = { onMenuItemClick(menuItemWithNumber) }
+                        menuItem = menuItem,
+                        onClick = { onMenuItemClick(menuItem) },
+                        onLongClick = { onMenuItemLongClick(menuItem) }
                     )
                 }
             }
@@ -250,16 +279,15 @@ private fun Credit(credit: Float)
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MenuItem(
-    menuItemWithNumber: MenuItemWithNumber,
+    menuItem: MenuItem,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {}
 )
 {
-    val menuItem = menuItemWithNumber.menuItem
-
     val color = when
     {
         menuItem.isOrdered && !menuItem.isEnabled -> jm_canteen_ordered_disabled
@@ -268,7 +296,7 @@ private fun MenuItem(
         else                                      -> MaterialTheme.colorScheme.surface
     }
 
-    val lunchString = stringResource(R.string.canteen_lunch, menuItemWithNumber.number)
+    val lunchString = stringResource(R.string.canteen_lunch, menuItem.number)
 
     val text = remember(menuItem.description?.rest) {
         menuItem.description?.rest?.replaceFirstChar { it.uppercase() }?.replace(" , ", ", ")
@@ -277,9 +305,12 @@ private fun MenuItem(
 
     Surface(
         tonalElevation = 10.dp,
-        modifier = modifier,
+        modifier = modifier
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
         color = color,
-        onClick = onClick,
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -325,33 +356,28 @@ private fun AllergensDialogContent(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            dayMenu.items.forEachIndexed { index, menuItem ->
-                AllergensForMenuItem(MenuItemWithNumber(menuItem, index + 1))
+            dayMenu.items.forEach { menuItem ->
+                AllergensForMenuItem(menuItem)
             }
         }
     }
 }
 
 @Composable
-private fun AllergensForMenuItem(menuItemWithNumber: MenuItemWithNumber)
+private fun AllergensForMenuItem(menuItem: MenuItem)
 {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(stringResource(R.string.canteen_lunch, menuItemWithNumber.number))
+        Text(stringResource(R.string.canteen_lunch, menuItem.number))
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            tonalElevation = ElevationLevel.level5,
-            shape = RoundedCornerShape(8.dp)
+        ElevatedTextRectangle(
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = menuItemWithNumber.menuItem.allergens?.joinToString() ?: "",
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth()
+                text = menuItem.allergens?.joinToString() ?: "",
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -359,17 +385,23 @@ private fun AllergensForMenuItem(menuItemWithNumber: MenuItemWithNumber)
 
 @Composable
 private fun MenuItemDialogContent(
-    menuItemWithNumber: MenuItemWithNumber,
+    menuItem: MenuItem,
+    dishMatchResult: DishMatchResult?,
+    onOpen: () -> Unit = {},
     onOrderClick: () -> Unit = {},
     onPutOnExchangeClick: () -> Unit = {},
     onCloseCLick: () -> Unit = {}
 )
 {
-    val menuItem = menuItemWithNumber.menuItem
+    DisposableEffect(Unit) {
+        onOpen()
+        onDispose {}
+    }
 
     DialogContainer(
+        modifier = Modifier.padding(16.dp),
         title = {
-            Text(stringResource(R.string.canteen_lunch, menuItemWithNumber.number))
+            Text(stringResource(R.string.canteen_lunch, menuItem.number))
         },
         buttons = {
             TextButton(onClick = onCloseCLick) {
@@ -397,18 +429,109 @@ private fun MenuItemDialogContent(
                 }
         }
     ) {
-        // To be added
-        /*AsyncImage(
-            modifier = Modifier
-                .height(180.dp)
-                .clip(RoundedCornerShape(28.dp)),
-            model = "https://comfortablefood.com/wp-content/uploads/2022/05/beef-chop-suey-featured.jpg",
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )*/
+        if (dishMatchResult != null)
+        {
+            var pictureNameShown by rememberMutableStateOf(false)
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { pictureNameShown = !pictureNameShown },
+                    model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                AnimatedVisibility(pictureNameShown) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val imageDishDescription = remember(dishMatchResult) {
+                            dishDescriptionString(dishMatchResult = dishMatchResult)
+                        }
+                        ElevatedTextRectangle(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = { Text(imageDishDescription) }
+                        )
+                        VerticalDivider(
+                            modifier = Modifier
+                                .width(60.dp)
+                                .clip(RoundedCornerShape(1.dp))
+                                .padding(vertical = 10.dp)
+                                .height(3.dp),
+                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        val menuItemDescription = remember(menuItem) {
+            menuItem.description?.rest?.replaceFirstChar { it.uppercase() }
+                ?.replace(" , ", ", ")
+        }
+
+        ElevatedTextRectangle(
+            modifier = Modifier.fillMaxWidth(),
+            text = menuItemDescription ?: stringResource(R.string.canteen_lunch, menuItem.number)
+        )
     }
 }
 
-private data class MenuItemWithNumber(val menuItem: MenuItem, val number: Int)
+private fun dishDescriptionString(
+    dishMatchResult: DishMatchResult
+): AnnotatedString
+{
+    val regex = Regex(" , ")
+    val matchCount = regex
+        .findAll(dishMatchResult.dish.description)
+        .count { it.range.first < dishMatchResult.compareResult.matchPart.last }
+
+    return buildAnnotatedString {
+        val modified = dishMatchResult.dish.description
+            .replace(regex, ", ")
+            .replaceFirstChar { it.uppercase() }
+        append(modified)
+        addStyle(
+            style = SpanStyle(
+                color = canteen_dish_description_difference
+            ),
+            start = dishMatchResult.compareResult.matchPart.last + 1 - matchCount,
+            end = modified.length
+        )
+    }
+}
+
+@Composable
+private fun ElevatedTextRectangle(
+    modifier: Modifier = Modifier,
+    elevation: Dp = ElevationLevel.level5,
+    text: @Composable () -> Unit
+)
+{
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        tonalElevation = elevation,
+    ) {
+        Box(modifier = Modifier.padding(10.dp)) {
+            text()
+        }
+    }
+}
+
+@Composable
+private fun ElevatedTextRectangle(
+    modifier: Modifier = Modifier,
+    elevation: Dp = ElevationLevel.level5,
+    text: String
+) = ElevatedTextRectangle(modifier, elevation) {
+    Text(text)
+}
 
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
