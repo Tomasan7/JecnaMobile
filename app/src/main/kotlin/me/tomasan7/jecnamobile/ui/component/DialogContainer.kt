@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -23,12 +24,14 @@ import me.tomasan7.jecnamobile.ui.ElevationLevel
  */
 @Composable
 fun DialogContainer(
+    modifier: Modifier = Modifier,
     title: (@Composable () -> Unit)? = null,
     buttons: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 )
 {
     Surface(
+        modifier = modifier,
         tonalElevation = ElevationLevel.level3,
         shadowElevation = ElevationLevel.level3,
         shape = RoundedCornerShape(28.dp)
