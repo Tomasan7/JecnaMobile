@@ -11,6 +11,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -30,6 +37,12 @@ class CanteenViewModel @Inject constructor(
     private val canteenClient: CanteenClient,
 ) : ViewModel()
 {
+    private val httpClient = HttpClient(Android) {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+
     var uiState by mutableStateOf(CanteenState())
         private set
 
@@ -116,6 +129,40 @@ class CanteenViewModel @Inject constructor(
         }
     }
 
+    fun requestImage(menuItem: MenuItem)
+    {
+        if (uiState.images.contains(menuItem) || menuItem.description == null)
+            return
+
+        viewModelScope.launch {
+            try
+            {
+                val dishMatchResult = requestDishMatchResult(menuItem.description!!.rest)
+
+                if (dishMatchResult.compareResult.matchPart.last <= 10)
+                    return@launch
+
+                changeUiState(images = uiState.images + (menuItem to dishMatchResult))
+            }
+            catch (e: CancellationException)
+            {
+                /* To not catch cancellation exception with the following catch block.  */
+                throw e
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private suspend fun requestDishMatchResult(dishDescription: String): DishMatchResult
+    {
+        return httpClient.get("$CANTEEN_IMAGES_HOST/api/dishes") {
+            parameter("description", dishDescription)
+        }.body()
+    }
+
     fun loadMenu()
     {
         changeUiState(loading = true)
@@ -160,14 +207,21 @@ class CanteenViewModel @Inject constructor(
         loading: Boolean = uiState.loading,
         orderInProcess: Boolean = uiState.orderInProcess,
         menuPage: MenuPage? = uiState.menuPage,
+        images: ImagesMap = uiState.images,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
     {
         uiState = uiState.copy(
             loading = loading,
             menuPage = menuPage,
+            images = images,
             orderInProcess = orderInProcess,
             snackBarMessageEvent = snackBarMessageEvent,
         )
+    }
+
+    companion object
+    {
+        const val CANTEEN_IMAGES_HOST = "http://192.168.1.10:80"
     }
 }
