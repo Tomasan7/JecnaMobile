@@ -70,6 +70,9 @@ kapt {
 
 dependencies {
     implementation(libs.jecnaAPI)
+    implementation(libs.ktor.client)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.content.negotiation.json)
 
     implementation(libs.compose.material)
     implementation(libs.compose.material3)
