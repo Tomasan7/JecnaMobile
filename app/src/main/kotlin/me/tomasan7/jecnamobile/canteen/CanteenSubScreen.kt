@@ -23,8 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -49,7 +51,6 @@ import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
-import me.tomasan7.jecnamobile.ui.theme.teacher_search_query_highlight
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import java.time.format.DateTimeFormatter
@@ -73,6 +74,7 @@ fun CanteenSubScreen(
     val uiState = viewModel.uiState
     val menuItemDialogState = rememberObjectDialogState<MenuItem>()
     val allergensDialogState = rememberObjectDialogState<DayMenu>()
+    val helpDialogState = rememberObjectDialogState<Unit>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -91,7 +93,7 @@ fun CanteenSubScreen(
                 actions = {
                     if (uiState.menuPage != null)
                         Credit(uiState.menuPage.credit)
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { helpDialogState.show(Unit) }) {
                         Icon(
                             imageVector = Icons.Default.HelpOutline,
                             contentDescription = null
@@ -172,6 +174,18 @@ fun CanteenSubScreen(
                     AllergensDialogContent(
                         dayMenu = dayMenu,
                         onCloseCLick = { allergensDialogState.hide() })
+                }
+            )
+
+            ObjectDialog(
+                state = helpDialogState,
+                /* https://stackoverflow.com/questions/68818202/animatedvisibility-doesnt-expand-height-in-dialog-in-jetpack-compose/68818540#68818540 */
+                properties = DialogProperties(usePlatformDefaultWidth = false),
+                onDismissRequest = { helpDialogState.hide() },
+                content = {
+                    HelpDialogContent(
+                        onCloseCLick = { helpDialogState.hide() }
+                    )
                 }
             )
 
@@ -303,37 +317,28 @@ private fun MenuItem(
             ?: lunchString
     }
 
-    Surface(
-        tonalElevation = 10.dp,
+    ElevatedTextRectangle(
+        text = { Text(text, modifier = Modifier.weight(1f)) },
         modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = onLongClick
+                onLongClick = onLongClick,
             ),
         color = color,
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = text,
-                modifier = Modifier.weight(1f)
-            )
-
-            if (menuItem.isInExchange)
+        trailingIcon = if (menuItem.isInExchange)
+        {
+            {
                 Icon(
-                    modifier = Modifier.padding(start = 10.dp),
                     imageVector = Icons.Filled.TrendingUp,
                     tint = Color.Gray.copy(alpha = .5f),
                     contentDescription = null
                 )
+            }
         }
-    }
+        else
+            null
+    )
 }
 
 @Composable
@@ -399,7 +404,7 @@ private fun MenuItemDialogContent(
     }
 
     DialogContainer(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(24.dp),
         title = {
             Text(stringResource(R.string.canteen_lunch, menuItem.number))
         },
@@ -430,46 +435,7 @@ private fun MenuItemDialogContent(
         }
     ) {
         if (dishMatchResult != null)
-        {
-            var pictureNameShown by rememberMutableStateOf(false)
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { pictureNameShown = !pictureNameShown },
-                    model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-                AnimatedVisibility(pictureNameShown) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val imageDishDescription = remember(dishMatchResult) {
-                            dishDescriptionString(dishMatchResult = dishMatchResult)
-                        }
-                        ElevatedTextRectangle(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = { Text(imageDishDescription) }
-                        )
-                        VerticalDivider(
-                            modifier = Modifier
-                                .width(60.dp)
-                                .clip(RoundedCornerShape(1.dp))
-                                .padding(vertical = 10.dp)
-                                .height(3.dp),
-                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-                        )
-                    }
-                }
-            }
-        }
+            DishPicture(dishMatchResult)
 
         val menuItemDescription = remember(menuItem) {
             menuItem.description?.rest?.replaceFirstChar { it.uppercase() }
@@ -480,6 +446,49 @@ private fun MenuItemDialogContent(
             modifier = Modifier.fillMaxWidth(),
             text = menuItemDescription ?: stringResource(R.string.canteen_lunch, menuItem.number)
         )
+    }
+}
+
+@Composable
+private fun DishPicture(dishMatchResult: DishMatchResult)
+{
+    var pictureNameShown by rememberMutableStateOf(false)
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .height(180.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { pictureNameShown = !pictureNameShown },
+            model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        AnimatedVisibility(pictureNameShown) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val imageDishDescription = remember(dishMatchResult) {
+                    dishDescriptionString(dishMatchResult = dishMatchResult)
+                }
+                ElevatedTextRectangle(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = { Text(imageDishDescription) }
+                )
+                VerticalDivider(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .clip(RoundedCornerShape(1.dp))
+                        .padding(vertical = 10.dp)
+                        .height(3.dp),
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                )
+            }
+        }
     }
 }
 
@@ -508,19 +517,68 @@ private fun dishDescriptionString(
 }
 
 @Composable
+private fun HelpDialogContent(
+    onCloseCLick: () -> Unit = {}
+) =
+    DialogContainer(
+        modifier = Modifier.padding(24.dp),
+        title = {
+            Text(stringResource(R.string.canteen_help_title))
+        },
+        buttons = {
+            TextButton(onClick = onCloseCLick) {
+                Text(stringResource(R.string.close))
+            }
+        }
+    ) {
+        val content = stringArrayResource(R.array.canteen_help_points)
+
+        if (content.size % 2 != 0)
+            throw IllegalStateException("Each help point must have a title.")
+
+        for (i in content.indices step 2)
+        {
+            Text(
+                text = content[i],
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 5.dp)
+            )
+            Text(
+                text = content[i + 1],
+                style = MaterialTheme.typography.bodyMedium
+            )
+            if (i != content.size - 2)
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                )
+        }
+    }
+
+@Composable
 private fun ElevatedTextRectangle(
     modifier: Modifier = Modifier,
     elevation: Dp = ElevationLevel.level5,
-    text: @Composable () -> Unit
+    color: Color = MaterialTheme.colorScheme.surface,
+    trailingIcon: @Composable (RowScope.() -> Unit)? = null,
+    text: @Composable RowScope.() -> Unit
 )
 {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(8.dp),
         tonalElevation = elevation,
+        color = color,
     ) {
-        Box(modifier = Modifier.padding(10.dp)) {
+        Row(modifier = Modifier.padding(10.dp)) {
             text()
+            if (trailingIcon != null)
+            {
+                HorizontalSpacer(10.dp)
+                trailingIcon()
+            }
         }
     }
 }
@@ -529,9 +587,15 @@ private fun ElevatedTextRectangle(
 private fun ElevatedTextRectangle(
     modifier: Modifier = Modifier,
     elevation: Dp = ElevationLevel.level5,
+    color: Color = MaterialTheme.colorScheme.surface,
+    trailingIcon: ImageVector? = null,
     text: String
-) = ElevatedTextRectangle(modifier, elevation) {
-    Text(text)
-}
+) = ElevatedTextRectangle(
+    modifier = modifier,
+    elevation = elevation,
+    color = color,
+    trailingIcon = trailingIcon?.let { { Icon(it, null) } },
+    text = { Text(text, modifier = Modifier.weight(1f)) }
+)
 
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.")
