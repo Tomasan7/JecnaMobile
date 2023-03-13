@@ -27,6 +27,8 @@ ktor-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor-clie
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-client" }
 ktor-client-content-negotiation-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-client" }
 
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-compiler" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-compiler" }
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose-material-icons-extended" }
