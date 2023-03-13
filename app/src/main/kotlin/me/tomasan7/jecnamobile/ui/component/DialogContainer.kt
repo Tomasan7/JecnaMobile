@@ -52,15 +52,13 @@ fun DialogContainer(
             content()
 
             if (buttons != null)
-            {
-                VerticalSpacer(24.dp)
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .fillMaxWidth(),
                     content = buttons
                 )
-            }
         }
     }
 }
