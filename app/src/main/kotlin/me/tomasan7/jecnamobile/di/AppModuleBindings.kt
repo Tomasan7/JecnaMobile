@@ -8,6 +8,8 @@ import me.tomasan7.jecnamobile.attendances.AttendancesRepositoryImpl
 import me.tomasan7.jecnamobile.grades.GradesRepository
 import me.tomasan7.jecnamobile.grades.GradesRepositoryImpl
 import me.tomasan7.jecnamobile.login.AuthRepository
+import me.tomasan7.jecnamobile.login.CanteenServerPasswordRepository
+import me.tomasan7.jecnamobile.login.FileCanteenServerPasswordRepository
 import me.tomasan7.jecnamobile.login.SharedPreferencesAuthRepository
 import me.tomasan7.jecnamobile.news.NewsRepository
 import me.tomasan7.jecnamobile.news.NewsRepositoryImpl
@@ -24,6 +26,10 @@ interface AppModuleBindings
     @Binds
     @Singleton
     fun bindAuthRepository(repository: SharedPreferencesAuthRepository): AuthRepository
+
+    @Binds
+    @Singleton
+    fun bindCanteenServerPasswordRepository(repository: FileCanteenServerPasswordRepository): CanteenServerPasswordRepository
 
     @Binds
     @Singleton

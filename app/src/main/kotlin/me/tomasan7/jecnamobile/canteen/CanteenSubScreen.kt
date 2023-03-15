@@ -1,5 +1,7 @@
 package me.tomasan7.jecnamobile.canteen
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -11,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Info
@@ -77,6 +80,17 @@ fun CanteenSubScreen(
     val helpDialogState = rememberObjectDialogState<Unit>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
+        if (successful)
+            viewModel.onImagePicked()
+    }
+
+    EventEffect(
+        event = uiState.takeImageEvent,
+        onConsumed = viewModel::onTakeImageEventConsumed
+    ) {
+        launcher.launch(it)
+    }
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -160,9 +174,13 @@ fun CanteenSubScreen(
                             viewModel.putMenuItemOnExchange(menuItem)
                             menuItemDialogState.hide()
                         },
-                        onCloseCLick = {
+                        onCloseClick = {
                             menuItemDialogState.hide()
-                        }
+                        },
+                        onUploadClick = {
+                            viewModel.takeImage(menuItem)
+                        },
+                        isUploader = uiState.isUploader
                     )
                 }
             )
@@ -395,7 +413,9 @@ private fun MenuItemDialogContent(
     onOpen: () -> Unit = {},
     onOrderClick: () -> Unit = {},
     onPutOnExchangeClick: () -> Unit = {},
-    onCloseCLick: () -> Unit = {}
+    onCloseClick: () -> Unit = {},
+    isUploader: Boolean = false,
+    onUploadClick: () -> Unit = {}
 )
 {
     DisposableEffect(Unit) {
@@ -406,10 +426,24 @@ private fun MenuItemDialogContent(
     DialogContainer(
         modifier = Modifier.padding(24.dp),
         title = {
-            Text(stringResource(R.string.canteen_lunch, menuItem.number))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(stringResource(R.string.canteen_lunch, menuItem.number))
+
+                if (isUploader)
+                    IconButton(onClick = onUploadClick) {
+                        Icon(
+                            imageVector = Icons.Filled.AddAPhoto,
+                            contentDescription = null
+                        )
+                    }
+            }
         },
         buttons = {
-            TextButton(onClick = onCloseCLick) {
+            TextButton(onClick = onCloseClick) {
                 Text(stringResource(R.string.close))
             }
 

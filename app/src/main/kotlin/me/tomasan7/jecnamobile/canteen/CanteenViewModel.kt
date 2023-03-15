@@ -1,9 +1,12 @@
 package me.tomasan7.jecnamobile.canteen
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,28 +18,41 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.forms.ChannelProvider
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.jvm.javaio.toByteReadChannel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.tomasan7.jecnaapi.CanteenClient
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.login.CanteenServerPasswordRepository
+import java.io.File
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class CanteenViewModel @Inject constructor(
     @ApplicationContext
     private val appContext: Context,
+    private val canteenServerPasswordRepository: CanteenServerPasswordRepository,
     private val jecnaClient: JecnaClient,
     private val canteenClient: CanteenClient,
 ) : ViewModel()
 {
+    private var uploaderPassword: String? = null
     private val httpClient = HttpClient(Android) {
         install(ContentNegotiation) {
             json()
@@ -47,6 +63,9 @@ class CanteenViewModel @Inject constructor(
         private set
 
     private var loadMenuJob: Job? = null
+
+    private var latestTmpUri: Uri? = null
+    private var currentlyTakingImageFor: MenuItem? = null
 
     init
     {
@@ -60,6 +79,14 @@ class CanteenViewModel @Inject constructor(
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
             else
                 canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
+
+            viewModelScope.launch {
+                if (canteenServerPasswordRepository.exists())
+                {
+                    uploaderPassword = canteenServerPasswordRepository.get()
+                    changeUiState(isUploader = true)
+                }
+            }
 
             loadMenu()
         }
@@ -163,6 +190,61 @@ class CanteenViewModel @Inject constructor(
         }.body()
     }
 
+    fun takeImage(menuItem: MenuItem)
+    {
+        currentlyTakingImageFor = menuItem
+        latestTmpUri = getTmpFileUri()
+        changeUiState(takeImageEvent = triggered(latestTmpUri!!))
+    }
+
+    fun onImagePicked()
+    {
+        val menuItem = currentlyTakingImageFor ?: return
+        val dayMenu = uiState.menuPage?.menu?.dayMenus?.find { it.contains(menuItem) } ?: return
+
+        if (menuItem.description == null)
+            return
+
+        val imageInputStream = latestTmpUri?.let { appContext.contentResolver.openInputStream(it) } ?: return
+        val fileDescriptor = latestTmpUri?.let { appContext.contentResolver.openFileDescriptor(it, "r") } ?: return
+        val imageChannel = imageInputStream.toByteReadChannel()
+
+        viewModelScope.launch {
+            httpClient.submitFormWithBinaryData(
+                url = "$CANTEEN_IMAGES_HOST/api/upload",
+                formData = formData {
+                    append("password", uploaderPassword!!)
+                    append("serveDate", dayMenu.day.format(DateTimeFormatter.ISO_DATE))
+                    append("number", menuItem.number.toString())
+                    append("author", jecnaClient.lastSuccessfulLoginAuth!!.username)
+                    append("description", menuItem.description!!.rest)
+                    append(
+                        key = "image",
+                        value = ChannelProvider(fileDescriptor.statSize) { imageChannel },
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, "image/*")
+                            append(HttpHeaders.ContentDisposition, "filename=image.jpg")
+                        }
+                    )
+                }
+            )
+            withContext(Dispatchers.IO) {
+                imageInputStream.close()
+                fileDescriptor.close()
+            }
+        }
+    }
+
+    private fun getTmpFileUri(): Uri
+    {
+        val tmpFile = File.createTempFile("tmp_image_file", ".jpg", appContext.cacheDir).apply {
+            createNewFile()
+            deleteOnExit()
+        }
+
+        return FileProvider.getUriForFile(appContext, appContext.packageName + ".fileprovider", tmpFile)
+    }
+
     fun loadMenu()
     {
         changeUiState(loading = true)
@@ -203,19 +285,25 @@ class CanteenViewModel @Inject constructor(
 
     fun onSnackBarMessageEventConsumed() = changeUiState(snackBarMessageEvent = consumed())
 
+    fun onTakeImageEventConsumed() = changeUiState(takeImageEvent = consumed())
+
     fun changeUiState(
         loading: Boolean = uiState.loading,
+        isUploader: Boolean = uiState.isUploader,
         orderInProcess: Boolean = uiState.orderInProcess,
         menuPage: MenuPage? = uiState.menuPage,
         images: ImagesMap = uiState.images,
+        takeImageEvent: StateEventWithContent<Uri> = uiState.takeImageEvent,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
     {
         uiState = uiState.copy(
             loading = loading,
+            isUploader = isUploader,
             menuPage = menuPage,
             images = images,
             orderInProcess = orderInProcess,
+            takeImageEvent = takeImageEvent,
             snackBarMessageEvent = snackBarMessageEvent,
         )
     }

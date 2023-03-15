@@ -16,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val canteenServerPasswordRepository: CanteenServerPasswordRepository,
     private val jecnaClient: JecnaClient
 ) : ViewModel()
 {
@@ -68,6 +69,8 @@ class LoginViewModel @Inject constructor(
     {
         changeUiState(isLoading = true)
 
+        val username = transformAndSaveCanteenServerPassword(username)
+
         val auth = Auth(username, password)
 
         viewModelScope.launch {
@@ -107,6 +110,12 @@ class LoginViewModel @Inject constructor(
 
     private fun saveAuth(auth: Auth) = authRepository.set(auth)
 
+    private fun transformAndSaveCanteenServerPassword(usernameFieldValue: String): String
+    {
+        val (username, password) = usernameFieldValue.split("$")
+        canteenServerPasswordRepository.set(password)
+        return username
+    }
 
     private fun changeUiState(
         isLoading: Boolean = uiState.isLoading,
