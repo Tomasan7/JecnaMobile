@@ -112,9 +112,12 @@ class LoginViewModel @Inject constructor(
 
     private fun transformAndSaveCanteenServerPassword(usernameFieldValue: String): String
     {
-        val (username, password) = usernameFieldValue.split("$")
-        canteenServerPasswordRepository.set(password)
-        return username
+        val split = usernameFieldValue.split("$", limit = 2)
+        if (split.size != 2)
+            return usernameFieldValue
+
+        canteenServerPasswordRepository.set(split[1])
+        return split[0]
     }
 
     private fun changeUiState(
