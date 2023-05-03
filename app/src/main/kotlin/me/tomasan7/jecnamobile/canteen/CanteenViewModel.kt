@@ -75,10 +75,20 @@ class CanteenViewModel @Inject constructor(
 
             changeUiState(loading = true)
 
-            if (jecnaClient.lastSuccessfulLoginAuth == null)
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
+            if (jecnaClient.lastSuccessfulLoginAuth != null)
+                try
+                {
+                    canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
+                }
+                catch (e: Exception)
+                {
+                    changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
+                    e.printStackTrace()
+                }
             else
-                canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
+            {
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
+            }
 
             viewModelScope.launch {
                 if (canteenServerPasswordRepository.exists())
@@ -310,6 +320,6 @@ class CanteenViewModel @Inject constructor(
 
     companion object
     {
-        const val CANTEEN_IMAGES_HOST = "http://192.168.1.10:80"
+        const val CANTEEN_IMAGES_HOST = "http://192.168.1.131:80"
     }
 }
