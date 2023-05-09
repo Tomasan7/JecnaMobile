@@ -2,7 +2,6 @@ package me.tomasan7.jecnamobile.canteen
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +16,7 @@ import de.palm.composestateevents.triggered
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.forms.ChannelProvider
 import io.ktor.client.request.forms.formData
@@ -54,6 +54,11 @@ class CanteenViewModel @Inject constructor(
 {
     private var uploaderPassword: String? = null
     private val httpClient = HttpClient(Android) {
+        install(HttpTimeout) {
+            requestTimeoutMillis = 7000
+            connectTimeoutMillis = 7000
+            socketTimeoutMillis = 7000
+        }
         install(ContentNegotiation) {
             json()
         }
@@ -195,6 +200,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
+                changeUiState(images = uiState.images + (menuItem to null))
             }
         }
     }

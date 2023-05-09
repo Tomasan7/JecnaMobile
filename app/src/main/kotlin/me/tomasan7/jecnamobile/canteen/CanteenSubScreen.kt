@@ -1,10 +1,7 @@
 package me.tomasan7.jecnamobile.canteen
 
-import android.content.res.Configuration
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -32,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -41,26 +37,21 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
-import me.tomasan7.jecnaapi.data.canteen.ItemDescription
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
-import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
@@ -68,7 +59,6 @@ import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsState
-import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
@@ -557,34 +547,23 @@ private fun DishPicture(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (LocalInspectionMode.current)
-            Image(
-                modifier = Modifier
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { pictureNameShown = !pictureNameShown },
-                painter = painterResource(id = R.drawable.canteen_dish_preview),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-        else
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { pictureNameShown = !pictureNameShown },
-                model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                },
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+        SubcomposeAsyncImage(
+            modifier = Modifier
+                .height(180.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { pictureNameShown = !pictureNameShown },
+            model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
+            loading = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
         AnimatedVisibility(pictureNameShown) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
