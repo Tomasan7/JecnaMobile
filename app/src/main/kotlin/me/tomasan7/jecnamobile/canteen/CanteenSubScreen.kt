@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -29,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -193,8 +191,7 @@ fun CanteenSubScreen(
                         onUploadClick = {
                             viewModel.takeImage(menuItem)
                         },
-                        isUploader = uiState.isUploader,
-                        scoreTolerance = settings.canteenImageTolerance
+                        isUploader = uiState.isUploader
                     )
                 }
             )
@@ -431,7 +428,6 @@ private interface ImageState
 private fun MenuItemDialogContent(
     menuItem: MenuItem,
     imageState: ImageState,
-    scoreTolerance: Float,
     onOpen: () -> Unit = {},
     onOrderClick: () -> Unit = {},
     onPutOnExchangeClick: () -> Unit = {},
