@@ -41,4 +41,4 @@ data class CanteenState(
     }
 }
 
-typealias ImagesMap = Map<MenuItem, DishMatchResult>
+typealias ImagesMap = Map<MenuItem, DishMatchResult?>

@@ -1,9 +1,13 @@
 package me.tomasan7.jecnamobile.canteen
 
+import android.content.res.Configuration
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +32,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -35,28 +41,36 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
+import me.tomasan7.jecnaapi.data.canteen.ItemDescription
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
+import me.tomasan7.jecnamobile.ui.theme.JecnaMobileTheme
 import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import me.tomasan7.jecnamobile.util.settingsAsState
+import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
@@ -154,15 +168,24 @@ fun CanteenSubScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 
+            val settings by settingsAsState()
+
             ObjectDialog(
                 state = menuItemDialogState,
                 /* https://stackoverflow.com/questions/68818202/animatedvisibility-doesnt-expand-height-in-dialog-in-jetpack-compose/68818540#68818540 */
                 properties = DialogProperties(usePlatformDefaultWidth = false),
                 onDismissRequest = { menuItemDialogState.hide() },
                 content = { menuItem ->
+                    val imageState = when
+                    {
+                        !uiState.images.containsKey(menuItem) -> ImageState.Loading
+                        uiState.images[menuItem] == null      -> ImageState.NotFound
+                        else                                  -> ImageState.Found(uiState.images[menuItem]!!)
+                    }
+
                     MenuItemDialogContent(
                         menuItem = menuItem,
-                        dishMatchResult = uiState.images[menuItem],
+                        imageState = imageState,
                         onOpen = {
                             viewModel.requestImage(menuItem)
                         },
@@ -180,7 +203,8 @@ fun CanteenSubScreen(
                         onUploadClick = {
                             viewModel.takeImage(menuItem)
                         },
-                        isUploader = uiState.isUploader
+                        isUploader = uiState.isUploader,
+                        scoreTolerance = settings.canteenImageTolerance
                     )
                 }
             )
@@ -406,10 +430,18 @@ private fun AllergensForMenuItem(menuItem: MenuItem)
     }
 }
 
+private interface ImageState
+{
+    object Loading : ImageState
+    data class Found(val result: DishMatchResult) : ImageState
+    object NotFound : ImageState
+}
+
 @Composable
 private fun MenuItemDialogContent(
     menuItem: MenuItem,
-    dishMatchResult: DishMatchResult?,
+    imageState: ImageState,
+    scoreTolerance: Float,
     onOpen: () -> Unit = {},
     onOrderClick: () -> Unit = {},
     onPutOnExchangeClick: () -> Unit = {},
@@ -468,8 +500,39 @@ private fun MenuItemDialogContent(
                 }
         }
     ) {
-        if (dishMatchResult != null)
-            DishPicture(dishMatchResult)
+        val settings by settingsAsState()
+
+        when (imageState)
+        {
+            is ImageState.Loading -> LinearProgressIndicator(
+                modifier = Modifier
+                    .padding(vertical = 20.dp, horizontal = 10.dp)
+                    .fillMaxWidth(),
+            )
+
+            is ImageState.Found   ->
+            {
+                val dishMatchResult = imageState.result
+                var showPicture by remember {
+                    mutableStateOf(dishMatchResult.compareResult.score >= settings.canteenImageTolerance)
+                }
+                if (showPicture)
+                    DishPicture(dishMatchResult)
+                else
+                    Text(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { showPicture = true }
+                            .padding(vertical = 20.dp, horizontal = 10.dp)
+                            .fillMaxWidth(),
+                        text = stringResource(
+                            R.string.canteen_image_innacurate,
+                            (dishMatchResult.compareResult.score * 100.0).roundToInt()
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+            }
+        }
 
         val menuItemDescription = remember(menuItem) {
             menuItem.description?.rest?.replaceFirstChar { it.uppercase() }
@@ -484,7 +547,9 @@ private fun MenuItemDialogContent(
 }
 
 @Composable
-private fun DishPicture(dishMatchResult: DishMatchResult)
+private fun DishPicture(
+    dishMatchResult: DishMatchResult
+)
 {
     var pictureNameShown by rememberMutableStateOf(false)
 
@@ -492,15 +557,34 @@ private fun DishPicture(dishMatchResult: DishMatchResult)
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .height(180.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .clickable { pictureNameShown = !pictureNameShown },
-            model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
+        if (LocalInspectionMode.current)
+            Image(
+                modifier = Modifier
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { pictureNameShown = !pictureNameShown },
+                painter = painterResource(id = R.drawable.canteen_dish_preview),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        else
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { pictureNameShown = !pictureNameShown },
+                model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                },
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
         AnimatedVisibility(pictureNameShown) {
             Column(
                 modifier = Modifier.fillMaxWidth(),

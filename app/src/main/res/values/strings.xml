@@ -92,6 +92,7 @@
     <string name="canteen_allergens">Alergeny</string>
     <string name="canteen_credit">%1s Kč</string>
     <string name="canteen_lunch">Oběd %1d</string>
+    <string name="canteen_image_innacurate">Fotka má shodu pouze %1$d%%</string>
     <string name="canteen_order">Objednat</string>
     <string name="canteen_cancel_order">Odobjednat</string>
     <string name="canteen_take_from_exchange">Z burzy</string>

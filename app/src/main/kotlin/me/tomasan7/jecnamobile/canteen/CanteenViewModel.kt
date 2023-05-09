@@ -168,18 +168,24 @@ class CanteenViewModel @Inject constructor(
 
     fun requestImage(menuItem: MenuItem)
     {
-        if (uiState.images.contains(menuItem) || menuItem.description == null)
+        if (uiState.images.contains(menuItem))
             return
+
+        if (menuItem.description == null)
+        {
+            changeUiState(images = uiState.images + (menuItem to null))
+            return
+        }
 
         viewModelScope.launch {
             try
             {
                 val dishMatchResult = requestDishMatchResult(menuItem.description!!.rest)
 
-                if (dishMatchResult.compareResult.matchPart.last <= 10)
-                    return@launch
-
-                changeUiState(images = uiState.images + (menuItem to dishMatchResult))
+                if (dishMatchResult.compareResult.score <= 0.1f)
+                    changeUiState(images = uiState.images + (menuItem to null))
+                else
+                    changeUiState(images = uiState.images + (menuItem to dishMatchResult))
             }
             catch (e: CancellationException)
             {
@@ -320,6 +326,6 @@ class CanteenViewModel @Inject constructor(
 
     companion object
     {
-        const val CANTEEN_IMAGES_HOST = "http://192.168.1.131:80"
+        const val CANTEEN_IMAGES_HOST = "http://109.164.127.114:1221"
     }
 }
