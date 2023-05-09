@@ -31,6 +31,8 @@
     </string-array>
     <string name="settings_open_subscreen_title">Hlavní obrazovka</string>
     <string name="settings_open_subscreen_description">Obrazovka, která se otevře po spuštění aplikace.</string>
+    <string name="settings_canteen_image_tolerance_title">Tolerance fotek v jídelně</string>
+    <string name="settings_canteen_image_tolerance_description">Minimální shoda, kterou fotka musí mít, aby se zobrazila.</string>
 
     <!-- ##### Main Screen ##### -->
 
