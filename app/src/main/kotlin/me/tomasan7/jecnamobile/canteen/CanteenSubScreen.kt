@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -505,18 +506,29 @@ private fun MenuItemDialogContent(
                 if (showPicture)
                     DishPicture(dishMatchResult)
                 else
-                    Text(
+                    Row(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
                             .clickable { showPicture = true }
                             .padding(vertical = 20.dp, horizontal = 10.dp)
                             .fillMaxWidth(),
-                        text = stringResource(
-                            R.string.canteen_image_innacurate,
-                            (dishMatchResult.compareResult.score * 100.0).roundToInt()
-                        ),
-                        textAlign = TextAlign.Center
-                    )
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(
+                                R.string.canteen_image_innacurate,
+                                (dishMatchResult.compareResult.score * 100.0).roundToInt()
+                            )
+                        )
+                        HorizontalSpacer(size = 10.dp)
+                        Icon(
+                            modifier = Modifier.size(16.dp),
+                            imageVector = Icons.Default.VisibilityOff,
+                            contentDescription = null
+                        )
+                    }
+
             }
         }
 
