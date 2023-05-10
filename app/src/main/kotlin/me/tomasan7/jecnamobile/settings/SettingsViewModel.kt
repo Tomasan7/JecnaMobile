@@ -1,6 +1,7 @@
 package me.tomasan7.jecnamobile.settings
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnamobile.util.settingsDataStore
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -31,7 +33,7 @@ class SettingsViewModel @Inject constructor(
 
     fun setCanteenImageTolerance(tolerance: Float) = viewModelScope.launch {
         settingsDataStore.updateData {
-            it.copy(canteenImageTolerance = tolerance)
+            it.copy(canteenImageTolerance = (tolerance * 100).roundToInt() / 100f)
         }
     }
 }
