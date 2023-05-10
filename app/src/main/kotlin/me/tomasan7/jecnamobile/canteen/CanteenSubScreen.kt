@@ -1,6 +1,5 @@
 package me.tomasan7.jecnamobile.canteen
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -45,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
+import me.tomasan7.canteenserver.api.DishMatchResult
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnamobile.R
@@ -56,10 +56,8 @@ import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
-import me.tomasan7.jecnamobile.util.awaitSettings
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
-import me.tomasan7.jecnamobile.util.settingsAsState
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt

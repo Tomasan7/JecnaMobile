@@ -3,6 +3,7 @@ package me.tomasan7.jecnamobile.canteen
 import android.net.Uri
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
+import me.tomasan7.canteenserver.api.DishMatchResult
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import java.time.LocalDate
