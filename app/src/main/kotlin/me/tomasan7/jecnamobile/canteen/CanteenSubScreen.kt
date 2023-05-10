@@ -1,5 +1,6 @@
 package me.tomasan7.jecnamobile.canteen
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -55,9 +56,11 @@ import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
+import me.tomasan7.jecnamobile.util.awaitSettings
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsState
+import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
@@ -157,7 +160,8 @@ fun CanteenSubScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 
-            val settings by settingsAsState()
+            val settings by settingsAsStateAwaitFirst()
+            val imageTolerance = remember { settings.canteenImageTolerance }
 
             ObjectDialog(
                 state = menuItemDialogState,
@@ -175,6 +179,7 @@ fun CanteenSubScreen(
                     MenuItemDialogContent(
                         menuItem = menuItem,
                         imageState = imageState,
+                        imageTolerance = imageTolerance,
                         onOpen = {
                             viewModel.requestImage(menuItem)
                         },
@@ -429,6 +434,7 @@ private interface ImageState
 private fun MenuItemDialogContent(
     menuItem: MenuItem,
     imageState: ImageState,
+    imageTolerance: Float,
     onOpen: () -> Unit = {},
     onOrderClick: () -> Unit = {},
     onPutOnExchangeClick: () -> Unit = {},
@@ -487,8 +493,6 @@ private fun MenuItemDialogContent(
                 }
         }
     ) {
-        val settings by settingsAsState()
-
         when (imageState)
         {
             is ImageState.Loading -> LinearProgressIndicator(
@@ -500,9 +504,8 @@ private fun MenuItemDialogContent(
             is ImageState.Found   ->
             {
                 val dishMatchResult = imageState.result
-                var showPicture by remember {
-                    mutableStateOf(dishMatchResult.compareResult.score >= settings.canteenImageTolerance)
-                }
+                var showPicture by remember { mutableStateOf(dishMatchResult.compareResult.score >= imageTolerance) }
+
                 if (showPicture)
                     DishPicture(dishMatchResult)
                 else
