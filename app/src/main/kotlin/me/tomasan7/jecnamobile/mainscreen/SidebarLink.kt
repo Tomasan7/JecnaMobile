@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.TableChart
 import androidx.compose.ui.graphics.vector.ImageVector
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.icons.Moodle
 
 enum class SidebarLink(
     val link: String,
@@ -15,7 +16,13 @@ enum class SidebarLink(
 )
 {
     SubstitutionTimetable(
-        JecnaWebClient.getUrlForPath("/suplovani"), R.string.sidebar_link_substitution_timetable,
+        "https://spsejecnacz.sharepoint.com/:x:/s/nastenka/EbA_RcWKRdRNlB8YU1iuWM4BnMetCQlVm8toHuuyW-TPyA?e=uu3iPR&CID=2686cea0-2d06-3304-4519-087fb9e06fd0",
+        R.string.sidebar_link_substitution_timetable,
         Icons.Outlined.TableChart
+    ),
+    Moodle(
+        "https://moodle.spsejecna.cz",
+        R.string.sidebar_link_moodle,
+        Icons.Moodle
     )
 }
