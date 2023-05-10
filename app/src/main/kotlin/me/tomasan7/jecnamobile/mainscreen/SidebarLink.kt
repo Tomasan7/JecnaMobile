@@ -16,7 +16,7 @@ enum class SidebarLink(
 )
 {
     SubstitutionTimetable(
-        JecnaWebClient.getUrlForPath("/suplovani"),
+        "https://spsejecnacz.sharepoint.com/:x:/s/nastenka/EbA_RcWKRdRNlB8YU1iuWM4BnMetCQlVm8toHuuyW-TPyA?e=uu3iPR&CID=2686cea0-2d06-3304-4519-087fb9e06fd0",
         R.string.sidebar_link_substitution_timetable,
         Icons.Outlined.TableChart
     ),
