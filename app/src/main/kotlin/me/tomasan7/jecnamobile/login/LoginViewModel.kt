@@ -1,13 +1,11 @@
 package me.tomasan7.jecnamobile.login
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.util.network.UnresolvedAddressException
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.launch
@@ -17,9 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    @ApplicationContext
-    private val appContext: Context,
     private val authRepository: AuthRepository,
+    private val canteenServerPasswordRepository: CanteenServerPasswordRepository,
     private val jecnaClient: JecnaClient
 ) : ViewModel()
 {
@@ -72,6 +69,8 @@ class LoginViewModel @Inject constructor(
     {
         changeUiState(isLoading = true)
 
+        val username = transformAndSaveCanteenServerPassword(username)
+
         val auth = Auth(username, password)
 
         viewModelScope.launch {
@@ -111,6 +110,15 @@ class LoginViewModel @Inject constructor(
 
     private fun saveAuth(auth: Auth) = authRepository.set(auth)
 
+    private fun transformAndSaveCanteenServerPassword(usernameFieldValue: String): String
+    {
+        val split = usernameFieldValue.split("$", limit = 2)
+        if (split.size != 2)
+            return usernameFieldValue
+
+        canteenServerPasswordRepository.set(split[1])
+        return split[0]
+    }
 
     private fun changeUiState(
         isLoading: Boolean = uiState.isLoading,
