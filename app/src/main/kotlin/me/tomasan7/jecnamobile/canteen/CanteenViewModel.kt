@@ -40,6 +40,7 @@ import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.login.CanteenServerPasswordRepository
+import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.io.File
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -307,6 +308,14 @@ class CanteenViewModel @Inject constructor(
     fun reload() = loadMenu()
 
     fun onSnackBarMessageEventConsumed() = changeUiState(snackBarMessageEvent = consumed())
+
+    fun onHelpDialogShownAutomatically() = viewModelScope.launch {
+        appContext.settingsDataStore.updateData {
+            it.copy(
+                canteenHelpSeen = true
+            )
+        }
+    }
 
     fun onTakeImageEventConsumed() = changeUiState(takeImageEvent = consumed())
 

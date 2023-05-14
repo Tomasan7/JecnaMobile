@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
+import kotlinx.coroutines.launch
 import me.tomasan7.canteenserver.api.DishMatchResult
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
@@ -59,7 +61,9 @@ import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import me.tomasan7.jecnamobile.util.settingsAsState
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
+import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
@@ -72,13 +76,6 @@ fun CanteenSubScreen(
     viewModel: CanteenViewModel = hiltViewModel()
 )
 {
-    DisposableEffect(Unit) {
-        viewModel.enteredComposition()
-        onDispose {
-            viewModel.leftComposition()
-        }
-    }
-
     val uiState = viewModel.uiState
     val menuItemDialogState = rememberObjectDialogState<MenuItem>()
     val allergensDialogState = rememberObjectDialogState<DayMenu>()
@@ -88,6 +85,25 @@ fun CanteenSubScreen(
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
         if (successful)
             viewModel.onImagePicked()
+    }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        viewModel.enteredComposition()
+        coroutineScope.launch {
+            context.settingsDataStore.data.collect {
+                if (!it.canteenHelpSeen)
+                {
+                    helpDialogState.show(Unit)
+                    viewModel.onHelpDialogShownAutomatically()
+                }
+            }
+        }
+        onDispose {
+            viewModel.leftComposition()
+        }
     }
 
     EventEffect(

@@ -7,6 +7,7 @@ import me.tomasan7.jecnamobile.destinations.TimetableSubScreenDestination
 data class Settings(
     val theme: Theme = Theme.SYSTEM,
     var canteenImageTolerance: Float = 0.5f,
+    var canteenHelpSeen: Boolean = false,
     val openSubScreenRoute: String = TimetableSubScreenDestination.route,
 )
 {
