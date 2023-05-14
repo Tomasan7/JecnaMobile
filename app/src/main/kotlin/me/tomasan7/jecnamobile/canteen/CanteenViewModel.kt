@@ -333,6 +333,6 @@ class CanteenViewModel @Inject constructor(
 
     companion object
     {
-        const val CANTEEN_IMAGES_HOST = "http://109.164.127.114:1221"
+        const val CANTEEN_IMAGES_HOST = "http://dev.spsejecna.net:20147"
     }
 }
