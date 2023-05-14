@@ -101,6 +101,7 @@
     <string name="canteen_take_from_exchange">Z burzy</string>
     <string name="canteen_put_on_exchange">Do burzy</string>
     <string name="canteen_help_title">Jak používat tuto stránku?</string>
+    <string name="canteen_piture_description_label">Popisek jídla na obrázku</string>
     <string-array name="canteen_help_points">
         <item>Fotky u jídel</item>
         <item>U jídel můžete vidět fotky, které jsou focené přímo v jídelně. Ovšem nejsou kvůli určitým limitacím vždy úplně přesné. Aplikace se snaží ke každému jídlu přiřadit nejpřesnější fotku, která je k dispozici. Přesnost fotky lze zobrazit po kliknutí na ní.</item>

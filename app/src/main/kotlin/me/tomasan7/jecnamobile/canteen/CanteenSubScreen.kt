@@ -56,6 +56,7 @@ import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
+import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
@@ -583,7 +584,8 @@ private fun DishPicture(
                 }
                 ElevatedTextRectangle(
                     modifier = Modifier.fillMaxWidth(),
-                    text = { Text(imageDishDescription) }
+                    text = { Text(imageDishDescription) },
+                    label = { Text("Popisek jídla na obrázku", color = jm_label) }
                 )
                 VerticalDivider(
                     modifier = Modifier
@@ -669,6 +671,7 @@ private fun ElevatedTextRectangle(
     elevation: Dp = ElevationLevel.level5,
     color: Color = MaterialTheme.colorScheme.surface,
     trailingIcon: @Composable (RowScope.() -> Unit)? = null,
+    label: @Composable (() -> Unit)? = null,
     text: @Composable RowScope.() -> Unit
 )
 {
@@ -678,12 +681,24 @@ private fun ElevatedTextRectangle(
         tonalElevation = elevation,
         color = color,
     ) {
-        Row(modifier = Modifier.padding(10.dp)) {
-            text()
-            if (trailingIcon != null)
-            {
-                HorizontalSpacer(10.dp)
-                trailingIcon()
+        Column(modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)) {
+            if (label != null)
+                CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.labelSmall) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        label()
+                    }
+                }
+            VerticalSpacer(5.dp)
+            Row {
+                text()
+                if (trailingIcon != null)
+                {
+                    HorizontalSpacer(10.dp)
+                    trailingIcon()
+                }
             }
         }
     }
