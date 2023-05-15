@@ -607,12 +607,13 @@ private fun DishPicture(
                     modifier = Modifier
                         .width(60.dp)
                         .clip(RoundedCornerShape(1.dp))
-                        .padding(vertical = 10.dp)
+                        .padding(top = 10.dp)
                         .height(3.dp),
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
                 )
             }
         }
+        VerticalSpacer(10.dp)
     }
 }
 
