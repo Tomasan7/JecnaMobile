@@ -35,7 +35,8 @@ Předem upozorňuji, že kód aplikace je velmi nekvalitní a neměli byste se n
 ### Instalace
 
 1. Nainstalujte si [Android Studio](https://developer.android.com/studio).
-2. Naklonujte si projekt, buď přes terminál, nebo `Android Studio > New project from VCS`.
+2. Forkněte si tento projekt.
+2. Naklonujte svůj fork, buď přes terminál, nebo `Android Studio > New project from VCS`.
 3. Počkejte než se vám vše načte.
 4. Teď už to buď znáte, nebo musíte následovat tutoriály :)
 5. Doporučuji pro testování používat fyzické zařízení a ne Emulátor, je to mnohem rychlejší, dá se to připojit i přes wifi, takže nemusíte to stále mít připojené kabelem.
