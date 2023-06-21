@@ -1,4 +1,4 @@
-# JecnaMobile
+# Ječná Mobile
 
 Ječná Mobile je android aplikace, vytvořená pro studenty [SPŠE Ječná v Praze](https://www.spsejecna.cz/). Byla vytvořena z důvodů pohodlnosti čtení školního portálu. Aplikace je **NEOFICIÁLNÍ** a tím pádem **nemá nic společného se školním softwarem**.
 
