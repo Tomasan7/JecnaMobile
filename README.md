@@ -47,4 +47,7 @@ Předem upozorňuji, že kód aplikace je velmi nekvalitní a neměli byste se n
 - Vždy aplikaci před začnutím pull requestu otestujte.
 - Pokud chcete dělat větší změny, zkuste to se mnou nejdříve zkonzultovat.
 
+I přesto, že můj kód je hnus, váš být nemusí :)
+Klidně můžete i pročistit/vylepšit stávající kód.
+
 Jakmile přidáte svůj kód, udělejte pull-request a napište smysluplný popis.
