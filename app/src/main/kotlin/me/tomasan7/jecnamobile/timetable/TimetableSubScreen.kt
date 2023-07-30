@@ -123,6 +123,7 @@ private fun PeriodSelectors(
     ) {
         SchoolYearSelector(
             modifier = Modifier.width(160.dp),
+            showYearAhead = true,
             selectedSchoolYear = selectedSchoolYear,
             onChange = onChangeSchoolYear
         )
