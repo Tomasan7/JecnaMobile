@@ -85,7 +85,7 @@ fun TimetableSubScreen(
                     modifier = Modifier.fillMaxWidth(),
                     timetablePeriodOptions = uiState.timetablePage?.periodOptions ?: emptyList(),
                     selectedSchoolYear = uiState.selectedSchoolYear,
-                    selectedTimetablePeriod = uiState.timetablePage?.periodOptions?.find { it.selected },
+                    selectedTimetablePeriod = uiState.selectedPeriod,
                     onChangeSchoolYear = { viewModel.selectSchoolYear(it) },
                     onChangeTimetablePeriod = { viewModel.selectTimetablePeriod(it) }
                 )

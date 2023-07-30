@@ -95,6 +95,8 @@ class TimetableViewModel @Inject constructor(
 
             changeUiState(
                 timetablePage = cachedGrades.data,
+                selectedSchoolYear = cachedGrades.data.selectedSchoolYear,
+                selectedPeriod = cachedGrades.data.periodOptions.find { it.selected },
                 lastUpdateTimestamp = cachedGrades.timestamp,
                 isCache = true
             )
@@ -117,6 +119,8 @@ class TimetableViewModel @Inject constructor(
 
                 changeUiState(
                     timetablePage = realTimetable,
+                    selectedSchoolYear = realTimetable.selectedSchoolYear,
+                    selectedPeriod = realTimetable.periodOptions.find { it.selected },
                     lastUpdateTimestamp = Instant.now(),
                     isCache = false
                 )
