@@ -3,7 +3,7 @@ plugin-android = "8.0.1"
 plugin-kotlin = "1.7.20"
 plugin-ksp = "1.7.20-1.0.8"
 
-jecnaAPI = "3.2.1"
+jecnaAPI = "3.3.0"
 canteenserver = "1.0.0"
 ktor-client = "2.3.0"
 
