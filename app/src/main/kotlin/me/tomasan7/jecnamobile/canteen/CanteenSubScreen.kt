@@ -61,7 +61,6 @@ import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
-import me.tomasan7.jecnamobile.util.settingsAsState
 import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.format.DateTimeFormatter
@@ -430,8 +429,12 @@ private fun AllergensForMenuItem(menuItem: MenuItem)
         ElevatedTextRectangle(
             modifier = Modifier.fillMaxWidth()
         ) {
+            val allergensText = remember(menuItem.allergens) {
+                menuItem.allergens?.joinToString { it.split(" - ")[0] }
+            }
+
             Text(
-                text = menuItem.allergens?.joinToString() ?: "",
+                text = allergensText ?: "",
                 textAlign = TextAlign.Center
             )
         }
