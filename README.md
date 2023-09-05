@@ -1,6 +1,8 @@
 # Ječná Mobile
 
-Ječná Mobile je android aplikace, vytvořená pro studenty [SPŠE Ječná v Praze](https://www.spsejecna.cz/). Byla vytvořena z důvodů pohodlnosti čtení školního portálu. Aplikace je **NEOFICIÁLNÍ** a tím pádem **nemá nic společného se školním softwarem**.
+Ječná Mobile je android aplikace, vytvořená pro studenty [SPŠE Ječná v Praze](https://www.spsejecna.cz/). Byla vytvořena
+z důvodů pohodlnosti čtení školního portálu. Aplikace je **NEOFICIÁLNÍ** a tím pádem **nemá nic společného se školním
+softwarem**.
 
 Můžete se podílet na vývoji: [Kontribuce](#Kontribuce)
 
@@ -21,6 +23,32 @@ Minimální podporovaný android je `Android 8.0 (Oreo)`.
 - [ ] Předvídač známek
 - [ ] Oznámení
 - [ ] Burza v jídelně
+
+## Screenshoty
+
+<p float="left">
+  <a href="readme-res/grades.png">
+    <img alt="známky" src="readme-res/screenshots/grades.png" width="200px" />
+  </a>
+  <a href="readme-res/screenshots/timetable.png">
+    <img alt="rozvrh" src="readme-res/screenshots/timetable.png" width="200px" />
+  </a>
+  <a href="readme-res/screenshots/news.png">
+    <img alt="novinky" src="readme-res/screenshots/news.png" width="200px" />
+  </a>
+<a href="readme-res/screenshots/canteen.png">
+    <img alt="jídelna" src="readme-res/screenshots/canteen.png" width="200px" />
+  </a>
+  <a href="readme-res/screenshots/attendances.png">
+      <img alt="příchody a odchody" src="readme-res/screenshots/attendances.png" width="200px" />
+  </a>
+  <a href="readme-res/screenshots/canteen_pictures.png">
+    <img alt="učitelé" src="readme-res/screenshots/canteen_pictures.png" width="200px" />
+  </a>
+  <a href="readme-res/screenshots/teachers.png">
+    <img alt="učitelé" src="readme-res/screenshots/teachers.png" width="200px" />
+  </a>
+</p>
 
 ## Kontribuce
 
