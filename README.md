@@ -27,7 +27,7 @@ Minimální podporovaný android je `Android 8.0 (Oreo)`.
 ## Screenshoty
 
 <p float="left">
-  <a href="readme-res/grades.png">
+  <a href="readme-res/screenshots/grades.png">
     <img alt="známky" src="readme-res/screenshots/grades.png" width="200px" />
   </a>
   <a href="readme-res/screenshots/timetable.png">
