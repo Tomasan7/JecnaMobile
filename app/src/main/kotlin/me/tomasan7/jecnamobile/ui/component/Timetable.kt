@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import me.tomasan7.jecnaapi.data.timetable.*
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.ui.ElevationLevel
@@ -51,16 +53,17 @@ fun Timetable(
     val dialogState = rememberObjectDialogState<Lesson>()
 
     Box(modifier = modifier) {
+        val breakWidth = 5.dp
         Column(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+            verticalArrangement = Arrangement.spacedBy(breakWidth)
         ) {
             Row {
                 timetable.lessonPeriods.forEachIndexed { i, lessonPeriod ->
                     if (i == 0)
                         HorizontalSpacer(30.dp)
 
-                    HorizontalSpacer(5.dp)
+                    HorizontalSpacer(breakWidth)
 
                     TimetableLessonPeriod(
                         modifier = Modifier.size(width = 100.dp, height = 50.dp),
@@ -81,16 +84,17 @@ fun Timetable(
                             .width(30.dp)
                             .fillMaxHeight()
                     )
-                    HorizontalSpacer(5.dp)
+                    HorizontalSpacer(breakWidth)
                     timetable.getLessonSpotsForDay(day)!!.forEach { lessonSpot ->
                         LessonSpot(
                             lessonSpot = lessonSpot,
                             onLessonClick = { dialogState.show(it) },
                             current = timetable.getCurrentLessonSpot() === lessonSpot,
                             next = timetable.getCurrentNextLessonSpot(takeEmpty = true) === lessonSpot,
-                            hideClass = hideClass
+                            hideClass = hideClass,
+                            breakWidth = breakWidth
                         )
-                        HorizontalSpacer(5.dp)
+                        HorizontalSpacer(breakWidth)
                     }
                 }
             }
@@ -142,10 +146,12 @@ private fun LessonSpot(
     onLessonClick: (Lesson) -> Unit = {},
     current: Boolean = false,
     next: Boolean = false,
-    hideClass: Boolean = false
+    hideClass: Boolean = false,
+    breakWidth: Dp = 0.dp
 )
 {
-    var lessonSpotModifier = Modifier.width(100.dp)
+    val totalWidth = lessonSpot.periodSpan * 100.dp + breakWidth * (lessonSpot.periodSpan - 1)
+    var lessonSpotModifier = Modifier.width(totalWidth)
 
     if (lessonSpot.size <= 2)
         lessonSpotModifier = lessonSpotModifier.fillMaxHeight()
