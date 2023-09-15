@@ -49,7 +49,7 @@ class TimetableViewModel @Inject constructor(
         {
             if (!first)
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
-            loadReal()
+            loadReal(true)
         }
     }
 
@@ -57,7 +57,7 @@ class TimetableViewModel @Inject constructor(
     {
         loadCache()
         if (jecnaClient.lastSuccessfulLoginAuth != null)
-            loadReal()
+            loadReal(true)
     }
 
     fun enteredComposition()
@@ -76,13 +76,13 @@ class TimetableViewModel @Inject constructor(
     fun selectSchoolYear(schoolYear: SchoolYear)
     {
         changeUiState(selectedSchoolYear = schoolYear)
-        loadReal()
+        loadReal(false)
     }
 
     fun selectTimetablePeriod(timetablePeriod: TimetablePage.PeriodOption)
     {
         changeUiState(selectedPeriod = timetablePeriod)
-        loadReal()
+        loadReal(false)
     }
 
     private fun loadCache()
@@ -103,7 +103,10 @@ class TimetableViewModel @Inject constructor(
         }
     }
 
-    private fun loadReal()
+    /**
+     * @param current If true, the newset timetable will be loaded. If false, the selected one will be loaded.
+     */
+    private fun loadReal(current: Boolean)
     {
         loadTimetableJob?.cancel()
 
@@ -112,7 +115,9 @@ class TimetableViewModel @Inject constructor(
         loadTimetableJob = viewModelScope.launch {
             try
             {
-                val realTimetable = if (uiState.selectedPeriod == null)
+                /* Load the current timetable if there is no cache or
+                the load was initiated automatically (upon open internet reconnection) */
+                val realTimetable = if (uiState.selectedPeriod == null || current)
                     repository.getRealTimetable()
                 else
                     repository.getRealTimetable(uiState.selectedSchoolYear, uiState.selectedPeriod!!)
@@ -167,7 +172,7 @@ class TimetableViewModel @Inject constructor(
         }
     }
 
-    fun reload() = loadReal()
+    fun reload() = loadReal(false)
 
     fun onSnackBarMessageEventConsumed() = changeUiState(snackBarMessageEvent = consumed())
 
