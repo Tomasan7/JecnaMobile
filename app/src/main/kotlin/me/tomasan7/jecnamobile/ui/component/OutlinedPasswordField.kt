@@ -37,7 +37,7 @@ fun OutlinedPasswordField(
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape? = null,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors()
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 )
 {
     var isVisible by rememberMutableStateOf(false)
