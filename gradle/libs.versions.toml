@@ -42,8 +42,6 @@ compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil
 
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 
-accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist" }
-accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }

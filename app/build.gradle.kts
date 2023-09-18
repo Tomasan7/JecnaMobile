@@ -91,8 +91,6 @@ dependencies {
     ksp(libs.compose.destinations.ksp)
     implementation(libs.compose.state.events)
 
-    implementation(libs.accompanist.swiperefresh)
-    implementation(libs.accompanist.flowlayout)
     implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.hilt.android)
