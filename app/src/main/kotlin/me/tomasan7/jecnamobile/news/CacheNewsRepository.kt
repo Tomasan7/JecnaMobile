@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.news
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -20,6 +21,7 @@ class CacheNewsRepository @Inject constructor(
 
     fun isCacheAvailable() = cacheFile.exists()
 
+    @OptIn(ExperimentalSerializationApi::class)
     fun getCachedNews(): CachedData<NewsPage>?
     {
         if (!isCacheAvailable())

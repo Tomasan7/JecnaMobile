@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.grades
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -22,6 +23,7 @@ class CacheGradesRepository @Inject constructor(
 
     fun isCacheAvailable() = cacheFile.exists()
 
+    @OptIn(ExperimentalSerializationApi::class)
     fun getCachedGrades(): CachedData<GradesPage>?
     {
         if (!isCacheAvailable())
