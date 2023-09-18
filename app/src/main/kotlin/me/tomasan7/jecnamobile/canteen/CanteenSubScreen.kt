@@ -223,6 +223,7 @@ private fun Soup(soup: String)
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
+                modifier = Modifier.size(20.dp),
                 painter = painterResource(R.drawable.ic_soup_filled),
                 contentDescription = null
             )
