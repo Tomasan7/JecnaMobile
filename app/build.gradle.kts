@@ -74,10 +74,6 @@ kapt {
 
 dependencies {
     implementation(libs.jecnaAPI)
-    implementation(libs.canteenserver)
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.content.negotiation.json)
 
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)

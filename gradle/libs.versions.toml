@@ -4,7 +4,6 @@ plugin-kotlin = "1.9.0"
 plugin-ksp = "1.9.0-1.0.13"
 
 jecnaAPI = "3.3.0"
-canteenserver = "1.0.0"
 ktor-client = "2.3.0"
 
 compose-compiler = "1.5.1"
@@ -24,10 +23,6 @@ serialization = "1.6.0"
 
 [libraries]
 jecnaAPI = { module = "com.github.Tomasan7.JecnaAPI:jecnaapi", version.ref = "jecnaAPI" }
-canteenserver = { module = "me.tomasan7:canteenserver-api", version.ref = "canteenserver" }
-ktor-client = { module = "io.ktor:ktor-client-android", version.ref = "ktor-client" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-client" }
-ktor-client-content-negotiation-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-client" }
 
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-compiler" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-compiler" }

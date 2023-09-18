@@ -1,21 +1,15 @@
 package me.tomasan7.jecnamobile.canteen
 
-import android.net.Uri
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
-import me.tomasan7.canteenserver.api.DishMatchResult
-import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import java.time.LocalDate
 import java.time.LocalTime
 
 data class CanteenState(
     val loading: Boolean = false,
-    val isUploader: Boolean = false,
     val orderInProcess: Boolean = false,
     val menuPage: MenuPage? = null,
-    val images: ImagesMap = emptyMap(),
-    val takeImageEvent: StateEventWithContent<Uri> = consumed(),
     val snackBarMessageEvent: StateEventWithContent<String> = consumed()
 )
 {
@@ -41,5 +35,3 @@ data class CanteenState(
         private val FOOD_HAND_OUT_END_TIME = LocalTime.of(14, 30)
     }
 }
-
-typealias ImagesMap = Map<MenuItem, DishMatchResult?>

@@ -16,7 +16,6 @@ Minimální podporovaný android je `Android 8.0 (Oreo)`.
 - [x] Známky a průměr z každého předmětu
 - [x] Rozvrh hodin
 - [x] Obědnávání obědů ze školní jídelny
-- [x] Fotky jídel ve školní jídelně
 - [x] Příchody a odchody
 - [x] Novinky
 - [x] Učitelský sbor
@@ -41,9 +40,6 @@ Minimální podporovaný android je `Android 8.0 (Oreo)`.
   </a>
   <a href="readme-res/screenshots/attendances.png">
       <img alt="příchody a odchody" src="readme-res/screenshots/attendances.png" width="200px" />
-  </a>
-  <a href="readme-res/screenshots/canteen_pictures.png">
-    <img alt="učitelé" src="readme-res/screenshots/canteen_pictures.png" width="200px" />
   </a>
   <a href="readme-res/screenshots/teachers.png">
     <img alt="učitelé" src="readme-res/screenshots/teachers.png" width="200px" />

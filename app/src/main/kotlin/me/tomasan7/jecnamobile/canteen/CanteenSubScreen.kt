@@ -1,10 +1,6 @@
 package me.tomasan7.jecnamobile.canteen
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,10 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -28,25 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.SubcomposeAsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import kotlinx.coroutines.launch
-import me.tomasan7.canteenserver.api.DishMatchResult
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnamobile.R
@@ -54,17 +39,12 @@ import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
-import me.tomasan7.jecnamobile.ui.theme.canteen_dish_description_difference
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_disabled
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered
 import me.tomasan7.jecnamobile.ui.theme.jm_canteen_ordered_disabled
-import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getWeekDayName
-import me.tomasan7.jecnamobile.util.rememberMutableStateOf
-import me.tomasan7.jecnamobile.util.settingsAsStateAwaitFirst
 import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
@@ -76,15 +56,10 @@ fun CanteenSubScreen(
 )
 {
     val uiState = viewModel.uiState
-    val menuItemDialogState = rememberObjectDialogState<MenuItem>()
     val allergensDialogState = rememberObjectDialogState<DayMenu>()
     val helpDialogState = rememberObjectDialogState<Unit>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
-        if (successful)
-            viewModel.onImagePicked()
-    }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -106,13 +81,6 @@ fun CanteenSubScreen(
     }
 
     EventEffect(
-        event = uiState.takeImageEvent,
-        onConsumed = viewModel::onTakeImageEventConsumed
-    ) {
-        launcher.launch(it)
-    }
-
-    EventEffect(
         event = uiState.snackBarMessageEvent,
         onConsumed = viewModel::onSnackBarMessageEventConsumed
     ) {
@@ -127,12 +95,6 @@ fun CanteenSubScreen(
                 actions = {
                     if (uiState.menuPage != null)
                         Credit(uiState.menuPage.credit)
-                    IconButton(onClick = { helpDialogState.show(Unit) }) {
-                        Icon(
-                            imageVector = Icons.Default.HelpOutline,
-                            contentDescription = null
-                        )
-                    }
                 }
             )
         },
@@ -156,8 +118,8 @@ fun CanteenSubScreen(
                         key(dayMenu) {
                             DayMenu(
                                 dayMenu = dayMenu,
-                                onMenuItemClick = { menuItemDialogState.show(it) },
-                                onMenuItemLongClick = { viewModel.orderMenuItem(it) },
+                                onMenuItemClick = { viewModel.orderMenuItem(it) },
+                                onMenuItemLongClick = { viewModel.putMenuItemOnExchange(it) },
                                 onInfoClick = { allergensDialogState.show(dayMenu) }
                             )
                         }
@@ -174,48 +136,6 @@ fun CanteenSubScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 
-            val settings by settingsAsStateAwaitFirst()
-            val imageTolerance = remember { settings.canteenImageTolerance }
-
-            ObjectDialog(
-                state = menuItemDialogState,
-                /* https://stackoverflow.com/questions/68818202/animatedvisibility-doesnt-expand-height-in-dialog-in-jetpack-compose/68818540#68818540 */
-                properties = DialogProperties(usePlatformDefaultWidth = false),
-                onDismissRequest = { menuItemDialogState.hide() },
-                content = { menuItem ->
-                    val imageState = when
-                    {
-                        !uiState.images.containsKey(menuItem) -> ImageState.Loading
-                        uiState.images[menuItem] == null      -> ImageState.NotFound
-                        else                                  -> ImageState.Found(uiState.images[menuItem]!!)
-                    }
-
-                    MenuItemDialogContent(
-                        menuItem = menuItem,
-                        imageState = imageState,
-                        imageTolerance = imageTolerance,
-                        onOpen = {
-                            viewModel.requestImage(menuItem)
-                        },
-                        onOrderClick = {
-                            viewModel.orderMenuItem(menuItem)
-                            menuItemDialogState.hide()
-                        },
-                        onPutOnExchangeClick = {
-                            viewModel.putMenuItemOnExchange(menuItem)
-                            menuItemDialogState.hide()
-                        },
-                        onCloseClick = {
-                            menuItemDialogState.hide()
-                        },
-                        onUploadClick = {
-                            viewModel.takeImage(menuItem)
-                        },
-                        isUploader = uiState.isUploader
-                    )
-                }
-            )
-
             ObjectDialog(
                 state = allergensDialogState,
                 onDismissRequest = { allergensDialogState.hide() },
@@ -223,18 +143,6 @@ fun CanteenSubScreen(
                     AllergensDialogContent(
                         dayMenu = dayMenu,
                         onCloseCLick = { allergensDialogState.hide() })
-                }
-            )
-
-            ObjectDialog(
-                state = helpDialogState,
-                /* https://stackoverflow.com/questions/68818202/animatedvisibility-doesnt-expand-height-in-dialog-in-jetpack-compose/68818540#68818540 */
-                properties = DialogProperties(usePlatformDefaultWidth = false),
-                onDismissRequest = { helpDialogState.hide() },
-                content = {
-                    HelpDialogContent(
-                        onCloseCLick = { helpDialogState.hide() }
-                    )
                 }
             )
 
@@ -440,250 +348,6 @@ private fun AllergensForMenuItem(menuItem: MenuItem)
         }
     }
 }
-
-private interface ImageState
-{
-    object Loading : ImageState
-    data class Found(val result: DishMatchResult) : ImageState
-    object NotFound : ImageState
-}
-
-@Composable
-private fun MenuItemDialogContent(
-    menuItem: MenuItem,
-    imageState: ImageState,
-    imageTolerance: Float,
-    onOpen: () -> Unit = {},
-    onOrderClick: () -> Unit = {},
-    onPutOnExchangeClick: () -> Unit = {},
-    onCloseClick: () -> Unit = {},
-    isUploader: Boolean = false,
-    onUploadClick: () -> Unit = {}
-)
-{
-    DisposableEffect(Unit) {
-        onOpen()
-        onDispose {}
-    }
-
-    DialogContainer(
-        modifier = Modifier.padding(24.dp),
-        title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(stringResource(R.string.canteen_lunch, menuItem.number))
-
-                if (isUploader)
-                    IconButton(onClick = onUploadClick) {
-                        Icon(
-                            imageVector = Icons.Filled.AddAPhoto,
-                            contentDescription = null
-                        )
-                    }
-            }
-        },
-        buttons = {
-            TextButton(onClick = onCloseClick) {
-                Text(stringResource(R.string.close))
-            }
-
-            if (menuItem.putOnExchangePath != null)
-                Button(onClick = onPutOnExchangeClick) {
-                    Text(
-                        text = if (menuItem.isInExchange)
-                            stringResource(R.string.canteen_take_from_exchange)
-                        else
-                            stringResource(R.string.canteen_put_on_exchange)
-                    )
-                }
-
-            if (menuItem.isEnabled)
-                Button(onClick = onOrderClick) {
-                    Text(
-                        text = if (menuItem.isOrdered)
-                            stringResource(R.string.canteen_cancel_order)
-                        else
-                            stringResource(R.string.canteen_order)
-                    )
-                }
-        }
-    ) {
-        when (imageState)
-        {
-            is ImageState.Loading -> LinearProgressIndicator(
-                modifier = Modifier
-                    .padding(vertical = 20.dp, horizontal = 10.dp)
-                    .fillMaxWidth(),
-            )
-
-            is ImageState.Found   ->
-            {
-                val dishMatchResult = imageState.result
-                var showPicture by remember { mutableStateOf(dishMatchResult.compareResult.score >= imageTolerance) }
-
-                if (showPicture)
-                    DishPicture(dishMatchResult)
-                else
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable { showPicture = true }
-                            .padding(vertical = 20.dp, horizontal = 10.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = stringResource(
-                                R.string.canteen_image_innacurate,
-                                (dishMatchResult.compareResult.score * 100.0).roundToInt()
-                            )
-                        )
-                        HorizontalSpacer(size = 10.dp)
-                        Icon(
-                            modifier = Modifier.size(16.dp),
-                            imageVector = Icons.Default.VisibilityOff,
-                            contentDescription = null
-                        )
-                    }
-
-            }
-        }
-
-        val menuItemDescription = remember(menuItem) {
-            menuItem.description?.rest?.replaceFirstChar { it.uppercase() }
-                ?.replace(" , ", ", ")
-        }
-
-        ElevatedTextRectangle(
-            modifier = Modifier.fillMaxWidth(),
-            text = menuItemDescription ?: stringResource(R.string.canteen_lunch, menuItem.number)
-        )
-    }
-}
-
-@Composable
-private fun DishPicture(
-    dishMatchResult: DishMatchResult
-)
-{
-    var pictureNameShown by rememberMutableStateOf(false)
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .height(180.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .clickable { pictureNameShown = !pictureNameShown },
-            model = "${CanteenViewModel.CANTEEN_IMAGES_HOST}/api/images/${dishMatchResult.dish.imageId}",
-            loading = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            },
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-        AnimatedVisibility(pictureNameShown) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val imageDishDescription = remember(dishMatchResult) {
-                    dishDescriptionString(dishMatchResult = dishMatchResult)
-                }
-                ElevatedTextRectangle(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = { Text(imageDishDescription) },
-                    label = { Text("Popisek jídla na obrázku", color = jm_label) }
-                )
-                VerticalDivider(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .clip(RoundedCornerShape(1.dp))
-                        .padding(top = 10.dp)
-                        .height(3.dp),
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-                )
-            }
-        }
-        VerticalSpacer(10.dp)
-    }
-}
-
-private fun dishDescriptionString(
-    dishMatchResult: DishMatchResult
-): AnnotatedString
-{
-    val regex = Regex(" , ")
-    val matchCount = regex
-        .findAll(dishMatchResult.dish.description)
-        .count { it.range.first < dishMatchResult.compareResult.matchPart.last }
-
-    return buildAnnotatedString {
-        val modified = dishMatchResult.dish.description
-            .replace(regex, ", ")
-            .replaceFirstChar { it.uppercase() }
-        append(modified)
-        addStyle(
-            style = SpanStyle(
-                color = canteen_dish_description_difference
-            ),
-            start = dishMatchResult.compareResult.matchPart.last + 1 - matchCount,
-            end = modified.length
-        )
-    }
-}
-
-@Composable
-private fun HelpDialogContent(
-    onCloseCLick: () -> Unit = {}
-) =
-    DialogContainer(
-        modifier = Modifier.padding(24.dp),
-        title = {
-            Text(stringResource(R.string.canteen_help_title))
-        },
-        buttons = {
-            TextButton(onClick = onCloseCLick) {
-                Text(stringResource(R.string.close))
-            }
-        }
-    ) {
-        val content = stringArrayResource(R.array.canteen_help_points)
-
-        if (content.size % 2 != 0)
-            throw IllegalStateException("Each help point must have a title.")
-
-        for (i in content.indices step 2)
-        {
-            Text(
-                text = content[i],
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 5.dp)
-            )
-            Text(
-                text = content[i + 1],
-                style = MaterialTheme.typography.bodyMedium
-            )
-            if (i != content.size - 2)
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
-                )
-        }
-    }
 
 @Composable
 private fun ElevatedTextRectangle(
