@@ -1,5 +1,7 @@
 package me.tomasan7.jecnamobile.canteen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -93,8 +95,8 @@ fun CanteenSubScreen(
                 R.string.sidebar_canteen,
                 navDrawerController = navDrawerController,
                 actions = {
-                    if (uiState.menuPage != null)
-                        Credit(uiState.menuPage.credit)
+                    if (uiState.credit != null)
+                        Credit(uiState.credit)
                 }
             )
         },
@@ -112,22 +114,19 @@ fun CanteenSubScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                if (uiState.menuPage != null)
-                {
-                    uiState.futureDayMenusSorted!!.forEach { dayMenu ->
-                        key(dayMenu) {
-                            DayMenu(
-                                dayMenu = dayMenu,
-                                onMenuItemClick = { viewModel.orderMenuItem(it) },
-                                onMenuItemLongClick = { viewModel.putMenuItemOnExchange(it) },
-                                onInfoClick = { allergensDialogState.show(dayMenu) }
-                            )
-                        }
+                uiState.futureDayMenusSorted.forEach { dayMenu ->
+                    key(dayMenu) {
+                        DayMenu(
+                            dayMenu = dayMenu,
+                            onMenuItemClick = { viewModel.orderMenuItem(it, dayMenu.day) },
+                            onMenuItemLongClick = { viewModel.putMenuItemOnExchange(it, dayMenu.day) },
+                            onInfoClick = { allergensDialogState.show(dayMenu) }
+                        )
                     }
-
-                    /* 0 because the space is already created by the Column, because of Arrangement.spacedBy() */
-                    Spacer(Modifier.height(0.dp))
                 }
+
+                /* 0 because the space is already created by the Column, because of Arrangement.spacedBy() */
+                Spacer(Modifier.height(0.dp))
             }
 
             PullRefreshIndicator(
@@ -199,12 +198,20 @@ private fun DayMenu(
 
             dayMenu.items.forEach { menuItem ->
                 key(menuItem) {
-                    MenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        menuItem = menuItem,
-                        onClick = { onMenuItemClick(menuItem) },
-                        onLongClick = { onMenuItemLongClick(menuItem) }
-                    )
+                    val visibilityState = remember(menuItem) {
+                        MutableTransitionState(false).apply {
+                            // Start the animation immediately.
+                            targetState = true
+                        }
+                    }
+                    AnimatedVisibility(visibleState = visibilityState) {
+                        MenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            menuItem = menuItem,
+                            onClick = { onMenuItemClick(menuItem) },
+                            onLongClick = { onMenuItemLongClick(menuItem) }
+                        )
+                    }
                 }
             }
         }

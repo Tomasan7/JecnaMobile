@@ -3,7 +3,7 @@ plugin-android = "8.1.1"
 plugin-kotlin = "1.9.0"
 plugin-ksp = "1.9.0-1.0.13"
 
-jecnaAPI = "3.3.0"
+jecnaAPI = "4.0.0"
 ktor-client = "2.3.0"
 
 compose-compiler = "1.5.1"

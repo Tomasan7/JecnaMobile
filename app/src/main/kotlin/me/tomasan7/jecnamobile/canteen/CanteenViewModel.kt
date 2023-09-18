@@ -13,14 +13,19 @@ import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.CanteenClient
 import me.tomasan7.jecnaapi.JecnaClient
+import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
-import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.util.settingsDataStore
+import java.time.DayOfWeek
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,9 +44,6 @@ class CanteenViewModel @Inject constructor(
     init
     {
         viewModelScope.launch {
-            if (uiState.menuPage != null)
-                return@launch
-
             changeUiState(loading = true)
 
             if (jecnaClient.lastSuccessfulLoginAuth != null)
@@ -73,7 +75,7 @@ class CanteenViewModel @Inject constructor(
         loadMenuJob?.cancel()
     }
 
-    fun orderMenuItem(menuItem: MenuItem)
+    fun orderMenuItem(menuItem: MenuItem, dayMenuDate: LocalDate)
     {
         if (uiState.orderInProcess)
             return
@@ -83,7 +85,10 @@ class CanteenViewModel @Inject constructor(
         viewModelScope.launch {
             try
             {
-                canteenClient.order(menuItem, uiState.menuPage!!)
+                canteenClient.order(menuItem)
+                val newDayMenu = canteenClient.getDayMenu(dayMenuDate)
+                updateMenu(newDayMenu)
+                changeUiState(loading = false)
             }
             catch (e: CancellationException)
             {
@@ -100,7 +105,7 @@ class CanteenViewModel @Inject constructor(
         }
     }
 
-    fun putMenuItemOnExchange(menuItem: MenuItem)
+    fun putMenuItemOnExchange(menuItem: MenuItem, dayMenuDate: LocalDate)
     {
         if (uiState.orderInProcess)
             return
@@ -116,7 +121,10 @@ class CanteenViewModel @Inject constructor(
         viewModelScope.launch {
             try
             {
-                canteenClient.putOnExchange(menuItem, uiState.menuPage!!)
+                canteenClient.putOnExchange(menuItem)
+                val newDayMenu = canteenClient.getDayMenu(dayMenuDate)
+                updateMenu(newDayMenu)
+                changeUiState(loading = false)
             }
             catch (e: CancellationException)
             {
@@ -139,34 +147,43 @@ class CanteenViewModel @Inject constructor(
 
         loadMenuJob?.cancel()
 
-        loadMenuJob = viewModelScope.launch {
+        changeUiState(menu = emptyList())
+
+        loadMenuJob = canteenClient.getMenuAsync(getDays())
+            .onEach { addDayMenu(it) }
+            .onCompletion { changeUiState(loading = false) }
+            .launchIn(viewModelScope)
+
+        viewModelScope.launch {
             try
             {
-                val menuPage = canteenClient.getMenuPage()
-                changeUiState(loading = false, menuPage = menuPage)
+                val credit = canteenClient.getCredit()
+                changeUiState(credit = credit)
             }
             catch (e: ParseException)
             {
                 e.printStackTrace()
-                changeUiState(
-                    loading = false,
-                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_menu))
-                )
-            }
-            catch (e: CancellationException)
-            {
-                /* To not catch cancellation exception with the following catch block.  */
-                throw e
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_menu)))
             }
             catch (e: Exception)
             {
                 e.printStackTrace()
-                changeUiState(
-                    loading = false,
-                    snackBarMessageEvent = triggered(appContext.getString(R.string.error_load))
-                )
+                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_load)))
             }
         }
+    }
+
+    private fun getDays(): List<LocalDate>
+    {
+        val result = mutableListOf<LocalDate>()
+        var cursor = LocalDate.now()
+        while(cursor.dayOfWeek != DayOfWeek.SATURDAY)
+        {
+            result.add(cursor)
+            cursor = cursor.plusDays(1)
+        }
+
+        return result
     }
 
     fun reload() = loadMenu()
@@ -181,16 +198,31 @@ class CanteenViewModel @Inject constructor(
         }
     }
 
-    fun changeUiState(
+    private fun updateMenu(newDayMenu: DayMenu)
+    {
+        val menu = uiState.menu.map { if (it.day == newDayMenu.day) newDayMenu else it }
+        changeUiState(menu = menu)
+    }
+
+    private fun addDayMenu(newDayMenu: DayMenu)
+    {
+        val menu = uiState.menu.toMutableList()
+        menu.add(newDayMenu)
+        changeUiState(menu = menu)
+    }
+
+    private fun changeUiState(
         loading: Boolean = uiState.loading,
         orderInProcess: Boolean = uiState.orderInProcess,
-        menuPage: MenuPage? = uiState.menuPage,
+        menu: List<DayMenu> = uiState.menu,
+        credit: Float? = uiState.credit,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
     {
         uiState = uiState.copy(
             loading = loading,
-            menuPage = menuPage,
+            menu = menu,
+            credit = credit,
             orderInProcess = orderInProcess,
             snackBarMessageEvent = snackBarMessageEvent,
         )
