@@ -19,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.attendance.Attendance
@@ -154,6 +152,7 @@ private fun PeriodSelectors(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun AttendancesDay(
     attendanceRow: Pair<LocalDate, List<Attendance>>,
@@ -175,9 +174,8 @@ private fun AttendancesDay(
     ) {
         FlowRow(
             Modifier.fillMaxWidth(),
-            crossAxisAlignment = FlowCrossAxisAlignment.Center,
-            mainAxisSpacing = 7.dp,
-            crossAxisSpacing = 7.dp
+            horizontalArrangement = Arrangement.spacedBy(7.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp)
         ) {
             attendanceRow.second.forEach { attendance ->
                 AttendanceChip(attendance)

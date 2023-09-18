@@ -17,8 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,8 +24,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.grade.*
@@ -179,13 +175,6 @@ private fun Container(
     content: @Composable () -> Unit = {}
 )
 {
-    var rowHeightValue by remember { mutableStateOf(0) }
-
-    /* This is used as a workaround for not working Intrinsic Measurements in Flow layouts. */
-    /* https://github.com/google/accompanist/issues/1236 */
-    @Composable
-    fun Modifier.rowHeight() = height(with(LocalDensity.current) { rowHeightValue.toDp() })
-
     Surface(
         modifier = modifier,
         tonalElevation = ElevationLevel.level1,
@@ -193,9 +182,7 @@ private fun Container(
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            Modifier
-                .padding(20.dp)
-                .onSizeChanged { rowHeightValue = it.height }
+            modifier = Modifier.padding(20.dp)
         ) {
             Column(Modifier.weight(1f, true)) {
                 title()
@@ -209,7 +196,7 @@ private fun Container(
             {
                 VerticalDivider(
                     modifier = Modifier
-                        .rowHeight()
+                        .height(IntrinsicSize.Min)
                         .padding(horizontal = 10.dp),
                     thickness = 2.dp,
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
@@ -217,7 +204,7 @@ private fun Container(
 
                 Column(
                     modifier = Modifier
-                        .rowHeight()
+                        .height(IntrinsicSize.Min)
                         .clickable(
                             enabled = onRightColumnClick != null,
                             onClick = { onRightColumnClick?.invoke() },
@@ -303,6 +290,7 @@ private fun Subject(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SubjectPart(
     subjectPart: String? = null,
@@ -318,12 +306,15 @@ private fun SubjectPart(
         )
 
     FlowRow(
-        crossAxisAlignment = FlowCrossAxisAlignment.Center,
-        mainAxisSpacing = 5.dp,
-        crossAxisSpacing = 5.dp
+        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.Top),
+        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
     ) {
-        grades.forEach {
-            Grade(it, onClick = { onGradeClick(it) })
+        grades.forEach { grade ->
+            Grade(
+                grade = grade,
+                modifier = Modifier.align(Alignment.CenterVertically),
+                onClick = { onGradeClick(grade) }
+            )
         }
     }
 }
@@ -361,6 +352,7 @@ private fun GradeBox(
 @Composable
 private fun Grade(
     grade: Grade,
+    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 )
 {
@@ -368,6 +360,7 @@ private fun Grade(
     val gradeColor = remember { getGradeColor(grade) }
 
     GradeBox(
+        modifier = modifier,
         text = grade.valueChar().toString(),
         color = gradeColor,
         height = gradeHeight,
@@ -488,6 +481,7 @@ private fun GradeDialogContent(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Behaviour(behaviour: Behaviour)
 {
@@ -500,9 +494,8 @@ private fun Behaviour(behaviour: Behaviour)
         }
     ) {
         FlowRow(
-            crossAxisAlignment = FlowCrossAxisAlignment.Center,
-            mainAxisSpacing = 5.dp,
-            crossAxisSpacing = 5.dp
+            verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start)
         ) {
             behaviour.notifications.forEach {
                 BehaviourNotification(it)
