@@ -5,9 +5,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
@@ -33,6 +34,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import de.palm.composestateevents.EventEffect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
@@ -106,27 +108,28 @@ fun CanteenSubScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(16.dp)
+                .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                uiState.futureDayMenusSorted.forEach { dayMenu ->
-                    key(dayMenu) {
-                        DayMenu(
-                            dayMenu = dayMenu,
-                            onMenuItemClick = { viewModel.orderMenuItem(it, dayMenu.day) },
-                            onMenuItemLongClick = { viewModel.putMenuItemOnExchange(it, dayMenu.day) },
-                            onInfoClick = { allergensDialogState.show(dayMenu) }
-                        )
-                    }
-                }
+            val columnState = remember { LazyListState() }
 
-                /* 0 because the space is already created by the Column, because of Arrangement.spacedBy() */
-                Spacer(Modifier.height(0.dp))
+            LazyColumn(
+                state = columnState,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(uiState.menuSorted, key = { it.day }) { dayMenu ->
+                    // TODO: Add animated appearance using AnimatedVisibility
+                    DayMenu(
+                        dayMenu = dayMenu,
+                        onMenuItemClick = { viewModel.orderMenuItem(it, dayMenu.day) },
+                        onMenuItemLongClick = { viewModel.putMenuItemOnExchange(it, dayMenu.day) },
+                        onInfoClick = { allergensDialogState.show(dayMenu) }
+                    )
+                }
+            }
+
+            InfiniteListHandler(listState = columnState, buffer = 1) {
+                viewModel.loadMoreDayMenus(1)
             }
 
             PullRefreshIndicator(
@@ -150,6 +153,41 @@ fun CanteenSubScreen(
                     CircularProgressIndicator()
                 }
         }
+    }
+}
+
+/* https://dev.to/luismierez/infinite-lazycolumn-in-jetpack-compose-44a4 */
+/**
+ * Handler to make any lazy column (or lazy row) infinite. Will notify the [onLoadMore]
+ * callback once needed
+ * @param listState state of the list that needs to also be passed to the LazyColumn composable.
+ * Get it by calling rememberLazyListState()
+ * @param buffer the number of items before the end of the list to call the onLoadMore callback
+ * @param onLoadMore will notify when we need to load more
+ */
+@Composable
+fun InfiniteListHandler(
+    listState: LazyListState,
+    buffer: Int = 2,
+    onLoadMore: () -> Unit
+)
+{
+    val loadMore = remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val totalItemsNumber = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
+
+            lastVisibleItemIndex > (totalItemsNumber - buffer)
+        }
+    }
+
+    LaunchedEffect(loadMore) {
+        snapshotFlow { loadMore.value }
+            .distinctUntilChanged()
+            .collect {
+                onLoadMore()
+            }
     }
 }
 
@@ -198,20 +236,12 @@ private fun DayMenu(
 
             dayMenu.items.forEach { menuItem ->
                 key(menuItem) {
-                    val visibilityState = remember(menuItem) {
-                        MutableTransitionState(false).apply {
-                            // Start the animation immediately.
-                            targetState = true
-                        }
-                    }
-                    AnimatedVisibility(visibleState = visibilityState) {
-                        MenuItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            menuItem = menuItem,
-                            onClick = { onMenuItemClick(menuItem) },
-                            onLongClick = { onMenuItemLongClick(menuItem) }
-                        )
-                    }
+                    MenuItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        menuItem = menuItem,
+                        onClick = { onMenuItemClick(menuItem) },
+                        onLongClick = { onMenuItemLongClick(menuItem) }
+                    )
                 }
             }
         }

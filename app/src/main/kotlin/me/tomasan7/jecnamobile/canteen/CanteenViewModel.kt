@@ -1,6 +1,7 @@
 package me.tomasan7.jecnamobile.canteen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +14,7 @@ import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -40,6 +42,8 @@ class CanteenViewModel @Inject constructor(
         private set
 
     private var loadMenuJob: Job? = null
+
+    private val awaitedDays = mutableSetOf<LocalDate>()
 
     init
     {
@@ -147,11 +151,13 @@ class CanteenViewModel @Inject constructor(
 
         loadMenuJob?.cancel()
 
-        changeUiState(menu = emptyList())
+        changeUiState(menu = emptySet())
 
-        loadMenuJob = canteenClient.getMenuAsync(getDays())
+        val days = getDays()
+        awaitedDays.addAll(days)
+        loadMenuJob = canteenClient.getMenuAsync(days)
             .onEach { addDayMenu(it) }
-            .onCompletion { changeUiState(loading = false) }
+            .onCompletion { changeUiState(loading = false); awaitedDays.removeAll(days.toSet()) }
             .launchIn(viewModelScope)
 
         viewModelScope.launch {
@@ -186,6 +192,34 @@ class CanteenViewModel @Inject constructor(
         return result
     }
 
+    fun loadMoreDayMenus(count: Int)
+    {
+        if (uiState.loading)
+            return
+
+        val currentLatestDay = uiState.menuSorted.lastOrNull()?.day ?: LocalDate.now()
+
+        val newDays = generateSequence(currentLatestDay.plusDays(1)) { it.plusDays(1) }
+            .filterNot { it.isWeekend() }
+            .take(count)
+            .toList()
+
+        val newNewDays = newDays
+            // Filters any days, that are already loaded.
+            .filter { day -> uiState.menu.none { it.day == day } }
+            // Filters any days, that are already loading.
+            .filter { day -> day !in awaitedDays }
+
+        awaitedDays.addAll(newNewDays)
+
+        loadMenuJob = canteenClient.getMenuAsync(newNewDays)
+            .onEach { addDayMenu(it) }
+            .onCompletion { awaitedDays.removeAll(newNewDays.toSet()) }
+            .launchIn(viewModelScope)
+    }
+
+    fun LocalDate.isWeekend() = dayOfWeek in listOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+
     fun reload() = loadMenu()
 
     fun onSnackBarMessageEventConsumed() = changeUiState(snackBarMessageEvent = consumed())
@@ -200,13 +234,15 @@ class CanteenViewModel @Inject constructor(
 
     private fun updateMenu(newDayMenu: DayMenu)
     {
-        val menu = uiState.menu.map { if (it.day == newDayMenu.day) newDayMenu else it }
+        val menu = uiState.menu.map { if (it.day == newDayMenu.day) newDayMenu else it }.toMutableSet()
         changeUiState(menu = menu)
     }
 
     private fun addDayMenu(newDayMenu: DayMenu)
     {
-        val menu = uiState.menu.toMutableList()
+        Log.d("CanteenViewModel", "addDayMenu: $newDayMenu")
+        awaitedDays.remove(newDayMenu.day)
+        val menu = uiState.menu.toMutableSet()
         menu.add(newDayMenu)
         changeUiState(menu = menu)
     }
@@ -214,7 +250,7 @@ class CanteenViewModel @Inject constructor(
     private fun changeUiState(
         loading: Boolean = uiState.loading,
         orderInProcess: Boolean = uiState.orderInProcess,
-        menu: List<DayMenu> = uiState.menu,
+        menu: Set<DayMenu> = uiState.menu,
         credit: Float? = uiState.credit,
         snackBarMessageEvent: StateEventWithContent<String> = uiState.snackBarMessageEvent,
     )
