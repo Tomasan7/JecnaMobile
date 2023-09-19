@@ -25,11 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.grade.*
+import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
@@ -49,6 +52,7 @@ import kotlin.math.roundToInt
 @Composable
 fun GradesSubScreen(
     navDrawerController: NavDrawerController,
+    navigator: DestinationsNavigator,
     viewModel: GradesViewModel = hiltViewModel()
 )
 {
@@ -63,7 +67,7 @@ fun GradesSubScreen(
     val objectDialogState = rememberObjectDialogState<Grade>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     EventEffect(
         event = uiState.snackBarMessageEvent,
         onConsumed = viewModel::onSnackBarMessageEventConsumed
@@ -131,6 +135,7 @@ fun GradesSubScreen(
                 content = { grade ->
                     GradeDialogContent(
                         grade = grade,
+                        onTeacherClick = { navigator.navigate(TeacherScreenDestination(it)) },
                         onCloseClick = { objectDialogState.hide() }
                     )
                 }
@@ -428,6 +433,7 @@ private fun GradesAndAbsenceWarning()
 @Composable
 private fun GradeDialogContent(
     grade: Grade,
+    onTeacherClick: (TeacherReference) -> Unit = {},
     onCloseClick: () -> Unit = {}
 )
 {
@@ -463,7 +469,15 @@ private fun GradeDialogContent(
                         grade.receiveDate?.format(Constants.gradeDateFormatter) ?: ""
                     )
                     DialogRow(stringResource(R.string.grade_description), grade.description ?: "")
-                    DialogRow(stringResource(R.string.grade_teacher), grade.teacher?.full ?: "")
+                    val teacher = grade.teacher
+                    if (teacher?.short == null)
+                        DialogRow(stringResource(R.string.grade_teacher), teacher?.full ?: "")
+                    else
+                        DialogRow(
+                            label = stringResource(R.string.grade_teacher),
+                            value = teacher.full,
+                            onClick = { onTeacherClick(TeacherReference(teacher.full, teacher.short!!)) }
+                        )
                 }
 
                 VerticalSpacer(24.dp)
@@ -528,7 +542,7 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
                         tint = getGradeColor(1)
                     )
 
-                Behaviour.NotificationType.BAD ->
+                Behaviour.NotificationType.BAD  ->
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = null,
@@ -542,12 +556,12 @@ private fun BehaviourNotification(behaviourNotification: Behaviour.Notification)
 @Composable
 private fun getGradeWord(grade: Grade) = when (grade.value)
 {
-    0 -> stringResource(R.string.grade_word_0)
-    1 -> stringResource(R.string.grade_word_1)
-    2 -> stringResource(R.string.grade_word_2)
-    3 -> stringResource(R.string.grade_word_3)
-    4 -> stringResource(R.string.grade_word_4)
-    5 -> stringResource(R.string.grade_word_5)
+    0    -> stringResource(R.string.grade_word_0)
+    1    -> stringResource(R.string.grade_word_1)
+    2    -> stringResource(R.string.grade_word_2)
+    3    -> stringResource(R.string.grade_word_3)
+    4    -> stringResource(R.string.grade_word_4)
+    5    -> stringResource(R.string.grade_word_5)
     else -> throw IllegalArgumentException("Grade value must be between 0 and 5. (got ${grade.value})")
 }
 
