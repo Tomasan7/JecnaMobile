@@ -1,7 +1,9 @@
 package me.tomasan7.jecnamobile.canteen
 
 import android.content.Context
+import android.content.IntentFilter
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
+import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
@@ -24,7 +27,9 @@ import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.parser.ParseException
+import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.util.createBroadcastReceiver
 import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -40,13 +45,29 @@ class CanteenViewModel @Inject constructor(
 {
     var uiState by mutableStateOf(CanteenState())
         private set
-
     private var loadMenuJob: Job? = null
-
+    private var loginInProcess = false
     private val awaitedDays = mutableSetOf<LocalDate>()
+
+    private val loginBroadcastReceiver = createBroadcastReceiver { _, intent ->
+        val first = intent.getBooleanExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, false)
+
+        if (canteenClient.lastSuccessfulLoginAuth == null && !loginInProcess)
+            loginCanteenClient()
+
+        if (!first)
+            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+    }
 
     init
     {
+        if (jecnaClient.lastSuccessfulLoginAuth != null)
+            loginCanteenClient()
+    }
+
+    private fun loginCanteenClient()
+    {
+        loginInProcess = true
         viewModelScope.launch {
             changeUiState(loading = true)
 
@@ -54,16 +75,15 @@ class CanteenViewModel @Inject constructor(
                 try
                 {
                     canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
+                    loginInProcess = false
                 }
                 catch (e: Exception)
                 {
-                    changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
+                    showMessage(R.string.canteen_login_error)
                     e.printStackTrace()
                 }
             else
-            {
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.canteen_login_error)))
-            }
+                showMessage(R.string.canteen_login_error)
 
             loadMenu()
         }
@@ -71,12 +91,16 @@ class CanteenViewModel @Inject constructor(
 
     fun enteredComposition()
     {
-
+        appContext.registerReceiver(
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+        )
     }
 
     fun leftComposition()
     {
         loadMenuJob?.cancel()
+        appContext.unregisterReceiver(loginBroadcastReceiver)
     }
 
     fun orderMenuItem(menuItem: MenuItem, dayMenuDate: LocalDate)
@@ -94,6 +118,11 @@ class CanteenViewModel @Inject constructor(
                 updateMenu(newDayMenu)
                 changeUiState(loading = false)
             }
+            catch (e: UnresolvedAddressException)
+            {
+                e.printStackTrace()
+                showMessage(R.string.no_internet_connection)
+            }
             catch (e: CancellationException)
             {
                 /* To not catch cancellation exception with the following catch block.  */
@@ -102,7 +131,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_order)))
+                showMessage(R.string.error_order)
             }
 
             changeUiState(orderInProcess = false)
@@ -130,6 +159,10 @@ class CanteenViewModel @Inject constructor(
                 updateMenu(newDayMenu)
                 changeUiState(loading = false)
             }
+            catch (e: UnresolvedAddressException)
+            {
+                showMessage(R.string.no_internet_connection)
+            }
             catch (e: CancellationException)
             {
                 /* To not catch cancellation exception with the following catch block.  */
@@ -138,7 +171,7 @@ class CanteenViewModel @Inject constructor(
             catch (e: Exception)
             {
                 e.printStackTrace()
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_order)))
+                showMessage(R.string.error_order)
             }
 
             changeUiState(orderInProcess = false)
@@ -151,13 +184,15 @@ class CanteenViewModel @Inject constructor(
 
         loadMenuJob?.cancel()
 
-        changeUiState(menu = emptySet())
-
         val days = getDays()
         awaitedDays.addAll(days)
         loadMenuJob = canteenClient.getMenuAsync(days)
             .onEach { addDayMenu(it) }
-            .onCompletion { changeUiState(loading = false); awaitedDays.removeAll(days.toSet()) }
+            .catch { e -> showMenuLoadErrorMessage(e, R.string.error_load) }
+            .onCompletion {
+                changeUiState(loading = false)
+                awaitedDays.removeAll(days.toSet())
+            }
             .launchIn(viewModelScope)
 
         viewModelScope.launch {
@@ -168,13 +203,11 @@ class CanteenViewModel @Inject constructor(
             }
             catch (e: ParseException)
             {
-                e.printStackTrace()
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_unsupported_menu)))
+                showMessage(R.string.error_unsupported_credit)
             }
             catch (e: Exception)
             {
-                e.printStackTrace()
-                changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.error_load)))
+                showMessage(R.string.error_load_credit)
             }
         }
     }
@@ -183,7 +216,7 @@ class CanteenViewModel @Inject constructor(
     {
         val result = mutableListOf<LocalDate>()
         var cursor = LocalDate.now()
-        while(cursor.dayOfWeek != DayOfWeek.SATURDAY)
+        while (cursor.dayOfWeek != DayOfWeek.SATURDAY)
         {
             result.add(cursor)
             cursor = cursor.plusDays(1)
@@ -192,9 +225,22 @@ class CanteenViewModel @Inject constructor(
         return result
     }
 
+    fun showMenuLoadErrorMessage(e: Throwable, @StringRes default: Int) = when (e)
+    {
+        is UnresolvedAddressException -> showMessage(R.string.no_internet_connection)
+        is ParseException             -> showMessage(R.string.error_unsupported_menu)
+        else                          -> showMessage(default)
+    }
+
+    fun showMessage(@StringRes message: Int) =
+        changeUiState(snackBarMessageEvent = triggered(appContext.getString(message)))
+
     fun loadMoreDayMenus(count: Int)
     {
         if (uiState.loading)
+            return
+
+        if (uiState.menu.isEmpty())
             return
 
         val currentLatestDay = uiState.menuSorted.lastOrNull()?.day ?: LocalDate.now()
@@ -214,6 +260,7 @@ class CanteenViewModel @Inject constructor(
 
         loadMenuJob = canteenClient.getMenuAsync(newNewDays)
             .onEach { addDayMenu(it) }
+            .catch { e -> showMenuLoadErrorMessage(e, R.string.error_load) }
             .onCompletion { awaitedDays.removeAll(newNewDays.toSet()) }
             .launchIn(viewModelScope)
     }
