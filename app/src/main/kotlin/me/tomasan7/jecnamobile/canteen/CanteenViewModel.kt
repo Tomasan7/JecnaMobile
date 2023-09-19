@@ -29,6 +29,7 @@ import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.login.AuthRepository
 import me.tomasan7.jecnamobile.util.createBroadcastReceiver
 import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.DayOfWeek
@@ -39,7 +40,7 @@ import javax.inject.Inject
 class CanteenViewModel @Inject constructor(
     @ApplicationContext
     private val appContext: Context,
-    private val jecnaClient: JecnaClient,
+    private val authRepository: AuthRepository,
     private val canteenClient: CanteenClient,
 ) : ViewModel()
 {
@@ -49,20 +50,19 @@ class CanteenViewModel @Inject constructor(
     private var loginInProcess = false
     private val awaitedDays = mutableSetOf<LocalDate>()
 
-    private val loginBroadcastReceiver = createBroadcastReceiver { _, intent ->
-        val first = intent.getBooleanExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, false)
+    private val networkAvailableBroadcastReceiver = createBroadcastReceiver { _, _ ->
+        if (!loginInProcess)
+            if (canteenClient.lastSuccessfulLoginAuth == null)
+                loginCanteenClient()
+            else if (uiState.menu.size < getDays().size)
+                loadMenu()
 
-        if (canteenClient.lastSuccessfulLoginAuth == null && !loginInProcess)
-            loginCanteenClient()
-
-        if (!first)
-            changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.back_online)))
+        showMessage(R.string.back_online)
     }
 
     init
     {
-        if (jecnaClient.lastSuccessfulLoginAuth != null)
-            loginCanteenClient()
+        loginCanteenClient()
     }
 
     private fun loginCanteenClient()
@@ -71,41 +71,55 @@ class CanteenViewModel @Inject constructor(
         viewModelScope.launch {
             changeUiState(loading = true)
 
-            if (jecnaClient.lastSuccessfulLoginAuth != null)
+            val auth = authRepository.get()
+
+            if (auth != null)
                 try
                 {
-                    canteenClient.login(jecnaClient.lastSuccessfulLoginAuth!!)
-                    loginInProcess = false
+                    canteenClient.login(auth)
                 }
                 catch (e: Exception)
                 {
                     showMessage(R.string.canteen_login_error)
                     e.printStackTrace()
                 }
+                finally
+                {
+                    loginInProcess = false
+                }
             else
+            {
+                loginInProcess = false
                 showMessage(R.string.canteen_login_error)
+            }
 
-            loadMenu()
+            if (uiState.menu.size < getDays().size)
+                loadMenu()
+            else
+                changeUiState(loading = false)
         }
     }
 
     fun enteredComposition()
     {
         appContext.registerReceiver(
-            loginBroadcastReceiver,
-            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            networkAvailableBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.NETWORK_AVAILABLE_ACTION)
         )
     }
 
     fun leftComposition()
     {
         loadMenuJob?.cancel()
-        appContext.unregisterReceiver(loginBroadcastReceiver)
+        appContext.unregisterReceiver(networkAvailableBroadcastReceiver)
     }
 
     fun orderMenuItem(menuItem: MenuItem, dayMenuDate: LocalDate)
     {
         if (uiState.orderInProcess)
+            return
+
+        if (!menuItem.isEnabled)
             return
 
         changeUiState(orderInProcess = true)
@@ -290,6 +304,7 @@ class CanteenViewModel @Inject constructor(
         Log.d("CanteenViewModel", "addDayMenu: $newDayMenu")
         awaitedDays.remove(newDayMenu.day)
         val menu = uiState.menu.toMutableSet()
+        menu.removeIf { it.day == newDayMenu.day }
         menu.add(newDayMenu)
         changeUiState(menu = menu)
     }
