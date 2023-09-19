@@ -77,12 +77,11 @@ fun TeacherScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                uiState.teacher?.profilePicturePath?.let { picturePath ->
+                if (uiState.teacher != null)
                     TeacherPicture(
-                        picturePath = picturePath,
+                        picturePath = uiState.teacher.profilePicturePath,
                         imageRequestCreator = viewModel::createImageRequest
                     )
-                }
 
                 if (uiState.teacher != null)
                     InfoTable(uiState.teacher)
@@ -132,7 +131,7 @@ private fun TopAppBar(
 
 @Composable
 private fun TeacherPicture(
-    picturePath: String,
+    picturePath: String?,
     modifier: Modifier = Modifier,
     imageRequestCreator: (String) -> ImageRequest
 )
@@ -142,14 +141,25 @@ private fun TeacherPicture(
         tonalElevation = 4.dp,
         shape = RoundedCornerShape(4.dp)
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .padding(12.dp)
-                .aspectRatio(200f / 257f)
-                .clip(RoundedCornerShape(4.dp)),
-            model = imageRequestCreator(picturePath),
-            contentDescription = null
-        )
+        if (picturePath != null)
+            AsyncImage(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .aspectRatio(200f / 257f)
+                    .clip(RoundedCornerShape(4.dp)),
+                model = imageRequestCreator(picturePath),
+                contentDescription = null
+            )
+        else
+            Box(
+                modifier = Modifier
+                    .padding(30.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(4.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(stringResource(R.string.teacher_no_pfp))
+            }
     }
 }
 

@@ -108,6 +108,8 @@
 
     <!-- ##### Teacher Screen ##### -->
 
+    <string name="teacher_no_pfp">Tento učitel nemá profilový obrázek</string>
+
     <string name="teacher_name">Jméno</string>
     <string name="teacher_tag">Zkratka</string>
     <string name="teacher_school_mail">E-mail</string>
