@@ -30,10 +30,4 @@ class SettingsViewModel @Inject constructor(
             it.copy(openSubScreenRoute = subScreenRoute)
         }
     }
-
-    fun setCanteenImageTolerance(tolerance: Float) = viewModelScope.launch {
-        settingsDataStore.updateData {
-            it.copy(canteenImageTolerance = (tolerance * 100).roundToInt() / 100f)
-        }
-    }
 }
