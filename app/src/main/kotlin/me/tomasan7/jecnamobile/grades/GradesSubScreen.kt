@@ -1,5 +1,9 @@
 package me.tomasan7.jecnamobile.grades
 
+import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -8,6 +12,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -29,6 +35,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
+import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
@@ -36,15 +43,19 @@ import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
+import me.tomasan7.jecnamobile.settings.Settings
 import me.tomasan7.jecnamobile.ui.ElevationLevel
 import me.tomasan7.jecnamobile.ui.component.*
 import me.tomasan7.jecnamobile.ui.theme.*
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
+import me.tomasan7.jecnamobile.util.settingsAsState
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
@@ -67,6 +78,7 @@ fun GradesSubScreen(
     val objectDialogState = rememberObjectDialogState<Grade>()
     val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
     val snackbarHostState = remember { SnackbarHostState() }
+    val settings by settingsAsState()
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -83,6 +95,10 @@ fun GradesSubScreen(
                     underlyingIcon = SubScreenDestination.Grades.iconSelected,
                     lastUpdateTimestamp = uiState.lastUpdateTimestamp,
                     visible = uiState.isCache
+                )
+                ViewModeButton(
+                    viewMode = settings.gradesViewMode,
+                    onViewModeChange = viewModel::setViewMode
                 )
             }
         },
@@ -112,10 +128,18 @@ fun GradesSubScreen(
                 {
                     uiState.subjectsSorted!!.forEach { subject ->
                         key(subject) {
-                            Subject(
-                                subject = subject,
-                                onGradeClick = { objectDialogState.show(it) }
-                            )
+                            when (settings.gradesViewMode)
+                            {
+                                Settings.GradesViewMode.LIST -> ListSubject(
+                                    subject = subject,
+                                    onGradeClick = { objectDialogState.show(it) }
+                                )
+
+                                Settings.GradesViewMode.GRID -> Subject(
+                                    subject = subject,
+                                    onGradeClick = { objectDialogState.show(it) }
+                                )
+                            }
                         }
                     }
 
@@ -141,6 +165,37 @@ fun GradesSubScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun ViewModeButton(
+    viewMode: Settings.GradesViewMode,
+    onViewModeChange: (Settings.GradesViewMode) -> Unit,
+)
+{
+    val icon = remember(viewMode) {
+        when (viewMode)
+        {
+            Settings.GradesViewMode.LIST -> Icons.Filled.ViewModule
+            Settings.GradesViewMode.GRID -> Icons.Filled.ViewList
+        }
+    }
+
+    val nextViewMode = remember(viewMode) {
+        when (viewMode)
+        {
+            Settings.GradesViewMode.LIST -> Settings.GradesViewMode.GRID
+            Settings.GradesViewMode.GRID -> Settings.GradesViewMode.LIST
+        }
+    }
+
+    IconButton(onClick = { onViewModeChange(nextViewMode) }) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            //tint = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+        )
     }
 }
 
@@ -297,6 +352,67 @@ private fun Subject(
     }
 }
 
+@Composable
+private fun ListSubject(
+    subject: Subject,
+    onGradeClick: (Grade) -> Unit = {}
+)
+{
+    val average = remember { subject.grades.average() }
+    var showAverage by rememberMutableStateOf(false)
+    var showGrades by rememberMutableStateOf(false)
+
+    Container(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showGrades = !showGrades },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(subject.name.full, style = MaterialTheme.typography.titleMedium)
+                    if (subject.grades.count != 0)
+                        Text(
+                            text = pluralStringResource(
+                                R.plurals.grades_count, subject.grades.count, subject.grades.count
+                            ),
+                            color = jm_label,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                }
+
+                if (subject.finalGrade != null || average != null)
+                    if (subject.finalGrade == null)
+                        GradeAverage(average!!, onClick = { showAverage = !showAverage })
+                    else
+                        if (showAverage)
+                            GradeAverage(average!!, onClick = { showAverage = !showAverage })
+                        else
+                            FinalGrade(finalGrade = subject.finalGrade!!, onClick = { showAverage = !showAverage })
+            }
+        },
+        rightColumnVisible = false,
+        rightColumnContent = {},
+    ) {
+        if (subject.grades.isEmpty())
+            Text(
+                text = stringResource(R.string.no_grades),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        else
+        {
+            if (showGrades)
+                Column {
+                    subject.grades.subjectParts.forEach { subjectPart ->
+                        ListSubjectPart(subjectPart, subject.grades[subjectPart]!!, onGradeClick)
+                    }
+                }
+        }
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SubjectPart(
@@ -323,6 +439,89 @@ private fun SubjectPart(
                 onClick = { onGradeClick(grade) }
             )
         }
+    }
+}
+
+@Composable
+private fun ListSubjectPart(
+    subjectPart: String? = null,
+    grades: List<Grade>,
+    onGradeClick: (Grade) -> Unit = {}
+)
+{
+    if (subjectPart != null)
+        Text(
+            text = "$subjectPart:",
+            modifier = Modifier.padding(vertical = 10.dp),
+            style = MaterialTheme.typography.labelLarge
+        )
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
+    ) {
+        grades.forEachIndexed { i, grade ->
+            ListGrade(
+                grade = grade,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onGradeClick(grade) }
+            )
+            if (i != grades.lastIndex)
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
+                )
+        }
+    }
+}
+
+@Composable
+private fun ListGrade(
+    grade: Grade,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
+)
+{
+    val newModifier = if (onClick != null)
+        modifier.clickable(onClick = onClick)
+    else
+        modifier
+
+    val gradeColor = remember { getGradeColor(grade) }
+
+    val gradeSizeBig = 30.dp
+    val gradeSizeSmall = 20.dp
+
+    Row(
+        modifier = newModifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
+            val size = if (grade.small) gradeSizeSmall else gradeSizeBig
+
+            Box(
+                modifier = Modifier.size(gradeSizeBig),
+                contentAlignment = Alignment.Center
+            ) {
+                GradeBox(
+                    text = grade.valueChar().toString(),
+                    color = gradeColor,
+                    modifier = Modifier.size(size)
+                )
+            }
+            HorizontalSpacer(10.dp)
+            Text(grade.description ?: "")
+        }
+
+        if (grade.receiveDate != null)
+            Text(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                text = grade.receiveDate!!.format(Constants.gradeDateFormatter)
+            )
     }
 }
 
@@ -376,7 +575,10 @@ private fun Grade(
 }
 
 @Composable
-private fun GradeAverage(value: Float)
+private fun GradeAverage(
+    value: Float,
+    onClick: () -> Unit = {}
+)
 {
     val valueString = remember { Constants.gradeAverageDecimalFormat.format(value) }
 
@@ -384,6 +586,7 @@ private fun GradeAverage(value: Float)
         modifier = Modifier.size(Constants.gradeWidth),
         border = BorderStroke(1.dp, getGradeColor(value.roundToInt())),
         tonalElevation = 10.dp,
+        onClick = onClick,
         shape = Constants.gradeShape
     ) {
         Box(contentAlignment = Alignment.Center) {
@@ -396,37 +599,45 @@ private fun GradeAverage(value: Float)
 }
 
 @Composable
-private fun FinalGrade(finalGrade: FinalGrade) = when (finalGrade)
+private fun FinalGrade(
+    finalGrade: FinalGrade,
+    onClick: () -> Unit = {}
+) = when (finalGrade)
 {
-    is FinalGrade.Grade                   -> Grade(Grade(finalGrade.value, false))
-    is FinalGrade.GradesWarning           -> GradesWarning()
-    is FinalGrade.AbsenceWarning          -> AbsenceWarning()
-    is FinalGrade.GradesAndAbsenceWarning -> GradesAndAbsenceWarning()
+    is FinalGrade.Grade                   -> Grade(Grade(finalGrade.value, false), onClick = onClick)
+    is FinalGrade.GradesWarning           -> GradesWarning(onClick = onClick)
+    is FinalGrade.AbsenceWarning          -> AbsenceWarning(onClick = onClick)
+    is FinalGrade.GradesAndAbsenceWarning -> GradesAndAbsenceWarning(onClick = onClick)
 }
 
 
 @Composable
-private fun GradesWarning()
+private fun GradesWarning(onClick: () -> Unit = {})
 {
     GradeBox(
         text = stringResource(R.string.grade_grades_warning_content),
-        color = grade_grades_warning
+        color = grade_grades_warning,
+        onClick = onClick
     )
 }
 
 @Composable
-private fun AbsenceWarning()
+private fun AbsenceWarning(onClick: () -> Unit = {})
 {
     GradeBox(
         text = stringResource(R.string.grade_absence_warning_content),
-        color = grade_absence_warning
+        color = grade_absence_warning,
+        onClick = onClick
     )
 }
 
 @Composable
-private fun GradesAndAbsenceWarning()
+private fun GradesAndAbsenceWarning(onClick: () -> Unit = {})
 {
-    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+    Column(
+        modifier = Modifier.clickable(onClick = onClick),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
         GradesWarning()
         AbsenceWarning()
     }

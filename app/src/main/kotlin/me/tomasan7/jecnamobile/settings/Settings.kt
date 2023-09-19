@@ -8,9 +8,15 @@ data class Settings(
     val theme: Theme = Theme.SYSTEM,
     var canteenImageTolerance: Float = 0.5f,
     var canteenHelpSeen: Boolean = false,
+    var gradesViewMode: GradesViewMode = GradesViewMode.GRID,
     val openSubScreenRoute: String = TimetableSubScreenDestination.route,
 )
 {
+    enum class GradesViewMode
+    {
+        LIST,
+        GRID
+    }
     enum class Theme
     {
         DARK,

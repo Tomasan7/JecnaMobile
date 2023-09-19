@@ -22,7 +22,9 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.JecnaMobileApplication
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.settings.Settings
 import me.tomasan7.jecnamobile.util.createBroadcastReceiver
+import me.tomasan7.jecnamobile.util.settingsDataStore
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,9 +42,7 @@ class GradesViewModel @Inject constructor(
 {
     var uiState by mutableStateOf(GradesState())
         private set
-
     private var loadGradesJob: Job? = null
-
     private val loginBroadcastReceiver = createBroadcastReceiver { _, intent ->
         val first = intent.getBooleanExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, false)
 
@@ -53,6 +53,7 @@ class GradesViewModel @Inject constructor(
             loadReal()
         }
     }
+    private val settingsDataStore = appContext.settingsDataStore
 
     init
     {
@@ -73,6 +74,15 @@ class GradesViewModel @Inject constructor(
     {
         loadGradesJob?.cancel()
         appContext.unregisterReceiver(loginBroadcastReceiver)
+    }
+
+    fun setViewMode(gradesViewMode: Settings.GradesViewMode)
+    {
+        viewModelScope.launch {
+            settingsDataStore.updateData {
+                it.copy(gradesViewMode = gradesViewMode)
+            }
+        }
     }
 
     fun selectSchoolYearHalf(schoolYearHalf: SchoolYearHalf)
