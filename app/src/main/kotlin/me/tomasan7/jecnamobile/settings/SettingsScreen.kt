@@ -52,8 +52,9 @@ private fun Settings(viewModel: SettingsViewModel)
         NewsSubScreenDestination.route to stringResource(R.string.sidebar_news),
         GradesSubScreenDestination.route to stringResource(R.string.sidebar_grades),
         TimetableSubScreenDestination.route to stringResource(R.string.sidebar_timetable),
+        CanteenSubScreenDestination.route to stringResource(R.string.sidebar_canteen),
+        AttendancesSubScreenDestination.route to stringResource(R.string.sidebar_attendances),
         TeachersSubScreenDestination.route to stringResource(R.string.sidebar_teachers),
-        AttendancesSubScreenDestination.route to stringResource(R.string.sidebar_attendances)
     )
 
     val settings by settingsAsState()
