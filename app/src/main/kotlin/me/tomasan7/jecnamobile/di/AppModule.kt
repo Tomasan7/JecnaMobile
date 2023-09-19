@@ -18,5 +18,5 @@ internal object AppModule
 
     @Provides
     @Singleton
-    fun provideCanteenClient() = CanteenClient()
+    fun provideCanteenClient() = CanteenClient(autoLogin = true)
 }
