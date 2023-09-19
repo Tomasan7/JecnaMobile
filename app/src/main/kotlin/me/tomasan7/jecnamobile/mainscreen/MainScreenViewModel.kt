@@ -42,7 +42,7 @@ class MainScreenViewModel @Inject constructor(
 
     private val connectivityManager =
         getSystemService(appContext, ConnectivityManager::class.java) as ConnectivityManager
-    private val loginNetworkCallback = LoginNetworkCallback()
+    private val networkAvailabilityCallback = NetworkAvailabilityCallback()
 
     init
     {
@@ -90,10 +90,22 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    private fun onNetworkAvailable()
+    {
+        broadcastNetworkAvailable()
+        tryLogin()
+    }
+
     private fun broadcastSuccessfulLogin(first: Boolean = false)
     {
         val intent = Intent(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
         intent.putExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, first)
+        appContext.sendBroadcast(intent)
+    }
+
+    private fun broadcastNetworkAvailable()
+    {
+        val intent = Intent(JecnaMobileApplication.NETWORK_AVAILABLE_ACTION)
         appContext.sendBroadcast(intent)
     }
 
@@ -124,18 +136,18 @@ class MainScreenViewModel @Inject constructor(
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
 
-        connectivityManager.registerNetworkCallback(networkRequest, loginNetworkCallback)
+        connectivityManager.registerNetworkCallback(networkRequest, networkAvailabilityCallback)
     }
 
     private fun unregisterNetworkAvailabilityListener()
     {
-        connectivityManager.unregisterNetworkCallback(loginNetworkCallback)
+        connectivityManager.unregisterNetworkCallback(networkAvailabilityCallback)
     }
 
     override fun onCleared() = unregisterNetworkAvailabilityListener()
 
-    inner class LoginNetworkCallback : ConnectivityManager.NetworkCallback()
+    inner class NetworkAvailabilityCallback : ConnectivityManager.NetworkCallback()
     {
-        override fun onAvailable(network: android.net.Network) = tryLogin()
+        override fun onAvailable(network: android.net.Network) = onNetworkAvailable()
     }
 }
