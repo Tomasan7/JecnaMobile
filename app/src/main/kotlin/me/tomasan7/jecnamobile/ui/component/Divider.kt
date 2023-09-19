@@ -2,6 +2,7 @@ package me.tomasan7.jecnamobile.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,5 +21,17 @@ fun VerticalDivider(
     Box(
         modifier.width(thickness)
                 .background(color = color)
+    )
+}
+@Composable
+fun HorizontalDivider(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    thickness: Dp = 1.dp
+)
+{
+    Box(
+        modifier.height(thickness)
+            .background(color = color)
     )
 }
