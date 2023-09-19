@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.data.timetable.*
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.ui.ElevationLevel
@@ -28,7 +29,8 @@ import java.time.DayOfWeek
 fun Timetable(
     timetable: Timetable,
     modifier: Modifier = Modifier,
-    hideClass: Boolean = false
+    hideClass: Boolean = false,
+    onTeacherClick: (TeacherReference) -> Unit = {},
 )
 {
     val mostLessonsInLessonSpotInEachDay = remember(timetable) {
@@ -105,7 +107,8 @@ fun Timetable(
             content = { lesson ->
                 LessonDialogContent(
                     lesson = lesson,
-                    onCloseClick = { dialogState.hide() }
+                    onCloseClick = { dialogState.hide() },
+                    onTeacherClick = { onTeacherClick(it) }
                 )
             }
         )
@@ -233,7 +236,8 @@ private fun DayLabel(
 @Composable
 private fun LessonDialogContent(
     lesson: Lesson,
-    onCloseClick: () -> Unit = {}
+    onCloseClick: () -> Unit = {},
+    onTeacherClick: (TeacherReference) -> Unit
 )
 {
     DialogContainer(
@@ -254,8 +258,18 @@ private fun LessonDialogContent(
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (lesson.teacherName != null)
-                DialogRow(stringResource(R.string.timetable_dialog_teacher), lesson.teacherName!!.full)
+            val teacher = lesson.teacherName
+            if (teacher != null && teacher.short == null)
+                DialogRow(
+                    label = stringResource(R.string.timetable_dialog_teacher),
+                    value = teacher.full
+                )
+            else if (teacher?.short != null)
+                DialogRow(
+                    label = stringResource(R.string.timetable_dialog_teacher),
+                    value = teacher.full,
+                    onClick = { onTeacherClick(TeacherReference(teacher.full, teacher.short!!)) }
+                )
             if (lesson.classroom != null)
                 DialogRow(stringResource(R.string.timetable_dialog_classroom), lesson.classroom!!)
             if (lesson.group != null)

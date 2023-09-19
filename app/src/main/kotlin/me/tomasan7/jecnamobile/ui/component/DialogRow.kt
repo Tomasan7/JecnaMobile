@@ -18,12 +18,14 @@ import me.tomasan7.jecnamobile.ui.theme.jm_label
 @Composable
 fun DialogRow(
     label: String,
-    value: String
+    value: String,
+    onClick: () -> Unit = {}
 )
 {
     Surface(
         tonalElevation = 10.dp,
-        shape = RoundedCornerShape(28.dp)
+        shape = RoundedCornerShape(28.dp),
+        onClick = onClick,
     ) {
         Column(Modifier.padding(top = 5.dp, start = 15.dp, end = 15.dp, bottom = 15.dp)) {
             Text(
