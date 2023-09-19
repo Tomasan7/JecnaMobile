@@ -115,7 +115,7 @@ fun CanteenSubScreen(
                 state = columnState,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(uiState.menuSorted, key = { it.day }) { dayMenu ->
+                items(uiState.menuSorted, key = { it.day.hashCode() }) { dayMenu ->
                     // TODO: Add animated appearance using AnimatedVisibility
                     DayMenu(
                         dayMenu = dayMenu,
