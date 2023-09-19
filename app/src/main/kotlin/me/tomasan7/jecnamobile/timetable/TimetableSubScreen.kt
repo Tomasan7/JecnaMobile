@@ -19,10 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.palm.composestateevents.EventEffect
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
+import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
+import me.tomasan7.jecnamobile.destinations.TeachersSubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
@@ -34,6 +37,7 @@ import me.tomasan7.jecnamobile.ui.component.*
 @Composable
 fun TimetableSubScreen(
     navDrawerController: NavDrawerController,
+    navigator: DestinationsNavigator,
     viewModel: TimetableViewModel = hiltViewModel()
 )
 {
@@ -94,7 +98,8 @@ fun TimetableSubScreen(
                     Timetable(
                         modifier = Modifier.fillMaxSize(),
                         timetable = uiState.timetablePage.timetable,
-                        hideClass = true
+                        hideClass = true,
+                        onTeacherClick = { navigator.navigate(TeacherScreenDestination(it)) }
                     )
             }
 
