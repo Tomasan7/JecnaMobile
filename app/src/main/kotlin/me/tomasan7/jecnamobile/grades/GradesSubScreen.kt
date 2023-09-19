@@ -187,7 +187,9 @@ private fun Container(
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .padding(20.dp)
         ) {
             Column(Modifier.weight(1f, true)) {
                 title()
@@ -201,7 +203,7 @@ private fun Container(
             {
                 VerticalDivider(
                     modifier = Modifier
-                        .height(IntrinsicSize.Min)
+                        .fillMaxHeight()
                         .padding(horizontal = 10.dp),
                     thickness = 2.dp,
                     color = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp)
@@ -209,7 +211,7 @@ private fun Container(
 
                 Column(
                     modifier = Modifier
-                        .height(IntrinsicSize.Min)
+                        .fillMaxHeight()
                         .clickable(
                             enabled = onRightColumnClick != null,
                             onClick = { onRightColumnClick?.invoke() },
