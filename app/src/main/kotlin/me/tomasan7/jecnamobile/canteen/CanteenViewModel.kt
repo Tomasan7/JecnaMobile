@@ -127,10 +127,10 @@ class CanteenViewModel @Inject constructor(
         viewModelScope.launch {
             try
             {
-                canteenClient.order(menuItem)
+                val newCredit = canteenClient.order(menuItem)
                 val newDayMenu = canteenClient.getDayMenu(dayMenuDate)
                 updateMenu(newDayMenu)
-                changeUiState(loading = false)
+                changeUiState(loading = false, credit = newCredit)
             }
             catch (e: UnresolvedAddressException)
             {
@@ -214,6 +214,10 @@ class CanteenViewModel @Inject constructor(
             {
                 val credit = canteenClient.getCredit()
                 changeUiState(credit = credit)
+            }
+            catch (e: UnresolvedAddressException)
+            {
+                showMessage(R.string.no_internet_connection)
             }
             catch (e: ParseException)
             {
