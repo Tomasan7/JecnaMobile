@@ -232,13 +232,10 @@ class CanteenViewModel @Inject constructor(
 
     private fun getDays(): List<LocalDate>
     {
-        val result = mutableListOf<LocalDate>()
-        var cursor = LocalDate.now()
-        while (cursor.dayOfWeek != DayOfWeek.SATURDAY)
-        {
-            result.add(cursor)
-            cursor = cursor.plusDays(1)
-        }
+        val result = generateSequence(LocalDate.now()) { it.plusDays(1) }
+            .filterNot { it.isWeekend() }
+            .take(DAYS_TO_LOAD_COUNT)
+            .toList()
 
         return result
     }
@@ -328,5 +325,10 @@ class CanteenViewModel @Inject constructor(
             orderInProcess = orderInProcess,
             snackBarMessageEvent = snackBarMessageEvent,
         )
+    }
+
+    companion object
+    {
+        private const val DAYS_TO_LOAD_COUNT = 7
     }
 }
