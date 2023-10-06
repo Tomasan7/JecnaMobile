@@ -2,9 +2,11 @@ package me.tomasan7.jecnamobile.timetable
 
 import android.content.Context
 import android.content.IntentFilter
+import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,7 +65,9 @@ class TimetableViewModel @Inject constructor(
     fun enteredComposition()
     {
         appContext.registerReceiver(
-            loginBroadcastReceiver, IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION),
+            Context.RECEIVER_NOT_EXPORTED
         )
     }
 

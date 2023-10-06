@@ -83,10 +83,14 @@ class NewsViewModel @Inject constructor(
     fun enteredComposition()
     {
         appContext.registerReceiver(
-            loginBroadcastReceiver, IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION),
+            Context.RECEIVER_NOT_EXPORTED
         )
         appContext.registerReceiver(
-            downloadFinishedBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            downloadFinishedBroadcastReceiver,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+            Context.RECEIVER_NOT_EXPORTED
         )
     }
 

@@ -104,7 +104,8 @@ class CanteenViewModel @Inject constructor(
     {
         appContext.registerReceiver(
             networkAvailableBroadcastReceiver,
-            IntentFilter(JecnaMobileApplication.NETWORK_AVAILABLE_ACTION)
+            IntentFilter(JecnaMobileApplication.NETWORK_AVAILABLE_ACTION),
+            Context.RECEIVER_NOT_EXPORTED
         )
     }
 

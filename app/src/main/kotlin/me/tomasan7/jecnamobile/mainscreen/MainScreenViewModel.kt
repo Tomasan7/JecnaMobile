@@ -100,12 +100,14 @@ class MainScreenViewModel @Inject constructor(
     {
         val intent = Intent(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
         intent.putExtra(JecnaMobileApplication.SUCCESSFUL_LOGIN_FIRST_EXTRA, first)
+        intent.`package` = appContext.packageName
         appContext.sendBroadcast(intent)
     }
 
     private fun broadcastNetworkAvailable()
     {
         val intent = Intent(JecnaMobileApplication.NETWORK_AVAILABLE_ACTION)
+        intent.`package` = appContext.packageName
         appContext.sendBroadcast(intent)
     }
 

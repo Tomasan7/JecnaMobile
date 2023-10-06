@@ -66,7 +66,8 @@ class GradesViewModel @Inject constructor(
     {
         appContext.registerReceiver(
             loginBroadcastReceiver,
-            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION),
+            Context.RECEIVER_NOT_EXPORTED
         )
     }
 

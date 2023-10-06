@@ -64,7 +64,9 @@ class AttendancesViewModel @Inject constructor(
     fun enteredComposition()
     {
         appContext.registerReceiver(
-            loginBroadcastReceiver, IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION)
+            loginBroadcastReceiver,
+            IntentFilter(JecnaMobileApplication.SUCCESSFUL_LOGIN_ACTION),
+            Context.RECEIVER_NOT_EXPORTED
         )
     }
 
