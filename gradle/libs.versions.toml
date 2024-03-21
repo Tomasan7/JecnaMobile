@@ -1,35 +1,33 @@
 [versions]
-plugin-android = "8.1.2"
-plugin-kotlin = "1.9.0"
+plugin-android = "8.3.1"
+plugin-kotlin = "1.9.23"
 plugin-ksp = "1.9.0-1.0.13"
 
-jecnaAPI = "4.0.0"
-ktor-client = "2.3.0"
+jecnaAPI = "4.0.2"
 
-compose-compiler = "1.5.1"
-compose-material = "1.5.1"
-compose-material3 = "1.1.1"
-compose-material-icons-extended = "1.5.1"
+compose-compiler = "1.5.11"
+compose-android-bom = "2024.03.00"
+
 compose-destinations = "1.9.53"
-compose-state-events = "2.0.3"
+compose-state-events = "2.2.0"
 compose-html = "1.0.2"
-compose-coil = "2.4.0"
-activity = "1.7.2"
+compose-coil = "2.6.0"
 accompanist = "0.32.0"
-hilt = "2.48"
-hilt-navigation-compose = "1.0.0"
+hilt = "2.51"
+hilt-navigation-compose = "1.2.0"
 datastore = "1.0.0"
-serialization = "1.6.0"
+serialization = "1.6.3"
 
 [libraries]
 jecnaAPI = { module = "com.github.Tomasan7.JecnaAPI:jecnaapi", version.ref = "jecnaAPI" }
 
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-compiler" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-compiler" }
-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "activity" }
-compose-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose-material-icons-extended" }
+compose-android-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-android-bom" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-activity = { module = "androidx.activity:activity-compose" }
+compose-material = { module = "androidx.compose.material:material" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 compose-destinations-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
 compose-state-events = { module = "com.github.leonard-palm:compose-state-events", version.ref = "compose-state-events" }

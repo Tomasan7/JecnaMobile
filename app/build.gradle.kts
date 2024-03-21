@@ -75,6 +75,7 @@ kapt {
 dependencies {
     implementation(libs.jecnaAPI)
 
+    implementation(platform(libs.compose.android.bom))
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.activity)
