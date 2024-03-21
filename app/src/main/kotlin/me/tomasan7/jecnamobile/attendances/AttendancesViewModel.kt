@@ -139,6 +139,7 @@ class AttendancesViewModel @Inject constructor(
             catch (e: Exception)
             {
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.attendances_load_error)))
+                e.printStackTrace()
             }
             finally
             {

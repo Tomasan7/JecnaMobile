@@ -149,6 +149,7 @@ class TimetableViewModel @Inject constructor(
             catch (e: Exception)
             {
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.timetable_load_error)))
+                e.printStackTrace()
             }
             finally
             {

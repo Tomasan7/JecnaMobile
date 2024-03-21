@@ -276,7 +276,7 @@ class CanteenViewModel @Inject constructor(
 
         loadMenuJob = canteenClient.getMenuAsync(newNewDays)
             .onEach { addDayMenu(it) }
-            .catch { e -> showMenuLoadErrorMessage(e, R.string.error_load) }
+            .catch { e -> showMenuLoadErrorMessage(e, R.string.error_load); e.printStackTrace(); }
             .onCompletion { awaitedDays.removeAll(newNewDays.toSet()) }
             .launchIn(viewModelScope)
     }

@@ -99,6 +99,7 @@ class TeachersViewModel @Inject constructor(
             catch (e: Exception)
             {
                 changeUiState(snackBarMessageEvent = triggered(appContext.getString(R.string.teachers_load_error)))
+                e.printStackTrace()
             }
             finally
             {
