@@ -89,6 +89,7 @@ class LoginViewModel @Inject constructor(
             }
             catch (e: Exception)
             {
+                e.printStackTrace()
                 LoginResult.Error.Unknown
             }
 
