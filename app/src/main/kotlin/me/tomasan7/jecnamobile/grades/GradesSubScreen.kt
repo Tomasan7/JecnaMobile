@@ -1,24 +1,55 @@
 package me.tomasan7.jecnamobile.grades
 
-import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +64,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.palm.composestateevents.EventEffect
-import me.tomasan7.jecnaapi.data.grade.*
+import me.tomasan7.jecnaapi.data.grade.Behaviour
+import me.tomasan7.jecnaapi.data.grade.FinalGrade
+import me.tomasan7.jecnaapi.data.grade.Grade
+import me.tomasan7.jecnaapi.data.grade.Subject
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
-import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnamobile.R
@@ -45,17 +78,25 @@ import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.settings.Settings
 import me.tomasan7.jecnamobile.ui.ElevationLevel
-import me.tomasan7.jecnamobile.ui.component.*
-import me.tomasan7.jecnamobile.ui.theme.*
+import me.tomasan7.jecnamobile.ui.component.DialogRow
+import me.tomasan7.jecnamobile.ui.component.HorizontalSpacer
+import me.tomasan7.jecnamobile.ui.component.ObjectDialog
+import me.tomasan7.jecnamobile.ui.component.OfflineDataIndicator
+import me.tomasan7.jecnamobile.ui.component.SchoolYearHalfSelector
+import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
+import me.tomasan7.jecnamobile.ui.component.VerticalSpacer
+import me.tomasan7.jecnamobile.ui.component.rememberObjectDialogState
+import me.tomasan7.jecnamobile.ui.theme.grade_absence_warning
+import me.tomasan7.jecnamobile.ui.theme.grade_grades_warning
+import me.tomasan7.jecnamobile.ui.theme.jm_label
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsState
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterialApi::class)
 @SubScreensNavGraph
@@ -178,7 +219,7 @@ private fun ViewModeButton(
         when (viewMode)
         {
             Settings.GradesViewMode.LIST -> Icons.Filled.ViewModule
-            Settings.GradesViewMode.GRID -> Icons.Filled.ViewList
+            Settings.GradesViewMode.GRID -> Icons.AutoMirrored.Filled.ViewList
         }
     }
 
