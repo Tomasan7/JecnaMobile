@@ -66,8 +66,8 @@ fun MainScreen(
     val settings by settingsAsStateAwaitFirst()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val destinationItems = SubScreenDestination.values()
-    val linkItems = SidebarLink.values()
+    val destinationItems = SubScreenDestination.entries
+    val linkItems = SidebarLink.entries
     var selectedItem by rememberMutableStateOf(SubScreenDestination.Timetable)
     val subScreensNavController = rememberNavController()
     val startRoute = remember { NavGraphs.subScreens.findDestination(settings.openSubScreenRoute)!! }
