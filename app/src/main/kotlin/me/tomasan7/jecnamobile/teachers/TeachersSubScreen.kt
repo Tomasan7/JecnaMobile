@@ -160,7 +160,6 @@ private fun FilterFieldRow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherCard(
     teacherReference: TeacherReference,
