@@ -45,6 +45,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -503,16 +504,18 @@ private fun ListSubjectPart(
             style = MaterialTheme.typography.labelLarge
         )
 
+    val gradesSorted by remember { derivedStateOf { grades.sortedByDescending { it.receiveDate } } }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
     ) {
-        grades.forEachIndexed { i, grade ->
+        gradesSorted.forEachIndexed { i, grade ->
             ListGrade(
                 grade = grade,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onGradeClick(grade) }
             )
-            if (i != grades.lastIndex)
+            if (i != gradesSorted.lastIndex)
                 HorizontalDivider(
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth(),
