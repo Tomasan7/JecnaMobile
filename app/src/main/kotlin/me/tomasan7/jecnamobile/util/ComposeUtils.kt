@@ -27,7 +27,7 @@ fun PullToRefreshHandler(state: PullToRefreshState, shown: Boolean, onRefresh: (
     if (state.isRefreshing)
         LaunchedEffect(true) { onRefresh() }
 
-    LaunchedEffect(shown) {
+    LaunchedEffect(state, shown) {
         if (shown)
             state.startRefresh()
         else
