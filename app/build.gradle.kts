@@ -78,22 +78,20 @@ dependencies {
     implementation(platform(libs.compose.android.bom))
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.activity)
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.core)
     implementation(libs.compose.material.icons.extended)
-    implementation(libs.compose.html)
-    implementation(libs.compose.coil)
-    implementation(libs.compose.destinations.core)
-    ksp(libs.compose.destinations.ksp)
-    implementation(libs.compose.state.events)
-
+    implementation(libs.activity.compose)
+    implementation(libs.composeHtml)
+    implementation(libs.composeCoil)
+    implementation(libs.composeDestinations.core)
+    ksp(libs.composeDestinations.ksp)
+    implementation(libs.composeStateEvents)
     implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
-
     implementation(libs.datastore)
     implementation(libs.serialization.json)
 }

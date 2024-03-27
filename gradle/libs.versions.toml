@@ -8,13 +8,14 @@ jecnaAPI = "4.0.2"
 compose-compiler = "1.5.11"
 compose-android-bom = "2024.03.00"
 
-compose-destinations = "1.9.53"
-compose-state-events = "2.2.0"
-compose-html = "1.0.2"
-compose-coil = "2.6.0"
+composeDestinations = "1.9.53"
+composeStateEvents = "2.2.0"
+composeHtml = "1.0.2"
+composeCoil = "2.6.0"
 accompanist = "0.32.0"
-hilt = "2.51"
-hilt-navigation-compose = "1.2.0"
+
+hilt-dagger = "2.51"
+hilt-android = "1.2.0"
 datastore = "1.0.0"
 serialization = "1.6.3"
 
@@ -24,23 +25,21 @@ jecnaAPI = { module = "com.github.Tomasan7.JecnaAPI:jecnaapi", version.ref = "je
 compose-android-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-android-bom" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-compose-activity = { module = "androidx.activity:activity-compose" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+activity-compose = { module = "androidx.activity:activity-compose" }
 
-compose-destinations-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destinations" }
-compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
-compose-state-events = { module = "com.github.leonard-palm:compose-state-events", version.ref = "compose-state-events" }
-compose-html = { module = "com.github.ireward:compose-html", version.ref = "compose-html" }
-compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "compose-coil" }
-
+composeDestinations-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "composeDestinations" }
+composeDestinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "composeDestinations" }
+composeStateEvents = { module = "com.github.leonard-palm:compose-state-events", version.ref = "composeStateEvents" }
+composeHtml = { module = "com.github.ireward:compose-html", version.ref = "composeHtml" }
+composeCoil = { module = "io.coil-kt:coil-compose", version.ref = "composeCoil" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
-
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-dagger" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-dagger" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-android" }
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
@@ -51,4 +50,4 @@ android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "plugin-ko
 ksp = { id = "com.google.devtools.ksp", version.ref = "plugin-ksp" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "plugin-kotlin" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "plugin-kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-dagger" }
