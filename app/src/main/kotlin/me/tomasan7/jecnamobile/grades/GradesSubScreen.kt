@@ -624,18 +624,12 @@ private fun Grade(
 @Composable
 private fun GradeAverage(
     value: Float,
-    onClick: () -> Unit = {}
+    onClick: (() -> Unit)? = null
 )
 {
     val valueString = remember { Constants.gradeAverageDecimalFormat.format(value) }
 
-    Surface(
-        modifier = Modifier.size(Constants.gradeWidth),
-        border = BorderStroke(1.dp, getGradeColor(value.roundToInt())),
-        tonalElevation = 10.dp,
-        onClick = onClick,
-        shape = Constants.gradeShape
-    ) {
+    val content = @Composable {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = valueString,
@@ -643,12 +637,35 @@ private fun GradeAverage(
             )
         }
     }
+
+    val modifier = Modifier.size(Constants.gradeWidth)
+    val border = BorderStroke(1.dp, getGradeColor(value.roundToInt()))
+    val tonalElevation = 10.dp
+    val shape = Constants.gradeShape
+
+    if (onClick != null)
+        Surface(
+            modifier = modifier,
+            shape = shape,
+            border = border,
+            tonalElevation = tonalElevation,
+            onClick = onClick,
+            content = content
+        )
+    else
+        Surface(
+            modifier = modifier,
+            shape = shape,
+            border = border,
+            tonalElevation = tonalElevation,
+            content = content
+        )
 }
 
 @Composable
 private fun FinalGrade(
     finalGrade: FinalGrade,
-    onClick: () -> Unit = {}
+    onClick: (() -> Unit)? = null
 ) = when (finalGrade)
 {
     is FinalGrade.Grade                   -> Grade(Grade(finalGrade.value, false, gradeId = -1), onClick = onClick)
@@ -659,7 +676,7 @@ private fun FinalGrade(
 
 
 @Composable
-private fun GradesWarning(onClick: () -> Unit = {})
+private fun GradesWarning(onClick: (() -> Unit)? = {})
 {
     GradeBox(
         text = stringResource(R.string.grade_grades_warning_content),
@@ -669,7 +686,7 @@ private fun GradesWarning(onClick: () -> Unit = {})
 }
 
 @Composable
-private fun AbsenceWarning(onClick: () -> Unit = {})
+private fun AbsenceWarning(onClick: (() -> Unit)? = {})
 {
     GradeBox(
         text = stringResource(R.string.grade_absence_warning_content),
@@ -679,10 +696,10 @@ private fun AbsenceWarning(onClick: () -> Unit = {})
 }
 
 @Composable
-private fun GradesAndAbsenceWarning(onClick: () -> Unit = {})
+private fun GradesAndAbsenceWarning(onClick: (() -> Unit)? = {})
 {
     Column(
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier,
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         GradesWarning()
