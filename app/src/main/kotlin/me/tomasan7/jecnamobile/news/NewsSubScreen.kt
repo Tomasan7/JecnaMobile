@@ -18,15 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +31,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -42,10 +40,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -72,9 +70,10 @@ import me.tomasan7.jecnamobile.ui.component.OfflineDataIndicator
 import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
 import me.tomasan7.jecnamobile.ui.component.rememberObjectDialogState
 import me.tomasan7.jecnamobile.ui.theme.jm_label
+import me.tomasan7.jecnamobile.util.PullToRefreshHandler
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SubScreensNavGraph
 @Destination
 @Composable
@@ -84,9 +83,15 @@ fun NewsSubScreen(
 )
 {
     val uiState = viewModel.uiState
-    val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
+    val pullToRefreshState = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
     val dialogState = rememberObjectDialogState<List<String>>()
+
+    PullToRefreshHandler(
+        state = pullToRefreshState,
+        shown = uiState.loading,
+        onRefresh = { viewModel.reload() }
+    )
 
     DisposableEffect(Unit) {
         viewModel.enteredComposition()
@@ -115,13 +120,13 @@ fun NewsSubScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .padding(paddingValues)
-                .padding(16.dp)
-                .pullRefresh(pullRefreshState)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -137,9 +142,8 @@ fun NewsSubScreen(
                 Spacer(Modifier.height(16.dp))
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.loading,
-                state = pullRefreshState,
+            PullToRefreshContainer(
+                state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 

@@ -23,15 +23,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ViewModule
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,6 +40,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -54,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -90,6 +90,7 @@ import me.tomasan7.jecnamobile.ui.component.rememberObjectDialogState
 import me.tomasan7.jecnamobile.ui.theme.grade_absence_warning
 import me.tomasan7.jecnamobile.ui.theme.grade_grades_warning
 import me.tomasan7.jecnamobile.ui.theme.jm_label
+import me.tomasan7.jecnamobile.util.PullToRefreshHandler
 import me.tomasan7.jecnamobile.util.getGradeColor
 import me.tomasan7.jecnamobile.util.rememberMutableStateOf
 import me.tomasan7.jecnamobile.util.settingsAsState
@@ -98,7 +99,7 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SubScreensNavGraph
 @Destination
 @Composable
@@ -117,9 +118,15 @@ fun GradesSubScreen(
 
     val uiState = viewModel.uiState
     val objectDialogState = rememberObjectDialogState<Grade>()
-    val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
+    val pullToRefreshState = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
     val settings by settingsAsState()
+
+    PullToRefreshHandler(
+        state = pullToRefreshState,
+        shown = uiState.loading,
+        onRefresh = { viewModel.reload() }
+    )
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -147,13 +154,13 @@ fun GradesSubScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .padding(paddingValues)
-                .padding(16.dp)
-                .pullRefresh(pullRefreshState)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -188,9 +195,8 @@ fun GradesSubScreen(
                 }
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.loading,
-                state = pullRefreshState,
+            PullToRefreshContainer(
+                state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 

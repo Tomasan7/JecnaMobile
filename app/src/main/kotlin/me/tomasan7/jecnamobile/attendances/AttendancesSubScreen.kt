@@ -5,17 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,13 +29,14 @@ import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.*
 import me.tomasan7.jecnamobile.ui.theme.jm_late_attendance
+import me.tomasan7.jecnamobile.util.PullToRefreshHandler
 import me.tomasan7.jecnamobile.util.getWeekDayName
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.DateTimeFormatter
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SubScreensNavGraph
 @Destination
 @Composable
@@ -53,8 +53,14 @@ fun AttendancesSubScreen(
     }
 
     val uiState = viewModel.uiState
-    val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
+    val pullToRefreshState = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    PullToRefreshHandler(
+        state = pullToRefreshState,
+        shown = uiState.loading,
+        onRefresh = { viewModel.reload() }
+    )
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -78,13 +84,13 @@ fun AttendancesSubScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .padding(paddingValues)
-                .padding(16.dp)
-                .pullRefresh(pullRefreshState)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -117,9 +123,8 @@ fun AttendancesSubScreen(
                 VerticalSpacer(0.dp)
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.loading,
-                state = pullRefreshState,
+            PullToRefreshContainer(
+                state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }

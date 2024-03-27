@@ -16,12 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,12 +28,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -52,8 +51,9 @@ import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
 import me.tomasan7.jecnamobile.ui.component.HorizontalSpacer
 import me.tomasan7.jecnamobile.ui.component.Timetable
+import me.tomasan7.jecnamobile.util.PullToRefreshHandler
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SubScreensNavGraph
 @Destination
 @Composable
@@ -71,8 +71,14 @@ fun TeacherScreen(
     }
 
     val uiState = viewModel.uiState
-    val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
+    val pullToRefreshState = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    PullToRefreshHandler(
+        state = pullToRefreshState,
+        shown = uiState.loading,
+        onRefresh = { viewModel.reload() }
+    )
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -87,14 +93,14 @@ fun TeacherScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .padding(paddingValues)
-                .padding(30.dp)
-                .pullRefresh(pullRefreshState)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(30.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 if (uiState.teacher != null)
@@ -123,9 +129,8 @@ fun TeacherScreen(
                 }
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.loading,
-                state = pullRefreshState,
+            PullToRefreshContainer(
+                state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }

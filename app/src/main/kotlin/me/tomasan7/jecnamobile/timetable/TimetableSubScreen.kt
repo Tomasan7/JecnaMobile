@@ -1,20 +1,27 @@
 package me.tomasan7.jecnamobile.timetable
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,13 +32,17 @@ import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnamobile.R
 import me.tomasan7.jecnamobile.destinations.TeacherScreenDestination
-import me.tomasan7.jecnamobile.destinations.TeachersSubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.NavDrawerController
 import me.tomasan7.jecnamobile.mainscreen.SubScreenDestination
 import me.tomasan7.jecnamobile.mainscreen.SubScreensNavGraph
-import me.tomasan7.jecnamobile.ui.component.*
+import me.tomasan7.jecnamobile.ui.component.OfflineDataIndicator
+import me.tomasan7.jecnamobile.ui.component.OutlinedDropDownSelector
+import me.tomasan7.jecnamobile.ui.component.SchoolYearSelector
+import me.tomasan7.jecnamobile.ui.component.SubScreenTopAppBar
+import me.tomasan7.jecnamobile.ui.component.Timetable
+import me.tomasan7.jecnamobile.util.PullToRefreshHandler
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SubScreensNavGraph(start = true)
 @Destination
 @Composable
@@ -49,8 +60,14 @@ fun TimetableSubScreen(
     }
 
     val uiState = viewModel.uiState
-    val pullRefreshState = rememberPullRefreshState(uiState.loading, viewModel::reload)
+    val pullToRefreshState = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    PullToRefreshHandler(
+        state = pullToRefreshState,
+        shown = uiState.loading,
+        onRefresh = { viewModel.reload() }
+    )
 
     EventEffect(
         event = uiState.snackBarMessageEvent,
@@ -75,13 +92,13 @@ fun TimetableSubScreen(
 
         Box(
             modifier = Modifier
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 .padding(paddingValues)
-                .padding(16.dp)
-                .pullRefresh(pullRefreshState)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -103,9 +120,8 @@ fun TimetableSubScreen(
                     )
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.loading,
-                state = pullRefreshState,
+            PullToRefreshContainer(
+                state = pullToRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
