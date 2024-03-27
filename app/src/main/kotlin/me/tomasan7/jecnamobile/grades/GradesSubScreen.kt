@@ -555,7 +555,7 @@ private fun ListGrade(
                 contentAlignment = Alignment.Center
             ) {
                 GradeBox(
-                    text = grade.valueChar().toString(),
+                    text = grade.valueChar.toString(),
                     color = gradeColor,
                     modifier = Modifier.size(size)
                 )
@@ -614,7 +614,7 @@ private fun Grade(
 
     GradeBox(
         modifier = modifier,
-        text = grade.valueChar().toString(),
+        text = grade.valueChar.toString(),
         color = gradeColor,
         height = gradeHeight,
         onClick = onClick
@@ -651,7 +651,7 @@ private fun FinalGrade(
     onClick: () -> Unit = {}
 ) = when (finalGrade)
 {
-    is FinalGrade.Grade                   -> Grade(Grade(finalGrade.value, false), onClick = onClick)
+    is FinalGrade.Grade                   -> Grade(Grade(finalGrade.value, false, gradeId = -1), onClick = onClick)
     is FinalGrade.GradesWarning           -> GradesWarning(onClick = onClick)
     is FinalGrade.AbsenceWarning          -> AbsenceWarning(onClick = onClick)
     is FinalGrade.GradesAndAbsenceWarning -> GradesAndAbsenceWarning(onClick = onClick)
@@ -764,7 +764,7 @@ private fun Behaviour(behaviour: Behaviour)
         title = Behaviour.SUBJECT_NAME,
         rightColumnContent = {
             if (behaviour.finalGrade is FinalGrade.Grade)
-                Grade(Grade((behaviour.finalGrade as FinalGrade.Grade).value, false))
+                Grade(Grade((behaviour.finalGrade as FinalGrade.Grade).value, false, gradeId = -1))
         }
     ) {
         FlowRow(

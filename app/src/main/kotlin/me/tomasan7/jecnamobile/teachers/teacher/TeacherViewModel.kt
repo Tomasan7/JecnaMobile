@@ -61,7 +61,7 @@ class TeacherViewModel @Inject constructor(
     {
         this.teacherReference = teacherReference
 
-        if (this::teacherReference.isInitialized && jecnaClient.lastSuccessfulLoginAuth != null)
+        if (this::teacherReference.isInitialized && jecnaClient.autoLoginAuth != null)
             loadReal()
 
         appContext.registerReceiver(
