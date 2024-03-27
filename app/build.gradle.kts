@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.activity)
     implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons.core)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.html)
     implementation(libs.compose.coil)

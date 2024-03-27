@@ -26,7 +26,9 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-activity = { module = "androidx.activity:activity-compose" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+
 compose-destinations-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destinations" }
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
 compose-state-events = { module = "com.github.leonard-palm:compose-state-events", version.ref = "compose-state-events" }
