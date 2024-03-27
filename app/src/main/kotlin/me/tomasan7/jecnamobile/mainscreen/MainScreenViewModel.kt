@@ -51,7 +51,7 @@ class MainScreenViewModel @Inject constructor(
 
     fun tryLogin()
     {
-        val hasBeenLoggedIn = jecnaClient.autoLoginAuth != null
+        val hasBeenLoggedIn = jecnaClient.lastSuccessfulLoginTime != null
         val auth = jecnaClient.autoLoginAuth ?: authRepository.get()
 
         if (auth == null)
