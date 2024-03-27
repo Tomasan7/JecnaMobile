@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -258,10 +259,12 @@ private fun InfoRow(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.CenterStart
             ) {
-                Text(
-                    text = value,
-                    modifier = Modifier.padding(16.dp)
-                )
+                SelectionContainer {
+                    Text(
+                        text = value,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
