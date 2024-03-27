@@ -12,7 +12,8 @@ composeDestinations = "1.9.53"
 composeStateEvents = "2.2.0"
 composeHtml = "1.0.2"
 composeCoil = "2.6.0"
-accompanist = "0.32.0"
+
+activity = "1.8.2"
 
 hilt-dagger = "2.51"
 hilt-android = "1.2.0"
@@ -35,7 +36,8 @@ composeDestinations-ksp = { module = "io.github.raamcosta.compose-destinations:k
 composeStateEvents = { module = "com.github.leonard-palm:compose-state-events", version.ref = "composeStateEvents" }
 composeHtml = { module = "com.github.ireward:compose-html", version.ref = "composeHtml" }
 composeCoil = { module = "io.coil-kt:coil-compose", version.ref = "composeCoil" }
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-dagger" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-dagger" }

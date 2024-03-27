@@ -87,7 +87,8 @@ dependencies {
     implementation(libs.composeDestinations.core)
     ksp(libs.composeDestinations.ksp)
     implementation(libs.composeStateEvents)
-    implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.activity.ktx)
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
